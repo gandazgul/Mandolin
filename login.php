@@ -1,5 +1,5 @@
 <?php
-	if (($_POST["username"] != "") and (!isset($sess_id)))
+	if ((isset($_POST["username"])) and (!isset($sess_id)))
 	{
 		session_name("newMusicServer");
 		session_start();
@@ -36,7 +36,7 @@
 			$_SESSION["key"] = $last_key;
 			$_SESSION["username"] = $username;
 			$_SESSION["userAdminLevel"] = $queryArr[0][3];
-			$_SESSION["id"] = session_id();
+			$_SESSION["id"] = sha1(session_id());
 			//print_r($_SESSION);
 	        header("Location: ./index.php?p=main");
 			exit();
@@ -56,8 +56,8 @@
 		<input type="submit" value="Login" />
 	</form>
 	<?php 
-		if ($_COOKIE["SCTm"] != "") 
-		{ 
+		if (isset($_COOKIE["SCTm"])) 
+		{
 			echo "<p style='color: red; font: 'Courier New', Courier, mono;'>Error: ".$_COOKIE["SCTm"]."</p>"; 
 			setcookie("SCTm", '', time()-42000, '/'); 
 		} 

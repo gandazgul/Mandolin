@@ -8,7 +8,10 @@
 	//VERSION END
 
 	$p = (isset($_GET["p"])) ? $_GET["p"] : "main";
-	$p = ($_SESSION["id"] != session_id()) ? "login" : $p;
+	if (isset($_SESSION["id"]))
+		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
+	else
+		$p = "login";
 	$sess_id = session_id();
 
 	
@@ -101,7 +104,9 @@
 		<img alt="newMusicServer logo" src="logo.jpg" />
 		<div style="position: absolute; top: 10px; left: 200px">
 			<?php
-				echo "<h1>Welcome <strong>{$_SESSION['username']}</strong> to newMusicServer v{$version}</h1>\n";
+				$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";
+
+				echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v{$version}</h1>\n";	
 			?>
 			<h2><em>"Because music is important"</em></h2>
 		</div>
