@@ -52,7 +52,7 @@
 	<form action="./login.php" method="post">
 		<p class="title">Login</p>
 		<p class="title">Username: <input type="text" size="20" name="username" /></p>
-		<p class="title">Password: <input type="text" size="20" name="passw" /></p>
+		<p class="title">Password: <input type="password" size="20" name="passw" /></p>
 		<input type="submit" value="Login" />
 	</form>
 	<?php 

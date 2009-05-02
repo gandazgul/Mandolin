@@ -29,57 +29,124 @@
 	<link href="css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<script type="text/javascript" src="./js/lib/jquery-1.3.min.js"></script>
+	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css">
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
-		function search(query)
+		
+		function setComm()
 		{
-			query = query.value;
-			
+			alb_id = getOptions($("#albList")[0]);
+			postData = "a=addc&com=" + $("#sngComm").val() + "&sng=" + $("#sngID").text() + "&alb=" + alb_id + "&SID=" + SID;
+			//alert(postData);
+			$.post("./ls.php", postData, albOnChange, "json");
 		}
 		
-		function showComments(comm)
+		function procSearchResults(results)
 		{
-			if (comm != 'null')
-				$("#sngComm").val(comm);
+			getArt(results["art"]);
+			artOnChange(results["alb"]);
+			albOnChange(results["sng"]);
 		}
 		
-		function albOnClick(data)
+		function queryDB(query)
+		{
+			if (query == "")
+			{
+				_getArt();
+				$("#albList")[0].options.length = 0;
+				$("#songList")[0].options.length = 0;
+				return;
+			}
+			postData = "a=search&q=" + query + "&SID=" + SID;
+			$.post("./ls.php", postData, procSearchResults, "json");
+		}
+		
+		var timerID;
+		
+		function search(query, reschedule)
+		{
+			if (reschedule)
+			{
+				//alert(query);
+				clearTimeout(timerID);
+				timerID = setTimeout("search('" + query + "', false)", 1000);
+			}
+			else
+			{
+				queryDB(query);
+			}	
+		}
+		
+		function getOptions(objSelect)//get all selected options in a <select> and separate them with |
+		{
+			txt = "";
+			for (i = 0; i < objSelect.length; i++)
+			{
+			  if(objSelect.options[i].selected)
+			  {
+				//alert(encodeURI(obj.options[i].value));
+				txt = txt + escape(objSelect.options[i].value) + "|";
+			  }
+			}
+			return txt;
+		}
+		
+		function sngOnChange(sng_value)
+		{
+			$("#commDialog").dialog('close');
+			$("#sngComm").val("");
+			$("#sngID").html("");
+			data = eval('('+ sng_value +')');
+			//alert(data[1]);
+			if (data[1] != null) 
+			{
+				$("#sngComm").val(data[1]);
+			}
+			$("#sngID").append(data[0]);
+		}
+		
+		function albOnChange(sngArr)
 		{
 			$("#songList")[0].options.length = 0;
-			for (i = 0; i < data.length; i++)
+			for (i = 0; i < sngArr.length; i++)
 			{
-				$("#songList").append("<option value="+ data[i].id +" onclick='showComments(\""+ data[i].comm +"\")'>"+ data[i].name +"</option>");	
+				$("#songList").append("<option value='["+ sngArr[i].id + ", \"" + sngArr[i].comm + "\"]'>"+ sngArr[i].name +"</option>");	
 			}			
 		}
 		
-		function _albOnClick(option)
+		function _albOnChange(objSelect)
 		{
-			postData = "a=sng&alb=" + option.value + "&SID=" + SID;
-			$.post("./ls.php", postData, albOnClick, "json");
+			alb_id = getOptions(objSelect);
+			postData = "a=sng&alb=" + alb_id + "&SID=" + SID;
+			$.post("./ls.php", postData, albOnChange, "json");
 		}
 		
-		function artOnClick(data)
+		function artOnChange(albArr)
 		{
 			$("#albList")[0].options.length = 0;
 			$("#songList")[0].options.length = 0;
-			for (i = 0; i < data.length; i++)
+			//alert(data[0].id);
+			for (i = 0; i < albArr.length; i++)
 			{
-				$("#albList").append("<option value="+ data[i].id +" onclick='_albOnClick(this)'>"+ data[i].name +"</option>");	
+				$("#albList").append("<option value='"+ albArr[i].id +"'>"+ albArr[i].name +"</option>");	
 			}
 		}
 		
-		function _artOnClick(option)
+		function _artOnChange(objSelect)
 		{
-			postData = "a=alb&artist=" + option.value + "&SID=" + SID;
-			$.post("./ls.php", postData, artOnClick, "json");
+			art_id = getOptions(objSelect);
+			postData = "a=alb&artist=" + art_id + "&SID=" + SID;
+			//alert(postData);
+			$.post("./ls.php", postData, artOnChange, "json");
 		}
 		
-		function getArt(data)
+		function getArt(artArr)
 		{
 			$("#artList")[0].options.length = 0;
-			for (i = 0; i < data.length; i++)
+			for (i = 0; i < artArr.length; i++)
 			{
-				$("#artList").append("<option value="+ data[i].id +" onclick='_artOnClick(this)'>"+ data[i].name +"</option>");	
+				$("#artList").append("<option value='"+ artArr[i].id +"'>"+ artArr[i].name +"</option>");	
 			}
 		}
 		
@@ -108,15 +175,15 @@
 
 				echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v{$version}</h1>\n";	
 			?>
-			<h2><em>"Because music is important"</em></h2>
-		</div>
+			<h2><em>"Because music is important"</em></h2>			
+		</div>	
       </div>
 		<?php 
 			include("{$p}.php");
 		?>
       <!-- begin: #footer -->
       <div id="footer">
-      	<a href="http://www.gnu.org/licenses/gpl.html">(L)</a> 2009 SCTree | <a href="./index.php?p=src">Get the code</a> | Layout based on <a href="http://www.yaml.de/">YAML</a>
+      	<a href="http://www.gnu.org/licenses/gpl.html">(L)</a> 2009 SCTree | <a href="./src.php">Get the code</a> | Layout based on <a href="http://www.yaml.de/">YAML</a>
       </div>
     </div>
   </div>

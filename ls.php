@@ -2,9 +2,10 @@
 /*/TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
 session_name("newMusicServer");
 session_start();
-if ($_POST["SID"] != sha1(session_id()))
-	die("session invalid");
-*/
+//print_r($_POST);
+if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+	header("Location: ./index.php");*/
+
 $action = $_REQUEST["a"];
 
 $action();//TODO catch possible error with try..catch
@@ -13,15 +14,15 @@ function art()
 {
 	global $action;
 	$dbh = new PDO("sqlite:./db/music.db");
-		$query = $dbh->query("SELECT * FROM artists ORDER BY `art_name`");
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);		
-		$artArr = array();
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-		}
-		echo json_encode($artArr);
+	$query = $dbh->query("SELECT * FROM artists ORDER BY `art_name`");
+	$queryArr = $query->fetchAll();
+	//print_r($queryArr);		
+	$artArr = array();
+	for ($i = 0; $i < count($queryArr); $i++)
+	{
+		$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
+	}
+	echo json_encode($artArr);
 	$dbh = null;
 }
 
@@ -32,13 +33,13 @@ function alb()
 	$artist = $_REQUEST["artist"];
 
 	$dbh = new PDO("sqlite:./db/music.db");
+	$albArr = array();	
 	$tok = strtok($artist, "|");
 	while($tok !== false)
 	{
 		$query = $dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
 		$queryArr = $query->fetchAll();
 		//print_r($queryArr);
-		$albArr = array();
 		for($i = 0; $i < count($queryArr); $i++)
 		{
 			$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
@@ -54,22 +55,90 @@ function sng()
 	$alb = $_REQUEST["alb"];
 	
 	$dbh = new PDO("sqlite:./db/music.db");
+	$sngArr = array();	
 	$tok = strtok($alb, "|");
 	while($tok !== false)
 	{
 		$query = $dbh->query("SELECT song_id, song_name, song_comments FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
 		$queryArr = $query->fetchAll();
 		//print_r($queryArr);
-		$sngArr = array();
 		for($i = 0; $i < count($queryArr); $i++)
 		{
-			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => $queryArr[$i]["song_comments"]);
+			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => utf8_encode($queryArr[$i]["song_comments"]));
 		}
 		$tok = strtok("|");
 	}//from the while
 	echo json_encode($sngArr);
 	$dbh = null;
 }
+
+function addc()//add a comment to a track
+{
+	$sng = $_REQUEST["sng"];
+	$com = $_REQUEST["com"];
+	$dbh = new PDO("sqlite:./db/music.db");
+	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
+	if ($query == 0)
+	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
+	$dbh = null;
+	
+	sng();
+}
+
+function search()
+{
+	//init ------------------------------------------------------------------------------------------------------------
+	$queryStr = $_REQUEST["q"];
+	$dbh = new PDO("sqlite:./db/music.db");
+	$resultArr = array();
+	$queryArr = array();
+
+	//artists ------------------------------------------------------------------------------------------------------------	
+	$query = $dbh->query("SELECT art_id,  art_name  FROM artists WHERE `art_name`  LIKE '$queryStr%'");
+	$queryArr = $query->fetchAll();
+	if (count($queryArr) != 0)
+	{
+		for ($i = 0; $i < count($queryArr); $i++)
+		{
+			$resultArr["art"][] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
+		}
+	}
+	else
+		$resultArr["art"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""));
+	
+	//Album ------------------------------------------------------------------------------------------------------------	
+	$query = $dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '$queryStr%'");
+	$queryArr = $query->fetchAll();
+	if (count($queryArr) != 0)
+	{
+		for ($i = 0; $i < count($queryArr); $i++)
+		{
+			$resultArr["alb"][] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
+		}
+	}
+	else
+		$resultArr["alb"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""));
+
+	//Song ------------------------------------------------------------------------------------------------------------	
+	$query = $dbh->query("SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '$queryStr%'");
+	$queryArr = $query->fetchAll();
+	if (count($queryArr) != 0)
+	{
+		for ($i = 0; $i < count($queryArr); $i++)
+		{
+			$resultArr["sng"][] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => utf8_encode($queryArr[$i]["song_comments"]));
+		}		
+	}
+	else
+		$resultArr["sng"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""), "comm" => utf8_encode(""));
+	
+	//print_r($resultArr);
+	echo json_encode($resultArr);
+	
+	$dbh = null;
+}
+
+//-----------------------------
 
 function saved()//returns the list of playlists
 {
@@ -114,19 +183,6 @@ function createPL()//creates a playlist
 	$dbh = null;
 
 	echo "Playlist: \"$name\" was created successfuly, switch to the \"Saved Playlists\" tab to play or edit it.";
-}
-
-function add_com()//add a comment to a track
-{
-	$sng = $_GET["sng"];
-	$com = $_GET["com"];
-	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
-	if ($query == 0)
-	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-	
-	sng();
 }
 
 function download()//downloads a saved playlist TODO: make playselected look like this one. TODO: when creating a new PL make sure the name is not in use already
