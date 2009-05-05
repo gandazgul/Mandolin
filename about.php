@@ -14,11 +14,6 @@
 			<li class="active"><strong>About</strong></li>			
 		</ul>
 	</div>
-	<div class="title" style="width: 100%; text-align: right; width: 290px; position: absolute; right: 10px; top: 170px; ">
-		Artists: <span id="artTotal"></span>,&nbsp;
-		Albums:  <span id="albTotal"></span>,&nbsp;
-		Songs:  <span id="sngTotal"></span>
-	</div>	
 </div>
 <div id="main">
 	<p>newMusicServer is a rewrite of mstServer 0.5, I decided to start anew with all the experiences 

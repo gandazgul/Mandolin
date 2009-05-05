@@ -155,21 +155,26 @@ function gett()
 	$dbh = null;
 }
 
-//-----------------------------
-
 function saved()//returns the list of playlists
 {
-	global $userName;
-	
+	$userName = $_REQUEST["un"];
+	$resultArr = array();
 	$dbh = new PDO("sqlite:./db/users.db");
-	$query = $dbh->query("SELECT pl_name FROM playlists WHERE `pl_user_name`='$userName'");
+
+	$query = $dbh->query("SELECT pl_name, pl_contents FROM playlists WHERE `pl_user_name`='$userName'");
 	$queryArr = $query->fetchAll();
+	
 	for($i = 0; $i < count($queryArr); $i++)
 	{
-		echo "<option>".$queryArr[$i][0]."</option>\n";
+		$resultArr[] = array("name" => $queryArr[$i]["pl_name"], "cont" => $queryArr[$i]["pl_contents"]);
 	}
+	
+	echo json_encode($resultArr);
+	
 	$dbh = null;
 }
+
+//-----------------------------
 
 function delete()//deletes a playlist
 {

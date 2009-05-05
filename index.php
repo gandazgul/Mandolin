@@ -91,6 +91,19 @@
 			return txt;
 		}
 		
+		function plOnChange()
+		{
+			$("#sngComm").val("");
+			$("#sngID").html("");
+			data = eval('('+ sng_value +')');
+			//alert(data[1]);
+			if (data[1] != null) 
+			{
+				$("#sngComm").val(data[1]);
+			}
+			$("#sngID").append(data[0]);
+		}
+		
 		function sngOnChange(sng_value)
 		{
 			$("#sngComm").val("");
@@ -154,6 +167,21 @@
 			$.post("./ls.php", postData, getArt, "json");
 		}
 		
+		function getSavedPL(savedPLArr)
+		{
+			$("#plList")[0].options.length = 0;
+			for (i = 0; i < savedPLArr.length; i++)
+			{
+				$("#plList").append("<option value='"+ savedPLArr[i].cont +"'>"+ savedPLArr[i].name +"</option>");	
+			}
+		}
+		
+		function _getSavedPL()
+		{
+			postData = "a=saved&un=<?php echo $_SESSION["username"]?>&SID=" + SID;
+			$.post("./ls.php", postData, getSavedPL, "json");
+		}
+		
 		function putTotals(data)
 		{
 			$("#artTotal").html(data[0]);
@@ -162,16 +190,24 @@
 		}
 		
 		$(document).ready(function(){
-			postData = "a=gett&SID=" + SID;
-			$.post("./ls.php", postData, putTotals, "json");
-		});
-		
-		<?php 
-			if ($p == "main")
+			<?php
+			switch($p)
 			{
-				echo "$(document).ready(function(){ _getArt(); });";
+				case "main":
+				{ 
+					echo "postData = 'a=gett&SID=' + SID;\n";
+					echo "$.post('./ls.php', postData, putTotals, 'json');\n";				
+					echo "_getArt();\n";
+					break;
+				}
+				case "pl":
+				{
+					echo "_getSavedPL();\n";
+					break;
+				}				
 			}
-		?>
+			?>		
+		});
 	</script>
 </head>
 <body>

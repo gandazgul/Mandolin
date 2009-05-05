@@ -19,7 +19,7 @@
 <div id="teaser">
 	<p>
 		<label for="sQuery"><p class="title">Type in Artist, Album or Song name: 
-		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="82" /></p></label>
+		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" /></p></label>
 	</p>
 </div>
 <div id="main">
