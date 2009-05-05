@@ -14,7 +14,6 @@
 		$p = "login";
 	$sess_id = session_id();
 
-	
 	//print_r($_SESSION);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,8 +28,8 @@
 	<link href="css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<script type="text/javascript" src="./js/lib/jquery-1.3.min.js"></script>
-	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>
-	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css">
+	<!--script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css"-->
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		
@@ -126,7 +125,7 @@
 		{
 			$("#albList")[0].options.length = 0;
 			$("#songList")[0].options.length = 0;
-			//alert(data[0].id);
+			//alert(albArr[0].id);
 			for (i = 0; i < albArr.length; i++)
 			{
 				$("#albList").append("<option value='"+ albArr[i].id +"'>"+ albArr[i].name +"</option>");	
@@ -156,6 +155,18 @@
 			$.post("./ls.php", postData, getArt, "json");
 		}
 		
+		function putTotals(data)
+		{
+			$("#artTotal").html(data[0]);
+			$("#albTotal").html(data[1]);
+			$("#sngTotal").html(data[2]);
+		}
+		
+		$(document).ready(function(){
+			postData = "a=gett&SID=" + SID;
+			$.post("./ls.php", postData, putTotals, "json");
+		});
+		
 		<?php 
 			if ($p == "main")
 			{
@@ -165,7 +176,11 @@
 	</script>
 </head>
 <body>
-  <div class="page_margins">  	
+  <div class="page_margins">
+  	<div id="border-top">
+      <div id="edge-tl"></div>
+      <div id="edge-tr"></div>
+    </div>
     <div class="page">
       <div id="header">    	
 		<img alt="newMusicServer logo" src="logo.jpg" />
@@ -175,17 +190,27 @@
 
 				echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v{$version}</h1>\n";	
 			?>
-			<h2><em>"Because music is important"</em></h2>			
+			<h2><em>"Because music is important"</em></h2>
+			<br />
+			<p class="title">Artists: <span id="artTotal"></span>,&nbsp;
+			Albums:  <span id="albTotal"></span>,&nbsp;
+			Songs:  <span id="sngTotal"></span></p>
 		</div>	
       </div>
+
 		<?php 
 			include("{$p}.php");
 		?>
+
       <!-- begin: #footer -->
       <div id="footer">
       	<a href="http://www.gnu.org/licenses/gpl.html">(L)</a> 2009 SCTree | <a href="./src.php">Get the code</a> | Layout based on <a href="http://www.yaml.de/">YAML</a>
       </div>
     </div>
+    <div id="border-bottom">
+      <div id="edge-bl"></div>
+      <div id="edge-br"></div>
+    </div>	
   </div>
 </body>
 </html>

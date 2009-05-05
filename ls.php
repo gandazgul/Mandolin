@@ -92,47 +92,64 @@ function search()
 	$dbh = new PDO("sqlite:./db/music.db");
 	$resultArr = array();
 	$queryArr = array();
-
-	//artists ------------------------------------------------------------------------------------------------------------	
-	$query = $dbh->query("SELECT art_id,  art_name  FROM artists WHERE `art_name`  LIKE '$queryStr%'");
-	$queryArr = $query->fetchAll();
-	if (count($queryArr) != 0)
-	{
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$resultArr["art"][] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-		}
-	}
-	else
-		$resultArr["art"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""));
 	
-	//Album ------------------------------------------------------------------------------------------------------------	
-	$query = $dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '$queryStr%'");
-	$queryArr = $query->fetchAll();
-	if (count($queryArr) != 0)
-	{
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$resultArr["alb"][] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
-		}
-	}
-	else
-		$resultArr["alb"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""));
-
-	//Song ------------------------------------------------------------------------------------------------------------	
-	$query = $dbh->query("SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '$queryStr%'");
-	$queryArr = $query->fetchAll();
-	if (count($queryArr) != 0)
-	{
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$resultArr["sng"][] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => utf8_encode($queryArr[$i]["song_comments"]));
-		}		
-	}
-	else
-		$resultArr["sng"][] = array("id" => utf8_encode(""), "name" => utf8_encode(""), "comm" => utf8_encode(""));
+	$queries = array();
+	$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '$queryStr%'";
+	$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '$queryStr%'";
+	$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '$queryStr%'";
+	$sections = array();
+	$sections[] = "art";
+	$sections[] = "alb";
+	$sections[] = "sng";
+	$attributes = array();
+	$attributes[] = "id";
+	$attributes[] = "name";
+	$attributes[] = "comm";
 	
+	for ($i = 0; $i < 3; $i++)//go thru the 3 queries and sections
+	{
+		$query = $dbh->query($queries[$i]);
+		$queryArr = $query->fetchAll();		
+		$section = $sections[$i];
+		
+		if (count($queryArr) != 0)// if we found something
+		{
+			for ($j = 0; $j < count($queryArr); $j++)//go thru all the results
+			{
+				for ($k = 0; $k < count($queryArr[$j]) / 2; $k++)//go thru all the attributes in each result
+				{
+					$resultArr[$section][][$attributes[$k]] = utf8_encode($queryArr[$j][$k]);
+				}
+			}
+		}
+		else
+			$resultArr[$section] = array();
+	}
+
 	//print_r($resultArr);
+	echo json_encode($resultArr);
+	
+	$dbh = null;
+}
+
+function gett()
+{
+	$dbh = new PDO("sqlite:./db/music.db");
+	
+	$resultArr = array();
+	
+	$query = $dbh->query("SELECT COUNT(art_id) FROM artists");
+	$queryArr = $query->fetchAll();
+	$resultArr[] = $queryArr[0][0];
+
+	$query = $dbh->query("SELECT COUNT(alb_id) FROM albums");
+	$queryArr = $query->fetchAll();
+	$resultArr[] = $queryArr[0][0];
+	
+	$query = $dbh->query("SELECT COUNT(song_id) FROM music");
+	$queryArr = $query->fetchAll();
+	$resultArr[] = $queryArr[0][0];
+	
 	echo json_encode($resultArr);
 	
 	$dbh = null;
