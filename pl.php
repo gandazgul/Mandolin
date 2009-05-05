@@ -20,13 +20,13 @@
 	  <div class="c33l">
 	    <div class="subcl">
 			<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
-			<select id="plList" size="20" style="width: 240px; " onchange="plOnChange(this)" multiple="multiple"></select>		
+			<select id="plList" size="20" style="width: 240px; " onchange="_plOnChange(this)" multiple="multiple"></select>		
 	    </div>
 	  </div>
 	  <div class="c33l">
 	    <div class="subl">
 			<p class="title">List content:&nbsp;<span id="listName"></span></p>
-			<select id="artList" size="20" style="width: 240px; " onchange="_plContOnChange(this)" multiple="multiple"></select>			 
+			<select id="plContents" size="20" style="width: 240px; " multiple="multiple"></select>			 
 	    </div>
 	  </div>
 	  <div class="c33l">

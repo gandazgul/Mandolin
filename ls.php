@@ -161,17 +161,47 @@ function saved()//returns the list of playlists
 	$resultArr = array();
 	$dbh = new PDO("sqlite:./db/users.db");
 
-	$query = $dbh->query("SELECT pl_name, pl_contents FROM playlists WHERE `pl_user_name`='$userName'");
+	$query = $dbh->query("SELECT pl_name FROM playlists WHERE `pl_user_name`='$userName'");
 	$queryArr = $query->fetchAll();
 	
 	for($i = 0; $i < count($queryArr); $i++)
 	{
-		$resultArr[] = array("name" => $queryArr[$i]["pl_name"], "cont" => $queryArr[$i]["pl_contents"]);
+		$resultArr[] = $queryArr[$i]["pl_name"];
 	}
 	
 	echo json_encode($resultArr);
 	
 	$dbh = null;
+}
+
+function retrPL() //this function retreives the contents of the specified playlist
+{
+	$userName = $_REQUEST["un"];
+	$plName = $_REQUEST["pl"];
+	$resultArr = array();
+	
+	$userDBH = new PDO("sqlite:./db/users.db");
+	$musicDBH = new PDO("sqlite:./db/music.db");
+			
+	$plName = strtok($plName, "|");
+	while($plName !== false)
+	{
+		$query = $userDBH->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='$userName' AND `pl_name`='$plName'");
+		$queryArr = $query->fetchAll();
+		$sng_id = strtok($queryArr[0]["pl_contents"], "|");
+		while($sng_id !== false)
+		{
+			$query = $musicDBH->query("SELECT song_name FROM music WHERE `song_id`='$sng_id'");
+			$queryArr = $query->fetchAll();
+			$resultArr[] = array("id" => $sng_id, "name" => $queryArr[0]["song_name"]);
+			$sng_id = strtok("|");
+		}
+		$plName = strtok("|");
+	}
+	$musicDBH = null;
+	$userDBH = null;
+	
+	echo json_encode($resultArr);
 }
 
 //-----------------------------
@@ -293,28 +323,6 @@ function ren()//rename a saved playlist
 	$dbh = null;
 	
 	saved();
-}
-
-function retrPL() //this function retreives the contents of the specified playlist
-{
-	global $userName, $action;
-	
-	$name = $_GET["name"];
-	$dbh = new PDO("sqlite:./db/users.db");
-	$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='$userName' AND `pl_name`='$name'");
-	$queryArr = $query->fetchAll();
-	$dbh = null;
-	$listArr = array();
-	$tok = strtok($queryArr[0][0], "|");
-	$dbh = new PDO("sqlite:./db/music.db");
-	while($tok !== false)
-	{
-		$query = $dbh->query("SELECT song_name FROM music WHERE `song_id`='$tok'");
-		$queryArr = $query->fetchAll();
-		echo "<option value=\"$tok\">".$queryArr[0][0]."</option>";
-		$tok = strtok("|");
-	}
-	$dbh = null;
 }//TODO: make 1 database instead of 2
 
 function updPL()//update pl

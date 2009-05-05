@@ -91,17 +91,22 @@
 			return txt;
 		}
 		
-		function plOnChange()
+		function plOnChange(plContArr)
 		{
-			$("#sngComm").val("");
-			$("#sngID").html("");
-			data = eval('('+ sng_value +')');
-			//alert(data[1]);
-			if (data[1] != null) 
+			$("#plContents")[0].options.length = 0;
+
+			for (i = 0; i < plContArr.length; i++)
 			{
-				$("#sngComm").val(data[1]);
+				$("#plContents").append("<option value='"+ plContArr[i].id +"'>"+ plContArr[i].name +"</option>");	
 			}
-			$("#sngID").append(data[0]);
+		}
+		
+		function _plOnChange(objSelect)
+		{
+			pl_name = getOptions(objSelect);
+			//alert(pl_name);
+			postData = "a=retrPL&un=<?php echo $_SESSION["username"]; ?>&pl=" + pl_name + "&SID=" + SID;
+			$.post("./ls.php", postData, plOnChange, "json");
 		}
 		
 		function sngOnChange(sng_value)
@@ -172,7 +177,7 @@
 			$("#plList")[0].options.length = 0;
 			for (i = 0; i < savedPLArr.length; i++)
 			{
-				$("#plList").append("<option value='"+ savedPLArr[i].cont +"'>"+ savedPLArr[i].name +"</option>");	
+				$("#plList").append("<option>" + savedPLArr[i] + "</option>");	
 			}
 		}
 		
