@@ -56,13 +56,12 @@
 		<span id="sngID" style="display: none;"></span>
 		<input type="text" id="sngComm" size="36" />&nbsp;<input type="button" onclick="setComm()" value="Save new note" />
 		<br /><br />
-		<h6 class="vlist">H6 Heading</h6>
+		<h6 class="vlist">Current Song Selection</h6>
 		<ul class="vlist">
-		  <li>List Item 1</li>
-		  <li>List Item 2</li>
-		  <li>List Item 3</li>
-		  <li>List Item 4</li>
-		  <li>List Item 5</li>
+		  <li>Play Selected</li>
+		  <li>Play random</li>
+		  <li>Make a new playlist</li>
+		  <li>Add to a playlist</li>
 		</ul>
 	  </div>
 	  <!-- IE Column Clearing -->

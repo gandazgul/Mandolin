@@ -93,7 +93,6 @@
 		
 		function sngOnChange(sng_value)
 		{
-			$("#commDialog").dialog('close');
 			$("#sngComm").val("");
 			$("#sngID").html("");
 			data = eval('('+ sng_value +')');
