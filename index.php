@@ -190,10 +190,6 @@
 				echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v{$version}</h1>\n";	
 			?>
 			<h2><em>"Because music is important"</em></h2>
-			<br />
-			<p class="title">Artists: <span id="artTotal"></span>,&nbsp;
-			Albums:  <span id="albTotal"></span>,&nbsp;
-			Songs:  <span id="sngTotal"></span></p>
 		</div>	
       </div>
 

@@ -118,7 +118,7 @@ function search()
 			{
 				for ($k = 0; $k < count($queryArr[$j]) / 2; $k++)//go thru all the attributes in each result
 				{
-					$resultArr[$section][][$attributes[$k]] = utf8_encode($queryArr[$j][$k]);
+					$resultArr[$section][$j][$attributes[$k]] = utf8_encode($queryArr[$j][$k]);
 				}
 			}
 		}

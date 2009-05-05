@@ -3,8 +3,6 @@
 		header("Location: ./index.php");
 ?>
 
-
-
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -31,19 +29,19 @@
 	    <div class="subcolumns">
 	      <div class="c33l">
 	        <div class="subcl">
-				<p class="title">Artists</p>
+				<p class="title">Artists:&nbsp;<span id="artTotal"></span></p>
 				<select id="artList" size="20" style="width: 240px; " onchange="_artOnChange(this)" multiple="multiple"></select>			 
 	        </div>
 	      </div>
 	      <div class="c33l">
 	        <div class="subc">
-				<p class="title">Albums</p>
+				<p class="title">Albums:&nbsp;<span id="albTotal"></span></p>
 				<select id="albList" size="20" style="width: 240px; " onchange="_albOnChange(this)" multiple="multiple"></select>
 	        </div>
 	      </div>
 	      <div class="c33r">
 	        <div class="subcr">
-				<p class="title">Songs</p>
+				<p class="title">Songs:&nbsp;<span id="sngTotal"></span></p>
 				<select id="songList" size="20" style="width: 240px; " onchange="sngOnChange(this.value)" multiple="multiple"></select>
 	        </div>
 	      </div>
@@ -52,17 +50,20 @@
 	</div>
 	<div id="col3">
 	  <div id="col3_content" class="clearfix">
-		<p>This is a note left by another user for the selected song, you can change it here</p>
-		<span id="sngID" style="display: none;"></span>
-		<input type="text" id="sngComm" size="36" />&nbsp;<input type="button" onclick="setComm()" value="Save new note" />
-		<br /><br />
 		<h6 class="vlist">Current Song Selection</h6>
 		<ul class="vlist">
 		  <li>Play Selected</li>
-		  <li>Play random</li>
+		  <li>Play Selected Randomly</li>
 		  <li>Make a new playlist</li>
 		  <li>Add to a playlist</li>
 		</ul>
+		<br />
+		<p>This is a note left by another user for the selected song, you can change it here</p>
+		<span id="sngID" style="display: none;"></span>
+		<center>
+			<input type="text" id="sngComm" size="36" /><br />
+			<input type="button" onclick="setComm()" value="Save new note" />
+		</center>
 	  </div>
 	  <!-- IE Column Clearing -->
 	  <div id="ie_clearing"> &#160; </div>
