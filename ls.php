@@ -174,28 +174,32 @@ function saved()//returns the list of playlists
 	$dbh = null;
 }
 
-function retrPL() //this function retreives the contents of the specified playlist
+function retrPL() //this function retreives the contents of the specified playlist(s)
 {
 	$userName = $_REQUEST["un"];
-	$plName = $_REQUEST["pl"];
+	$pl = $_REQUEST["pl"];
+	//echo $plName;
 	$resultArr = array();
 	
 	$userDBH = new PDO("sqlite:./db/users.db");
 	$musicDBH = new PDO("sqlite:./db/music.db");
 			
-	$plName = strtok($plName, "|");
+	$plName = strtok($pl, "|");
 	while($plName !== false)
 	{
+		//echo $plName;
 		$query = $userDBH->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='$userName' AND `pl_name`='$plName'");
 		$queryArr = $query->fetchAll();
-		$sng_id = strtok($queryArr[0]["pl_contents"], "|");
-		while($sng_id !== false)
+		$idArr = explode("|", $queryArr[0]["pl_contents"], -1);
+		//print_r($idArr);
+		for ($i = 0; $i < count($idArr); $i++)
 		{
+			$sng_id = $idArr[$i];
 			$query = $musicDBH->query("SELECT song_name FROM music WHERE `song_id`='$sng_id'");
 			$queryArr = $query->fetchAll();
 			$resultArr[] = array("id" => $sng_id, "name" => $queryArr[0]["song_name"]);
-			$sng_id = strtok("|");
 		}
+
 		$plName = strtok("|");
 	}
 	$musicDBH = null;
