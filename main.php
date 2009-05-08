@@ -1,8 +1,10 @@
 <?php
 	if (!isset($sess_id))
+	{
 		header("Location: ./index.php");
+		exit();
+	}
 ?>
-
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -13,10 +15,12 @@
 			<li><a href="./index.php?p=pl">My Playlists</a></li>
 			<li><a href="./index.php?p=adm">Aministration</a></li>
 			<li><a href="./index.php?p=about">About</a></li>
+			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>
 <div id="teaser">
+	<div id="errorDiv"></div>
 	<p>
 		<label for="sQuery"><p class="title">Type in Artist, Album or Song name: 
 		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" /></p></label>
@@ -52,18 +56,24 @@
 	  <div id="col3_content" class="clearfix">
 		<h6 class="vlist">Current Song Selection</h6>
 		<ul class="vlist">
-		  <li>Play Selected</li>
-		  <li>Play Selected Randomly</li>
-		  <li>Make a new playlist</li>
+		  <li><a href="javascript:selPlay()">Play Selected</a></li>
+		  <li><a href="javascript:selRandPlay()">Play Selected Randomly</a></li>
+		  <li><a href="javascript:_makeNewPlaylist()">Make a new playlist</a></li>
 		  <li>Add to a playlist</li>
 		</ul>
-		<br />
-		<p>This is a note left by another user for the selected song, you can change it here</p>
-		<span id="sngID" style="display: none;"></span>
-		<center>
-			<input type="text" id="sngComm" size="36" /><br />
-			<input type="button" onclick="setComm()" value="Save new note" />
-		</center>
+		<form class="yform">
+			<fieldset>
+				<!--legend></legend-->
+				<div class="type-text">
+					<input type="hidden" id="sngID" />
+					<label for="sngComm">This is a note left by another user for the selected song, you can change it here</label>
+					<input type="text" id="sngComm" style="width: auto;" />
+				</div>
+				<div class="type-button">
+					<input type="button" onclick="setComm()" value="Save new note" />
+				</div>
+			</fieldset>
+		</form>
 	  </div>
 	  <!-- IE Column Clearing -->
 	  <div id="ie_clearing"> &#160; </div>

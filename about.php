@@ -1,6 +1,9 @@
 <?php
 	if (!isset($sess_id))
+	{
 		header("Location: ./index.php");
+		exit();
+	}
 ?>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
@@ -11,7 +14,8 @@
 			<li><a href="./index.php?p=main">Search/Browse</a></li>
 			<li><a href="./index.php?p=pl">My Playlists</a></li>
 			<li><a href="./index.php?p=adm">Aministration</a></li>
-			<li class="active"><strong>About</strong></li>			
+			<li class="active"><strong>About</strong></li>	
+			<li><a href="./logout.php">Logout</a></li>					
 		</ul>
 	</div>
 </div>

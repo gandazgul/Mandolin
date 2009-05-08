@@ -22,6 +22,8 @@
 /* import print layout | Druck-Layout einbinden */
 @import url(../yaml/print/print_draft.css);
 
+/*Added by Carlos*/
+@import url(../yaml/screen/forms.css);
 .title {
 	font-family: "Courier New", Courier, monospace;
 	font-weight: bold;

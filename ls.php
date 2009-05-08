@@ -1,10 +1,11 @@
 <?php
-/*/TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
+//TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
 session_name("newMusicServer");
 session_start();
 //print_r($_POST);
-if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
-	header("Location: ./index.php");*/
+/*if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+	header("Location: ./index.php");
+*/
 
 $action = $_REQUEST["a"];
 
@@ -157,7 +158,7 @@ function gett()
 
 function saved()//returns the list of playlists
 {
-	$userName = $_REQUEST["un"];
+	$userName = $_SESSION["username"];
 	$resultArr = array();
 	$dbh = new PDO("sqlite:./db/users.db");
 
@@ -176,9 +177,8 @@ function saved()//returns the list of playlists
 
 function retrPL() //this function retreives the contents of the specified playlist(s)
 {
-	$userName = $_REQUEST["un"];
+	$userName = $_SESSION["username"];
 	$pl = $_REQUEST["pl"];
-	//echo $plName;
 	$resultArr = array();
 	
 	$userDBH = new PDO("sqlite:./db/users.db");
@@ -208,6 +208,60 @@ function retrPL() //this function retreives the contents of the specified playli
 	echo json_encode($resultArr);
 }
 
+function play()//makes a list of the tracks selected in the sng list
+{
+	$sng = $_REQUEST["sng"];
+	$random = $_REQUEST["rnd"];
+	
+	$fset = fopen("./settings", "rt");
+		$musicURL = fgets($fset);
+	fclose($fset);
+	$musicURL = substr($musicURL, strpos($musicURL, "=") + 1, -1);	
+	if (substr($musicURL, -1) != "/")
+		$musicURL .= "/";
+
+	header("Content-type: audio/m3u");
+	header("Content-Disposition: filename=\"playlist.m3u\"");
+	header("Content-Transfer-Encoding: plain");
+	echo "#EXTM3U\n";
+
+	$listContents = "[".str_replace("|", ",", substr($sng, 0, -1))."]";	
+	//echo $listContents;
+	$arr = json_decode($listContents);
+	if($random)	shuffle($arr);
+	$listContents = substr(json_encode($arr), 1, -1);
+	echo $listContents;
+	
+	$dbh = new PDO("sqlite:./db/music.db");
+		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");
+		$queryArr = $query->fetchAll();
+	$dbh = null;
+	
+	for($i = 0; $i < count($queryArr); $i++)
+	{
+		$ext = substr($queryArr[$i][1], strrpos($queryArr[$i][1], "."));
+		$name = substr($queryArr[$i][1], 0, strrpos($queryArr[$i][1], "."));
+		echo "#EXTINF:0,$name\n";
+		echo $musicURL."stream.php?k=".$_SESSION["key"]."&s=".$queryArr[$i][0]."&$ext\n";
+	}
+}
+
+function cpl()//creates a playlist
+{
+	$userName = $_SESSION["username"];
+	
+	$name = $_REQUEST["pl"];
+	$sng = $_REQUEST["sng"];
+	//echo "$name, $sng, $userName";
+	$dbh = new PDO("sqlite:./db/users.db");
+	$query = $dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$name', '$sng', '$userName')");
+	if ($query == 0)
+	  echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());
+	$dbh = null;
+
+	echo "Playlist: \"$name\" was created successfuly, switch to the \"Saved Playlists\" tab to play or edit it.";
+}
+
 //-----------------------------
 
 function delete()//deletes a playlist
@@ -223,22 +277,6 @@ function delete()//deletes a playlist
 	$dbh = null;
 	
 	saved();
-}
-
-function createPL()//creates a playlist
-{
-	global $userName;
-	
-	$name = $_GET["name"];
-	$sng = $_GET["sng"];
-	//echo "$name, $sng, $userName";
-	$dbh = new PDO("sqlite:./db/users.db");
-	$query = $dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$name', '$sng', '$userName')");
-	if ($query == 0)
-	  echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-
-	echo "Playlist: \"$name\" was created successfuly, switch to the \"Saved Playlists\" tab to play or edit it.";
 }
 
 function download()//downloads a saved playlist TODO: make playselected look like this one. TODO: when creating a new PL make sure the name is not in use already
@@ -268,40 +306,6 @@ function download()//downloads a saved playlist TODO: make playselected look lik
 	
 	$listContents = "'".substr(implode("','", explode("|", $queryArr[0][0])), 0, -2);
 	
-	$dbh = new PDO("sqlite:./db/music.db");
-		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");
-		$queryArr = $query->fetchAll();
-	$dbh = null;
-	
-	for($i = 0; $i < count($queryArr); $i++)
-	{
-		$ext = substr($queryArr[$i][1], strrpos($queryArr[$i][1], "."));
-		$name = substr($queryArr[$i][1], 0, strrpos($queryArr[$i][1], "."));
-		echo "#EXTINF:0,$name\n";
-		echo $musicURL."stream.php?k=$cur_key&s=".$queryArr[$i][0]."&$ext\n";
-	}
-}
-
-function play()//makes a list of the tracks selected in the sng list
-{
-	global $cur_key;
-	
-	$sng = $_GET["sng"];
-	
-	$fset = fopen("./settings", "rt");
-		$musicURL = fgets($fset);
-	fclose($fset);
-	$musicURL = substr($musicURL, strpos($musicURL, "=") + 1, -1);	
-	if (substr($musicURL, -1) != "/")
-		$musicURL .= "/";
-
-	header("Content-type: audio/m3u");
-	header("Content-Disposition: filename=\"playlist.m3u\"");
-	header("Content-Transfer-Encoding: plain");
-	echo "#EXTM3U\n";
-
-	$listContents = "'".substr(implode("','", explode("|", $sng)), 0, -2);
-
 	$dbh = new PDO("sqlite:./db/music.db");
 		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");
 		$queryArr = $query->fetchAll();

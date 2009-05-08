@@ -31,12 +31,22 @@
 	<!--script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>
 	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css"-->
 	<script type="text/javascript">
-		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
+		<?php 
+			echo "SID = '".sha1(session_id())."';\n"; 
+		?>
 		
 		function setComm()
 		{
+			comm = $("#sngComm").val();
+			if (comm == "") return;
+			
 			alb_id = getOptions($("#albList")[0]);
-			postData = "a=addc&com=" + $("#sngComm").val() + "&sng=" + $("#sngID").text() + "&alb=" + alb_id + "&SID=" + SID;
+			
+			postData =  "a=addc";
+			postData += "&com=" + comm;
+			postData += "&sng=" + $("#sngID").val();
+			postData += "&alb=" + alb_id;
+			postData += "&SID=" + SID;
 			//alert(postData);
 			$.post("./ls.php", postData, albOnChange, "json");
 		}
@@ -80,13 +90,22 @@
 		function getOptions(objSelect)//get all selected options in a <select> and separate them with |
 		{
 			txt = "";
-			for (i = 0; i < objSelect.length; i++)
+			for (i = 0; i < objSelect.options.length; i++)
 			{
-			  if(objSelect.options[i].selected)
-			  {
-				//alert(encodeURI(obj.options[i].value));
-				txt = txt + escape(objSelect.options[i].value) + "|";
-			  }
+				if(objSelect.options[i].selected)
+				{
+					value = objSelect.options[i].value;
+					c = value.toString().substr(0, 1);
+					
+					if (c == "[")
+					{
+						value = eval(value)[0];
+					}
+					
+					//alert(value);
+					
+					txt = txt + escape(value) + "|";
+				}
 			}
 			return txt;
 		}
@@ -105,7 +124,8 @@
 		{
 			pl_name = getOptions(objSelect);
 			//alert(pl_name);
-			postData = "a=retrPL&un=<?php echo $_SESSION["username"]; ?>&pl=" + pl_name + "&SID=" + SID;
+			postData = "a=retrPL&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&pl=" + pl_name + "&SID=" + SID;
+			//alert(postData);
 			$.post("./ls.php", postData, plOnChange, "json");
 		}
 		
@@ -119,7 +139,7 @@
 			{
 				$("#sngComm").val(data[1]);
 			}
-			$("#sngID").append(data[0]);
+			$("#sngID").val(data[0]);
 		}
 		
 		function albOnChange(sngArr)
@@ -177,13 +197,13 @@
 			$("#plList")[0].options.length = 0;
 			for (i = 0; i < savedPLArr.length; i++)
 			{
-				$("#plList").append("<option>" + savedPLArr[i] + "</option>");	
+				$("#plList").append("<option value='" + savedPLArr[i] + "'>" + savedPLArr[i] + "</option>");	
 			}
 		}
 		
 		function _getSavedPL()
 		{
-			postData = "a=saved&un=<?php echo $_SESSION["username"]?>&SID=" + SID;
+			postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
 			$.post("./ls.php", postData, getSavedPL, "json");
 		}
 		
@@ -192,6 +212,49 @@
 			$("#artTotal").html(data[0]);
 			$("#albTotal").html(data[1]);
 			$("#sngTotal").html(data[2]);
+		}
+		
+		function selRandPlay()
+		{
+			$("#rnd").val("true");
+			selPlay();
+		}
+		
+		function selPlay()
+		{
+			sng = getOptions($("#songList")[0]);
+			
+			if (sng == "") 
+			{
+				alert("The song list is empty, please select an album first.");
+			}
+			else 
+			{
+				$("#sng").val(sng);
+				$("#playForm")[0].submit();
+				$("#rnd").val("false");
+			}
+		}
+		
+		function makeNewPlaylist(data)
+		{
+			$("#errorDiv").addClass("info").text(data);
+		}
+		
+		function _makeNewPlaylist()
+		{
+			sng = getOptions($("#songList")[0]);
+			if (sng == "") 
+			{
+				alert("The song list is empty, please select an album first.");
+				exit();
+			}			
+			plName = prompt("Enter new playlist name: ", "New Playlist");
+			if (plName != null)
+			{
+				postData = "a=cpl&sng=" + sng + "&pl=" + plName + "&SID=" + SID;
+				$.post("./ls.php", postData, makeNewPlaylist);
+			}
 		}
 		
 		$(document).ready(function(){
@@ -216,6 +279,11 @@
 	</script>
 </head>
 <body>
+	<form method="post" action="./ls.php" id="playForm">
+		<input type="hidden" name="a" value="play" />
+		<input type="hidden" name="sng" id="sng" />
+		<input type="hidden" name="rnd" id="rnd" value="false" />
+	</form>
   <div class="page_margins">
   	<div id="border-top">
       <div id="edge-tl"></div>
