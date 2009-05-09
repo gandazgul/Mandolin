@@ -261,28 +261,9 @@ function cpl()//creates a playlist
 	echo "Playlist: \"$name\" was created successfuly, switch to the \"Saved Playlists\" tab to play or edit it.";
 }
 
-//-----------------------------
-
-function delete()//deletes a playlist
+function down()//downloads a saved playlist TODO: make playselected look like this one. TODO: when creating a new PL make sure the name is not in use already
 {
-	global $userName;
-
-	$name = $_GET["pl"];
-	echo $name;
-	$dbh = new PDO("sqlite:./db/users.db");
-	$query = $dbh->exec("DELETE FROM playlists WHERE `pl_name`='$name' AND `pl_user_name`='$userName'");
-	if ($query == 0)
-	  echo "ERROR: Deleting playlist: \"$name\" from user: \"$userName\". Error Info: ".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-	
-	saved();
-}
-
-function download()//downloads a saved playlist TODO: make playselected look like this one. TODO: when creating a new PL make sure the name is not in use already
-{
-	global $userName, $cur_key;
-	
-	$name = $_GET["pl"];
+	$name = $_REQUEST["pl"];
 		
 	$fset = fopen("./settings", "rt");
 		$musicURL = fgets($fset);
@@ -298,7 +279,7 @@ function download()//downloads a saved playlist TODO: make playselected look lik
 	
 	//this part is the only difference with play()
 	$dbh = new PDO("sqlite:./db/users.db");
-		$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='$userName' AND `pl_name`='$name'");
+		$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='".$_SESSION['username']."' AND `pl_name`='$name'");
 		$queryArr = $query->fetchAll();
 	$dbh = null;
 	//this part is the only difference with play()
@@ -315,8 +296,25 @@ function download()//downloads a saved playlist TODO: make playselected look lik
 		$ext = substr($queryArr[$i][1], strrpos($queryArr[$i][1], "."));
 		$name = substr($queryArr[$i][1], 0, strrpos($queryArr[$i][1], "."));
 		echo "#EXTINF:0,$name\n";
-		echo $musicURL."stream.php?k=$cur_key&s=".$queryArr[$i][0]."&$ext\n";
+		echo $musicURL."stream.php?k=".$_SESSION['key']."&s=".$queryArr[$i][0]."&$ext\n";
 	}
+}
+
+//-----------------------------
+
+function delete()//deletes a playlist
+{
+	global $userName;
+
+	$name = $_GET["pl"];
+	echo $name;
+	$dbh = new PDO("sqlite:./db/users.db");
+	$query = $dbh->exec("DELETE FROM playlists WHERE `pl_name`='$name' AND `pl_user_name`='$userName'");
+	if ($query == 0)
+	  echo "ERROR: Deleting playlist: \"$name\" from user: \"$userName\". Error Info: ".implode(" ", $dbh->errorInfo());
+	$dbh = null;
+	
+	saved();
 }
 
 function ren()//rename a saved playlist

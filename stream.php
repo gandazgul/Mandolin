@@ -18,16 +18,26 @@ $queryArr = $query->fetchAll();
 //print_r($queryArr);
 $song_path = $queryArr[0][0];
 $song_name = $queryArr[0][1];
-/*$ext = substr($song_name, strrpos($song_name, ".") + 1);
-echo $ext;
+$ext = substr($song_name, strrpos($song_name, ".") + 1);
+//echo $ext;
 switch ($ext)
 {
-  case "mp3" : header('Content-type: audio/mpeg');
-  break;
-  case "ogg" : header('Content-type: application/ogg');
-  break;
-  case "flac" : header('Content-type: audio/flac');
-}*/
+  case "mp3" : 
+  {
+	header('Content-type: audio/mpeg');
+  	break;
+  }
+  case "ogg" : 
+  {
+	header('Content-type: application/ogg');
+  	break;
+  }
+  case "flac" : 
+  {
+	header('Content-type: audio/flac');
+	break;
+  }
+}
 header("Content-length: ".filesize($song_path) );
 header("Content-Disposition: filename=\"".$song_name."\"");
 header("Content-Transfer-Encoding: binary");
