@@ -10,32 +10,31 @@
 	if (!isset($_SESSION["id"]) or ($_SESSION["id"] != sha1(session_id())))
 	{
 		include("login.php");
+		exit();
 	}
 ?>
 <html>
 	<head>
-		<script type="text/javascript" src="js/lib/jquery-1.3.min.js"></script>
-		<script type="text/javascript">	
-			<?php echo "SID = '".sha1(session_id())."';\n"; ?>
-					
-			function getSavedPL(savedPLArr)
-			{
-				$("#plList").html("");
-				for (i = 0; i < savedPLArr.length; i++)
-				{
-					$("#plList").append("<a href='./ls.php?a=down&pl=" + savedPLArr[i] + "'>" + savedPLArr[i] + "</a><br />");	
-				}
-			}
-			
-			function _getSavedPL()
-			{
-				postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
-				$.post("./ls.php", postData, getSavedPL, "json");
-			}
-		</script>
+		<title>newMusicServer <?php echo $version; ?></title>
 	</head>
-	<body onload="_getSavedPL()">
+	<body>
 		<p>newMusicServer <?php echo $version; ?></p>
-		<div id="plList"></div>
+		<div id="plList">
+			<?php
+				$userName = $_SESSION["username"];
+				$resultArr = array();
+				$dbh = new PDO("sqlite:./db/users.db");
+			
+				$query = $dbh->query("SELECT pl_name FROM playlists WHERE `pl_user_name`='$userName'");
+				$queryArr = $query->fetchAll();
+				
+				for($i = 0; $i < count($queryArr); $i++)
+				{
+					echo "<a href='./ls.php?a=down&pl=".$queryArr[$i]["pl_name"]."'>".$queryArr[$i]["pl_name"]."</a><br />\n";
+				}
+				
+				$dbh = null;
+			?>
+		</div>
 	</body>
 </html>
