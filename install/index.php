@@ -38,9 +38,9 @@ else
 if ($step == 2)
 {	
 	echo "Creating user database...";
-	if ( !(is_dir("./db") || mkdir("./db", 0770)) )
+	if ( !(is_dir("../db") || mkdir("../db", 0770)) )
 		die("<font color=\"red\">FATAL ERROR: Can't create databases directory. Please create a dir inside this one named \"db\" and make it writable; then restart the installation.</font>");
-	fclose(fopen("./db/index.php", "wt"));
+	fclose(fopen("../db/index.php", "wt"));
 	if (file_exists($usersDB))
 		if ( !unlink($usersDB) )
 			die("<font color=\"red\">FATAL ERROR: Can't delete the users database(\"$usersDB\") file. If this is the first installation that file should'nt exist. Please delete it manually.</font>");
@@ -80,10 +80,12 @@ if ($step == 3)
 else
 if ($step == 4)
 {
+	$musicURL =  "http://".$_SERVER['HTTP_HOST'];
+	$musicURL .= substr($_SERVER['PHP_SELF'], 0, -10);
 ?>
 	<form action='./index.php?step=5' method='post'>
 		Please check and correct if necessary the address to the server. This will be used to create playlists and will be kept in the file: "settings" under: "mstURL=";<br /><br />
-		<input name="mstURL" value="<?php echo "http://".$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], "/") + 1); ?>" />
+		<input name="mstURL" value="<?php echo $musicURL; ?>" />
 		<input type='submit' value='Step 5 >' />
 	</form>
 <?php
@@ -91,12 +93,8 @@ if ($step == 4)
 else
 if ($step == 5)
 {
-	if (file_exists($setFile))
-		if(!unlink($setFile))
-			die("<font color=\"red\">FATAL ERROR: Please delete the file: \"settings\"; before continuing. Then reload this page.</font>");
-
 	$fset = fopen($setFile, "wt");
-	fputs($fset, "mstURL=$mstURL\n");
+	fputs($fset, "mstURL={$_POST[mstURL]}\n");
 	fclose($fset);
 ?>
 	<form action='./index.php?step=6' method='post'>
@@ -116,7 +114,7 @@ if ($step == 6)
 	fputs($fset, "musicRoot=$musicRoot\n");
 	fclose($fset);
 	//get the key
-	$dbh = new PDO("sqlite:./db/users.db"); //this code can be merged with the same one on login.php
+	$dbh = new PDO("sqlite:../db/users.db"); //this code can be merged with the same one on login.php
 		$query = $dbh->query("SELECT last_key, user_name FROM users");
 		$queryArr = $query->fetchAll();
 		$_SESSION["key"] = $queryArr[0][0];
@@ -124,9 +122,8 @@ if ($step == 6)
 		$_SESSION["userAdminLevel"] = 0;
 	$dbh = null;
 	//call createDB
-	include("createDB.php");
+	include("../createDB.php");
 
-	fclose(fopen("install.complete", "wt"));
-	echo "Congatulations! Installation is complete. Please proceed to the login page. <a href=\"./index.php\">Login</a>";
+	echo "Congatulations! Installation is complete. Please proceed to the login page. <a href=\"../index.php\">Login</a>";
 }
 ?>

@@ -229,7 +229,7 @@ function play()//makes a list of the tracks selected in the sng list
 	$arr = json_decode($listContents);
 	if($random)	shuffle($arr);
 	$listContents = substr(json_encode($arr), 1, -1);
-	echo $listContents;
+	//echo $listContents;
 	
 	$dbh = new PDO("sqlite:./db/music.db");
 		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");

@@ -122,7 +122,7 @@
 	</td>
   </tr>
   <tr>
-    <td>some dir</td>
+    <td>Database directory (./db)</td>
     <td>
 		<?php
 			// Now let's check all the directories
@@ -146,7 +146,7 @@
 			if ($error)
 			{
 				$fatal = true;
-				echo '<font color="red">FATAL ERROR: some dir is not writable</font>';
+				echo '<font color="red">FATAL ERROR: the database directory is not writable</font>';
 				echo '<br>';
 			} 
 			else 

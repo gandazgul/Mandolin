@@ -1,16 +1,8 @@
 <?php
-include("header.php");
-if ($_SESSION["userAdminLevel"] != 0)
-{
-	setcookie("SCTm", "You are not allowed to recreate the database."); //if you think this is an error contact Carlos he is the only one who can :P
-	header("Location: ./index.php");
-	die();
-}
-
 ini_set('max_execution_time', '6000');
 
-@unlink("./db/music.db");
-$dbh = new PDO("sqlite:./db/music.db");
+@unlink("../db/music.db");
+$dbh = new PDO("sqlite:../db/music.db");
 //-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------
 $result = $dbh->exec("CREATE TABLE artists (
   art_id    integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -163,7 +155,7 @@ $artCount = 0;
 $albCount = 0;
 $sngCount = 0;
 
-$fset = fopen("./settings", "rt");
+$fset = fopen("../settings", "rt");
 fgets($fset);//musicURL
 $root = fgets($fset);
 $root = substr($root, strpos($root, "=") + 1, -1);
