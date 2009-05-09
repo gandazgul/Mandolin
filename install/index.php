@@ -1,12 +1,12 @@
 <?php
 //VERSION
-$fver = fopen("./version", "rt");
+$fver = fopen("../version", "rt");
 $version = fgets($fver);
 fclose($fver);
 //VERSION END
 
-$usersDB = "./db/users.db";//sqlite
-$setFile = "./settings";
+$usersDB = "../db/users.db";//sqlite
+$setFile = "../settings";
 
 $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 ?>
@@ -26,7 +26,7 @@ $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 		}
 	</script>
 	<div style="float: top" align="center">
-		Thanks for downloading SCTree MStServer v<?php echo $version ?><br />
+		Thanks for downloading SCTree newMusicServer v<?php echo $version ?><br />
 		Installation - Step <?php echo $step; ?>
 	</div><br />
 <?php
