@@ -1,4 +1,10 @@
 <?php
+if (!isset($sess_id))
+{
+	header("Location: ./index.php");
+	exit();
+}
+
 ini_set('max_execution_time', '6000');
 
 @unlink("../db/music.db");
