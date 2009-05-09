@@ -38,10 +38,10 @@
 			<h6 class="vlist">Current Playlist Selection</h6>
 			<ul class="vlist">
 			  <li>Play Selected</li>
+  			  <li>Play Selected Randomly</li>
   			  <li>Play Each Randomly</li>
-			  <li>Play Selected Randomly</li>
 			  <li>Delete Playlist</li>
-			  <li>Randomize Playlist</li>			  
+			  <li>Shuffle Playlist</li>			  
 			</ul>
 			<h6 class="vlist">Current Song Selection</h6>
 			<ul class="vlist">

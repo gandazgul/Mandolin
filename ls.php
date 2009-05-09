@@ -133,23 +133,22 @@ function search()
 	$dbh = null;
 }
 
-function gett()
+function gett()//returns total artists, albums and songs
 {
 	$dbh = new PDO("sqlite:./db/music.db");
+	$queries = array();
+	$queries[] = "SELECT COUNT(art_id) FROM artists";
+	$queries[] = "SELECT COUNT(alb_id) FROM albums";
+	$queries[] = "SELECT COUNT(song_id) FROM music";
 	
 	$resultArr = array();
 	
-	$query = $dbh->query("SELECT COUNT(art_id) FROM artists");
-	$queryArr = $query->fetchAll();
-	$resultArr[] = $queryArr[0][0];
-
-	$query = $dbh->query("SELECT COUNT(alb_id) FROM albums");
-	$queryArr = $query->fetchAll();
-	$resultArr[] = $queryArr[0][0];
-	
-	$query = $dbh->query("SELECT COUNT(song_id) FROM music");
-	$queryArr = $query->fetchAll();
-	$resultArr[] = $queryArr[0][0];
+	for ($i = 0; $i < 3; $i++)
+	{
+		$query = $dbh->query($queries[$i]);
+		$queryArr = $query->fetchAll();
+		$resultArr[] = $queryArr[0][0];		
+	}
 	
 	echo json_encode($resultArr);
 	

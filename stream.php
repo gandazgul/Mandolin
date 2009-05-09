@@ -10,7 +10,7 @@ $dbh = null;
 
 if ($last_key_date == "") die("The key is invalid");
 if ((time() - $last_key_date) > 604800) die("The key is old");
-if ($song_id == "")	die("No Song? I dont read minds :P");
+if ($song_id == "")	die("No Song ID? I dont read minds :P");
 
 $dbh = new PDO("sqlite:./db/music.db");
 $query = $dbh->query("SELECT song_path, song_name FROM music WHERE `song_id`='$song_id'");
