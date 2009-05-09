@@ -16,6 +16,7 @@
 	    $last_key = $queryArr[0][1]; //last key stored
 	    $last_key_date = $queryArr[0][2]; //last key date
 	    //print_r($queryArr);
+		//echo sha1($passw);
 	    if ($t_passw == sha1($passw))//if the passwords match
 	    {
 	    	//echo "<br/>last key date: $last_key_date<br/>";

@@ -29,9 +29,9 @@ END;
 
 CREATE TABLE users (
   user_name         varchar(15) PRIMARY KEY NOT NULL UNIQUE,
-  user_password     varchar(32) NOT NULL DEFAULT P455w0rd,
+  user_password     varchar(40) NOT NULL DEFAULT P455w0rd,
   user_settings     varchar(255),
-  last_key          varchar(32),
+  last_key          varchar(40),
   last_key_date     integer,
   user_admin_level  integer NOT NULL DEFAULT 1
 );
