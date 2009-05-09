@@ -272,7 +272,7 @@ function down()//downloads a saved playlist TODO: make playselected look like th
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
 	
-	header("Content-type: audio/m3u");
+	header("Content-type: audio/x-mpegurl");//this mime is understood by blackberry
 	header("Content-Disposition: filename=\"$name.m3u\"");
 	header("Content-Transfer-Encoding: plain");
 	echo "#EXTM3U\n";
