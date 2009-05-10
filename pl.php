@@ -5,6 +5,9 @@
 		exit();
 	}
 ?>
+<script type="text/javascript">
+	<?php include_once("./js/pl.js"); ?>
+</script>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>

@@ -9,7 +9,14 @@ session_start();
 
 $action = $_REQUEST["a"];
 
-$action();//TODO catch possible error with try..catch
+try
+{
+	$action();
+}
+catch(Exception $e)
+{
+	echo $e->getMessage();
+}
 
 function art()
 {
@@ -95,9 +102,9 @@ function search()
 	$queryArr = array();
 	
 	$queries = array();
-	$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '$queryStr%'";
-	$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '$queryStr%'";
-	$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '$queryStr%'";
+	$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '%$queryStr%'";
+	$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '%$queryStr%'";
+	$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '%$queryStr%'";
 	$sections = array();
 	$sections[] = "art";
 	$sections[] = "alb";
