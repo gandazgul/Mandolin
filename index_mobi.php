@@ -30,7 +30,7 @@
 				
 				for($i = 0; $i < count($queryArr); $i++)
 				{
-					echo "<a href='./ls.php?a=down&pl=".$queryArr[$i]["pl_name"]."'>".$queryArr[$i]["pl_name"]."</a><br />\n";
+					echo "<a href='./ls.php?a=play&pl=".$queryArr[$i]["pl_name"]."'>".$queryArr[$i]["pl_name"]."</a><br />\n";
 				}
 				
 				$dbh = null;
