@@ -56,9 +56,8 @@
 			<ul class="vlist">
 				<li><a href="javascript:shuffle()">Shuffle Playlist</a></li>	
 			 	<li><a href="javascript:delFromPl()">Delete from playlist</a></li>
-  			  	<li>Create a new playlist</li>
-			  	<li>Move up</li>
-			  	<li>Move down</li>
+			  	<li><a href="javascript:move(true)">Move up</a></li>
+			  	<li><a href="javascript:move(false)">Move down</a></li>
 			</ul>			
 	    </div>
 	  </div>

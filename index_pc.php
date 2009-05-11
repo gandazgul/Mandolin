@@ -34,8 +34,9 @@
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		
-		function getOptions(objSelect)//get all selected options in a <select> and separate them with |
+		function getSelectedOptions(objSelect)//get all selected options in a <select> and separate them with |
 		{
+			//alert(objSelect.options.length);
 			txt = "";
 			for (i = 0; i < objSelect.options.length; i++)
 			{
@@ -48,9 +49,7 @@
 					{
 						value = eval(value)[0];
 					}
-					
 					//alert(value);
-					
 					txt = txt + escape(value) + "|";
 				}
 			}
@@ -68,7 +67,7 @@
 		function displayError(data)
 		{
 			$("#errorDiv").addClass("info").text(data).effect('slide', {}, 500, hideError);
-		}		
+		}	
 	</script>
 </head>
 <body>

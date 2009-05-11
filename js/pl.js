@@ -6,6 +6,7 @@ $(document).ready(function(){
 function getSavedPL(savedPLArr)
 {
 	$("#plList")[0].options.length = 0;
+	$("#plContents")[0].options.length = 0;
 	for (i = 0; i < savedPLArr.length; i++)
 	{
 		$("#plList").append("<option value='" + savedPLArr[i] + "'>" + savedPLArr[i] + "</option>");	
@@ -15,7 +16,6 @@ function getSavedPL(savedPLArr)
 function plOnChange(plContArr)
 {
 	$("#plContents")[0].options.length = 0;
-
 	for (i = 0; i < plContArr.length; i++)
 	{
 		$("#plContents").append("<option value='"+ plContArr[i].id +"'>"+ plContArr[i].name +"</option>");	
@@ -24,7 +24,7 @@ function plOnChange(plContArr)
 
 function _plOnChange(objSelect)
 {
-	pl_name = getOptions(objSelect);
+	pl_name = getSelectedOptions(objSelect);
 	//alert(pl_name);
 	postData = "a=retrPL&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&pl=" + pl_name + "&SID=" + SID;
 	//alert(postData);
@@ -92,6 +92,17 @@ function shuffle()
 	}
 }
 
+function getOptions(objSelect)//get all selected options in a <select> and separate them with |
+{
+	txt = "";
+	for (i = 0; i < objSelect.options.length; i++)
+	{
+		value = objSelect.options[i].value;
+		txt = txt + escape(value) + "|";
+	}
+	return txt;
+}
+
 function delFromPl()
 {
 	objSelect = $("#plContents")[0];
@@ -101,8 +112,45 @@ function delFromPl()
 		objSelect.options[objSelect.options.selectedIndex] = null;
 	}
 	sng_id = getOptions(objSelect);
+	//alert(sng_id);
 	plSelect = $("#plList")[0];
 	pl_name = plSelect.options[plSelect.selectedIndex].value
 	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id;
 	$.post("./ls.php", postData, displayError);
+}
+
+function move(up)
+{
+	objSelect = $("#plContents")[0];
+	x = objSelect.selectedIndex;
+	if (objSelect.options.selectedIndex == -1) return;
+	if (up)
+	{
+		tmpTxt = objSelect.options[x-1].text;
+		tmpVal = objSelect.options[x-1].value;
+		objSelect.options[x-1].text = objSelect.options[x].text;
+		objSelect.options[x-1].value = objSelect.options[x].value;
+		objSelect.options[x].text = tmpTxt;
+		objSelect.options[x].value = tmpVal;	
+		objSelect.options[x-1].selected = true;
+		objSelect.options[x].selected = false;
+	}
+	else
+	{
+		tmpTxt = objSelect.options[x+1].text;
+		tmpVal = objSelect.options[x+1].value;
+		objSelect.options[x+1].text = objSelect.options[x].text;
+		objSelect.options[x+1].value = objSelect.options[x].value;
+		objSelect.options[x].text = tmpTxt;
+		objSelect.options[x].value = tmpVal;	
+		objSelect.options[x+1].selected = true;
+		objSelect.options[x].selected = false;
+	}
+	
+	sng_id = getOptions(objSelect);
+	//alert(sng_id);
+	plSelect = $("#plList")[0];
+	pl_name = plSelect.options[plSelect.selectedIndex].value
+	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id;
+	$.post("./ls.php", postData);
 }

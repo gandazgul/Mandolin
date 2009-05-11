@@ -1,7 +1,7 @@
 function setComm()
 {
 	comm = $("#sngComm").val();
-	alb_id = getOptions($("#albList")[0]);
+	alb_id = getSelectedOptions($("#albList")[0]);
 	
 	postData =  "a=addc";
 	postData += "&com=" + comm;
@@ -72,7 +72,7 @@ function albOnChange(sngArr)
 
 function _albOnChange(objSelect)
 {
-	alb_id = getOptions(objSelect);
+	alb_id = getSelectedOptions(objSelect);
 	postData = "a=sng&alb=" + alb_id + "&SID=" + SID;
 	$.post("./ls.php", postData, albOnChange, "json");
 }
@@ -90,7 +90,7 @@ function artOnChange(albArr)
 
 function _artOnChange(objSelect)
 {
-	art_id = getOptions(objSelect);
+	art_id = getSelectedOptions(objSelect);
 	postData = "a=alb&artist=" + art_id + "&SID=" + SID;
 	//alert(postData);
 	$.post("./ls.php", postData, artOnChange, "json");
@@ -126,7 +126,7 @@ function selRandPlay()
 
 function selPlay()
 {
-	sng = getOptions($("#songList")[0]);
+	sng = getSelectedOptions($("#songList")[0]);
 	
 	if (sng == "") 
 	{
@@ -140,15 +140,20 @@ function selPlay()
 	}
 }
 
+function trim(str) 
+{
+	return str.replace(/^\s+|\s+$/g,"");
+}
+
 function createPlaylist()
 {
-	sng = getOptions($("#songList")[0]);
+	sng = getSelectedOptions($("#songList")[0]);
 	if (sng == "") 
 	{
 		alert("The song list is empty, please select an album first.");
 		exit();
 	}			
-	plName = prompt("Enter new playlist name: ", "New Playlist");
+	plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
 	if (plName != null)
 	{
 		postData = "a=cpl&sng=" + sng + "&pl=" + plName + "&SID=" + SID;
@@ -191,7 +196,7 @@ $(document).ready(function(){
 			'Add to playlist': function() 
 			{
 				pl_name = $("#tmpPlList").val();
-				postData = "a=adds&name=" + pl_name + "&pl=" + getOptions($("#songList")[0]) + "&SID=" + SID;
+				postData = "a=adds&name=" + pl_name + "&pl=" + getSelectedOptions($("#songList")[0]) + "&SID=" + SID;
 				$.post("./ls.php", postData, displayError);
 				$(this).dialog('close');
 			},
