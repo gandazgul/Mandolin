@@ -8,6 +8,8 @@ fclose($fver);
 $usersDB = "../db/users.db";//sqlite
 $setFile = "../settings";
 
+$sess_id = "to fool createDB";
+
 $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 ?>
 	<script language="javascript" type="text/javascript">

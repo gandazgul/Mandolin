@@ -46,23 +46,28 @@
 	    }
 		header("Location: ./index.php?passw=false");
 	}
-?>
-<div id="main">
-	<form action="./login.php" method="post" class="yform">
-		<fieldset>
-			<legend>Please login</legend>
-			<div class="type-text">
-				<?php if(isset($_GET["passw"])):?>
-					<strong class="message">ERROR: Incorrect Username and/or Password</strong>
-				<?php endif; ?>
-				<label for="username">Username:</label>
-				<input type="text" size="20" name="username" id="username" />
-				<label for="passw">Password:</label>
-				<input type="password" size="20" name="passw" id="passw" />
-			</div>
-			<div class="type-button">
-				<input type="submit" value="Login" />
-			</div>
-		</fieldset>
-	</form>
-</div>
+	else
+	if (!is_dir("./install")): //delete the ! before publishing?>
+		<p style="margin-top: 10px" class="title">If this is the first time you access newMusicServer, then <a href="./install/index.php">click here to install</a>. 
+		If you already completed the installation then, delete the "install" directory before trying to login.</p>
+	<?php else: ?>
+		<div id="main">
+			<form action="./login.php" method="post" class="yform">
+				<fieldset>
+					<legend>Please login</legend>
+					<div class="type-text">
+						<?php if(isset($_GET["passw"])):?>
+							<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+						<?php endif; ?>
+						<label for="username">Username:</label>
+						<input type="text" size="20" name="username" id="username" />
+						<label for="passw">Password:</label>
+						<input type="password" size="20" name="passw" id="passw" />
+					</div>
+					<div class="type-button">
+						<input type="submit" value="Login" />
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	<?php endif; ?>

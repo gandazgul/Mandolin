@@ -93,31 +93,33 @@
 			// Now let's check to see if things are writeable
 			$file = "../settings";
 			$error = true;
-			if (!is_file($file))
+			if (file_exists($file) and is_file($file))
 			{
-				if (@touch($file))
+				for ($i = 0; $i < 2; $i++)
 				{
-					unlink($file);
-					$error = false;
+					if (!is_writable($file))
+					{
+						@chmod($file, 660);
+					}
+					else
+					{
+						$error = false;
+						break;						
+					}
 				}
-			} 
-			else 
+				if ($error)
+					echo "<font color='red'>Settings file not writable! Please make sure the file \"settings\" can be written 
+					 by the webserver but, only during the installation. When the installation ends it should be back to normal permissions.</font><br>";
+			}
+			else
 			{
-				if (is_writable($file))
-				{
+				if(fclose(fopen("settings")) === true)
 					$error = false;
-				}
+				else
+					echo "<font color='red'>Settings file does not exist and I cant create it. Please create an empty file called \"settings\".</font><br>";
 			}
-			if ($error)
-			{
-				echo '<font color="red">Settings file not writable!</font>';
-				//there should be an explanation of what to do and how to do it
-				echo '<br>';
-			}
-			else 
-			{
+			if (!$error)
 				echo '<font color="green">Writable!</font><br>';
-			}
 		?>	
 	</td>
   </tr>

@@ -25,7 +25,7 @@
 ../createDB.php
 ../install/users.db.sql
 ../js/minmax.js
-../js/lib/jquery-1.3.min.js
+../js/lib/jquery-1.3.2.min.js
 ../yaml/central_draft.css
 ../yaml/markup_draft.html
 ../yaml/add-ons/microformats/microformats.css
