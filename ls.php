@@ -216,8 +216,7 @@ function retrPL() //this function retreives the contents of the specified playli
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	$sng = $_REQUEST["sng"];
-	$random = $_REQUEST["rnd"];
+	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
 	
 	$fset = fopen("./settings", "rt");
 		$musicURL = fgets($fset);
@@ -226,103 +225,135 @@ function play()//makes a list of the tracks selected in the sng list
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
 
-	header("Content-type: audio/m3u");
-	header("Content-Disposition: filename=\"playlist.m3u\"");
+	header("Content-type: audio/x-mpegurl");//this mime is understood by blackberry
+	header("Content-Disposition: filename=\"$name.m3u\"");
 	header("Content-Transfer-Encoding: plain");
 	echo "#EXTM3U\n";
 
+	if (isset($_REQUEST["sng"]))
+	{
+		$sng = $_REQUEST["sng"];
+	}
+	else
+	{
+		$dbh = new PDO("sqlite:./db/users.db");
+		$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='".$_SESSION['username']."' AND `pl_name`='$name'");
+		$queryArr = $query->fetchAll();
+		$dbh = null;
+		$sng = $queryArr[0][0];
+		//echo $sng;
+	}
+	
 	$listContents = "[".str_replace("|", ",", substr($sng, 0, -1))."]";	
+	
 	//echo $listContents;
 	$arr = json_decode($listContents);
-	if($random)	shuffle($arr);
-	$listContents = substr(json_encode($arr), 1, -1);
+	if($_REQUEST["rnd"] == "true") shuffle($arr);
+	//$listContents = substr(json_encode($arr), 1, -1);
 	//echo $listContents;
 	
 	$dbh = new PDO("sqlite:./db/music.db");
-		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");
-		$queryArr = $query->fetchAll();
-	$dbh = null;
-	
-	for($i = 0; $i < count($queryArr); $i++)
+	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=:sng_id");
+	for ($i = 0; $i < count($arr); $i++)
 	{
-		$ext = substr($queryArr[$i][1], strrpos($queryArr[$i][1], "."));
-		$name = substr($queryArr[$i][1], 0, strrpos($queryArr[$i][1], "."));
+		$query->execute(array(':sng_id' => $arr[$i]));
+		$queryArr = $query->fetchAll();
+		$song_name = $queryArr[0][1];
+		$song_id = $queryArr[0][0];
+		$ext = substr($song_name, strrpos($song_name, "."));
+		$name = substr($song_name, 0, strrpos($song_name, "."));
 		echo "#EXTINF:0,$name\n";
-		echo $musicURL."stream.php?k=".$_SESSION["key"]."&s=".$queryArr[$i][0]."&$ext\n";
+		echo $musicURL."stream.php?k=".$_SESSION["key"]."&s=$song_id&$ext\n";		
 	}
+	$dbh = null;
 }
 
 function cpl()//creates a playlist
 {
 	$userName = $_SESSION["username"];
-	
 	$name = $_REQUEST["pl"];
 	$sng = $_REQUEST["sng"];
 	//echo "$name, $sng, $userName";
 	$dbh = new PDO("sqlite:./db/users.db");
 	$query = $dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$name', '$sng', '$userName')");
 	if ($query == 0)
-	  echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());
+	{
+		//echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());		
+		$errorArr = $dbh->errorInfo();
+		echo "ERROR: Creating the playlist \"$name\": ".$errorArr[2];
+		return;
+	}
 	$dbh = null;
 
-	echo "Playlist: \"$name\" was created successfuly, switch to the \"Saved Playlists\" tab to play or edit it.";
+	echo "Playlist: \"$name\" was created successfuly, switch to the \"My Playlists\" tab to play or edit it.";
 }
 
-function down()//downloads a saved playlist TODO: make playselected look like this one. TODO: when creating a new PL make sure the name is not in use already
+function adds()
 {
-	$name = $_REQUEST["pl"];
-		
-	$fset = fopen("./settings", "rt");
-		$musicURL = fgets($fset);
-	fclose($fset);
-	$musicURL = substr($musicURL, strpos($musicURL, "=") + 1, -1);	
-	if (substr($musicURL, -1) != "/")
-		$musicURL .= "/";
+	$name = $_REQUEST["name"];
+	$plCont = $_REQUEST["pl"];
 	
-	header("Content-type: audio/x-mpegurl");//this mime is understood by blackberry
-	header("Content-Disposition: filename=\"$name.m3u\"");
-	header("Content-Transfer-Encoding: plain");
-	echo "#EXTM3U\n";
-	
-	//this part is the only difference with play()
 	$dbh = new PDO("sqlite:./db/users.db");
 		$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='".$_SESSION['username']."' AND `pl_name`='$name'");
 		$queryArr = $query->fetchAll();
 	$dbh = null;
-	//this part is the only difference with play()
 	
-	$listContents = "'".substr(implode("','", explode("|", $queryArr[0][0])), 0, -2);
+	$plCont = $queryArr[0][0].$plCont;
+	//echo $plCont;
 	
-	$dbh = new PDO("sqlite:./db/music.db");
-		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_id` in($listContents)");
-		$queryArr = $query->fetchAll();
-	$dbh = null;
-	
-	for($i = 0; $i < count($queryArr); $i++)
-	{
-		$ext = substr($queryArr[$i][1], strrpos($queryArr[$i][1], "."));
-		$name = substr($queryArr[$i][1], 0, strrpos($queryArr[$i][1], "."));
-		echo "#EXTINF:0,$name\n";
-		echo $musicURL."stream.php?k=".$_SESSION['key']."&s=".$queryArr[$i][0]."&$ext\n";
-	}
+	updPL($name, $plCont);
 }
 
-//-----------------------------
-
-function delete()//deletes a playlist
+function updPL($name = "", $newCont = "")//update pl
 {
-	global $userName;
+	$name = ($name == "") ? $_REQUEST["name"] : $name;
+	$newCont = ($newCont == "") ? $_REQUEST["newC"] : $newCont;
+	
+	$dbh = new PDO("sqlite:./db/users.db");
+	$query = $dbh->exec("UPDATE playlists SET `pl_contents`='$newCont' WHERE `pl_name`='$name'");
+	if ($query == 0)
+		echo "ERROR: Updating \"$name\": ".implode(" ", $dbh->errorInfo());
+	$dbh = null;
+	echo "List content updated successfully";	
+}
 
-	$name = $_GET["pl"];
-	echo $name;
+function del()//deletes a playlist
+{
+	$userName = $_SESSION["username"];
+	$name = $_REQUEST["pl"];
+	//echo $name;
+	
 	$dbh = new PDO("sqlite:./db/users.db");
 	$query = $dbh->exec("DELETE FROM playlists WHERE `pl_name`='$name' AND `pl_user_name`='$userName'");
 	if ($query == 0)
-	  echo "ERROR: Deleting playlist: \"$name\" from user: \"$userName\". Error Info: ".implode(" ", $dbh->errorInfo());
+	{
+		$errorArr = $dbh->errorInfo();
+		echo "ERROR: Deleting playlist \"$name\": ".$errorArr[2];
+	}
 	$dbh = null;
 	
 	saved();
 }
+
+function shuf()
+{
+	$name = $_REQUEST['pl'];
+	
+	$dbh = new PDO("sqlite:./db/users.db");
+		$query = $dbh->query("SELECT pl_contents FROM playlists WHERE `pl_user_name`='{$_SESSION['username']}' AND `pl_name`='$name'");
+		$queryArr = $query->fetchAll();
+	$dbh = null;
+	
+	$listContents = "[".str_replace("|", ",", substr($queryArr[0][0], 0, -1))."]";
+	$arr = json_decode($listContents);
+	shuffle($arr);
+	$listContents = str_replace(",", "|", substr(json_encode($arr), 1, -1));
+	
+	updPL($name, $listContents.'|');
+	ob_clean();
+	retrPL();
+}
+//-----------------------------
 
 function ren()//rename a saved playlist
 {
@@ -336,16 +367,4 @@ function ren()//rename a saved playlist
 	
 	saved();
 }//TODO: make 1 database instead of 2
-
-function updPL()//update pl
-{
-	$name = $_GET["name"];
-	$newCont = $_GET["newC"];
-	$dbh = new PDO("sqlite:./db/users.db");
-	$query = $dbh->exec("UPDATE playlists SET `pl_contents`='$newCont' WHERE `pl_name`='$name'");
-	if ($query == 0)
-	  echo "ERROR: Updating playlist entry: \"$name\" to change its contents to: \"$newCont\". Error Info: ".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-	echo "Saved";
-}
 ?>
