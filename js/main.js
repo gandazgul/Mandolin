@@ -140,12 +140,7 @@ function selPlay()
 	}
 }
 
-function makeNewPlaylist(data)
-{
-	$("#errorDiv").addClass("info").text(data);
-}
-
-function _makeNewPlaylist()
+function createPlaylist()
 {
 	sng = getOptions($("#songList")[0]);
 	if (sng == "") 
@@ -157,13 +152,29 @@ function _makeNewPlaylist()
 	if (plName != null)
 	{
 		postData = "a=cpl&sng=" + sng + "&pl=" + plName + "&SID=" + SID;
-		$.post("./ls.php", postData, makeNewPlaylist);
+		$.post("./ls.php", postData, displayError);
 	}
 }
 
-function addToPlaylist()
+function addToPlaylist(plArr)
 {
+	$("#tmpPlList")[0].options.length = 0;
+	for (i = 0; i < plArr.length; i++)
+	{
+		$("#tmpPlList").append("<option value='" + plArr[i] + "'>" + plArr[i] + "</option>");	
+	}
 	$('#dialog').dialog('open');
+}
+
+function _addToPlaylist()
+{
+	if ($("#songList")[0].selectedIndex == -1)
+	{
+		alert("There are no songs selected, please make a selection first.");
+		return;
+	}
+	postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
+	$.post("./ls.php", postData, addToPlaylist, "json");
 }
 
 $(document).ready(function(){
@@ -174,21 +185,20 @@ $(document).ready(function(){
 	$("#dialog").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 300,
+		height: 150,
 		modal: true,
 		buttons: {
 			'Add to playlist': function() 
 			{
+				pl_name = $("#tmpPlList").val();
+				postData = "a=adds&name=" + pl_name + "&pl=" + getOptions($("#songList")[0]) + "&SID=" + SID;
+				$.post("./ls.php", postData, displayError);
 				$(this).dialog('close');
 			},
 			'Cancel': function() 
 			{
 				$(this).dialog('close');
 			}
-		},
-		close: function() 
-		{
-			allFields.removeClass('ui-state-error');
 		}
 	});
 });

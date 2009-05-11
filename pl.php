@@ -8,6 +8,11 @@
 <script type="text/javascript">
 	<?php include_once("./js/pl.js"); ?>
 </script>
+<form method="post" action="./ls.php" id="downForm">
+	<input type="hidden" name="a" value="play" />
+	<input type="hidden" name="pl" id="pl" />
+	<input type="hidden" name="rnd" id="rnd" value="false" />
+</form>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -22,12 +27,15 @@
 		</ul>
 	</div>
 </div>
+<div id="teaser">
+	<div id="errorDiv"></div>
+</div>
 <div id="main">
 	<div class="subcolumns">
 	  <div class="c33l">
 	    <div class="subcl">
 			<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
-			<select id="plList" size="20" style="width: 240px; " onchange="_plOnChange(this)" multiple="multiple"></select>		
+			<select id="plList" size="20" style="width: 240px; " onchange="_plOnChange(this)"></select>		
 	    </div>
 	  </div>
 	  <div class="c33l">
@@ -40,18 +48,17 @@
 	    <div class="subcl">
 			<h6 class="vlist">Current Playlist Selection</h6>
 			<ul class="vlist">
-			  <li>Play Selected</li>
-  			  <li>Play Selected Randomly</li>
-  			  <li>Play Each Randomly</li>
-			  <li>Delete Playlist</li>
-			  <li>Shuffle Playlist</li>			  
+			  <li><a href="javascript:playPL()">Play Selected</a></li>
+  			  <li><a href="javascript:ranPlayPL()">Shuffle then Play</a></li>
+			  <li><a href="javascript:delPL()">Delete Playlist</a></li>
 			</ul>
 			<h6 class="vlist">Current Song Selection</h6>
 			<ul class="vlist">
-			  <li>Delete from playlist</li>
-  			  <li>Create a new playlist</li>
-			  <li>Move up</li>
-			  <li>Move down</li>
+				<li><a href="javascript:shuffle()">Shuffle Playlist</a></li>	
+			 	<li><a href="javascript:delFromPl()">Delete from playlist</a></li>
+  			  	<li>Create a new playlist</li>
+			  	<li>Move up</li>
+			  	<li>Move down</li>
 			</ul>			
 	    </div>
 	  </div>

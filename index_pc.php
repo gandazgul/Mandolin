@@ -30,6 +30,7 @@
 	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css">
 	
 	<script type="text/javascript" src="./js/lib/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>	
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		
@@ -55,6 +56,19 @@
 			}
 			return txt;
 		}
+		
+		//callback function to bring a hidden box back
+		function hideError()
+		{
+			setTimeout(function(){
+				$("#errorDiv").removeClass("info").hide();
+			}, 10000);
+		}
+		
+		function displayError(data)
+		{
+			$("#errorDiv").addClass("info").text(data).effect('slide', {}, 500, hideError);
+		}		
 	</script>
 </head>
 <body>

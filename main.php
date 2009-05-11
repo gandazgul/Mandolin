@@ -5,7 +5,6 @@
 		exit();
 	}
 ?>
-<script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>
 <script type="text/javascript">
 	<?php include_once("./js/main.js"); ?>
 </script>
@@ -15,7 +14,7 @@
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
 
-<div id="dialog" title="Add selected songs to existing playlist">
+<div id="dialog" title="Add selected songs to a playlist">
 	<form>
 	<fieldset>
 		<label for="tmpPlList">Select a playlist:</label>
@@ -77,8 +76,8 @@
 		<ul class="vlist">
 		  <li><a href="javascript:selPlay()">Play Selected</a></li>
 		  <li><a href="javascript:selRandPlay()">Play Selected Randomly</a></li>
-		  <li><a href="javascript:_makeNewPlaylist()">Make a new playlist</a></li>
-		  <li><a href="javascript:addToPlaylist()">Add to a playlist</a></li>
+		  <li><a href="javascript:createPlaylist()">Create a new playlist</a></li>
+		  <li><a href="javascript:_addToPlaylist()">Add to a playlist</a></li>
 		</ul>
 		<form class="yform">
 			<fieldset>
