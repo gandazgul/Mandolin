@@ -56,6 +56,11 @@
 			return txt;
 		}
 		
+		function trim(str) 
+		{
+			return str.replace(/^\s+|\s+$/g,"");
+		}
+		
 		//callback function to bring a hidden box back
 		function hideError()
 		{

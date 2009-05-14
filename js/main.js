@@ -140,11 +140,6 @@ function selPlay()
 	}
 }
 
-function trim(str) 
-{
-	return str.replace(/^\s+|\s+$/g,"");
-}
-
 function createPlaylist()
 {
 	sng = getSelectedOptions($("#songList")[0]);

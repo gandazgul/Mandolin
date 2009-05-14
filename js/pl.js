@@ -56,6 +56,25 @@ function playPL()
 	}
 }
 
+function renPL()
+{
+	plSelect = $("#plList")[0];
+	
+	if (plSelect.selectedIndex == -1)
+	{
+		alert("Please select a list first.");
+		return;
+	}
+	else
+	{
+		plName = plSelect.options[plSelect.selectedIndex].value;
+		plNewName = trim(prompt("Enter a new name for \"" + plName + "\"", plName));
+		//alert(plName + " " + plNewName);
+		postData = "a=ren&pl=" + plName + "&npl=" + plNewName + "&SID=" + SID;
+		$.post("./ls.php", postData, getSavedPL, 'json');
+	}
+}
+
 function delPL()
 {
 	plSelect = $("#plList")[0];

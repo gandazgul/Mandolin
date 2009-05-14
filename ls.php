@@ -243,14 +243,12 @@ function play()//makes a list of the tracks selected in the sng list
 		$sng = $queryArr[0][0];
 		//echo $sng;
 	}
-	
 	$listContents = "[".str_replace("|", ",", substr($sng, 0, -1))."]";	
 	
 	//echo $listContents;
 	$arr = json_decode($listContents);
 	if($_REQUEST["rnd"] == "true") shuffle($arr);
-	//$listContents = substr(json_encode($arr), 1, -1);
-	//echo $listContents;
+	//print_r($arr);
 	
 	$dbh = new PDO("sqlite:./db/music.db");
 	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=:sng_id");
@@ -353,18 +351,18 @@ function shuf()
 	ob_clean();
 	retrPL();
 }
-//-----------------------------
 
 function ren()//rename a saved playlist
 {
-	$new_name = $_GET["new_name"];
-	$name = $_GET["pl"];
+	$new_name = $_REQUEST["npl"];
+	$name = $_REQUEST["pl"];
 	$dbh = new PDO("sqlite:./db/users.db");
 	$query = $dbh->exec("UPDATE playlists SET `pl_name`='$new_name' WHERE `pl_name`='$name'");
 	if ($query == 0)
-	  echo "ERROR: Updating playlist entry: \"$name\" to rename it to: \"$new_name\". Error Info: ".implode(" ", $dbh->errorInfo());
+	  echo "ERROR: Renaming playlist \"$name\" to \"$new_name\": ".implode(" ", $dbh->errorInfo());
 	$dbh = null;
 	
 	saved();
 }//TODO: make 1 database instead of 2
+
 ?>

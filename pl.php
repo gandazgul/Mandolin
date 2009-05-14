@@ -50,6 +50,7 @@
 			<ul class="vlist">
 			  <li><a href="javascript:playPL()">Play Selected</a></li>
   			  <li><a href="javascript:ranPlayPL()">Shuffle then Play</a></li>
+			  <li><a href="javascript:renPL()">Rename Playlist</a></li>			  
 			  <li><a href="javascript:delPL()">Delete Playlist</a></li>
 			</ul>
 			<h6 class="vlist">Current Song Selection</h6>
