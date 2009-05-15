@@ -63,22 +63,22 @@
 				<fieldset>
 					<legend>Select permission level</legend>
 					<div class="type-check">
-						<input type="radio" name="adminLvl" value="0">Administrator</input>
+						<input type="radio" name="adminLvl" value="0" />Administrator
 						<div class="message">
 							(Can delete, rename songs and users and 
 							also update or recreate the database)
 						</div>
-						<input type="radio" name="adminLvl" value="1">Mantainer</input>
+						<input type="radio" name="adminLvl" value="1" />Mantainer
 						<div class="message">
 							(Can rename songs, change passwords of users 
 							and update the database)
 						</div>
-						<input type="radio" name="adminLvl" value="2" checked="checked">User</input>
+						<input type="radio" name="adminLvl" value="2" checked="checked" />User
 					</div>
 				</fieldset>
 				<fieldset>
 					<div class="type-button">
-						<input type="button" value="Add user" onClick="$('newUserResults').innerHTML = umgrAddUser($('username').value, $('passw').value, $('rePassw').value)" />
+						<input type="button" value="Add user" onClick="addUser()" />
 					</div>
 				</fieldset>
 			</form>

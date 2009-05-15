@@ -15,24 +15,48 @@ function changePassw()
 	else
 		$("#userMsg").addClass("message").html("ERROR: Passwords don't match");
 }
-/*
-function addUser(strUser, strPassword, rePassw)
+
+// return the value of the radio button that is checked
+// return an empty string if none are checked, or
+// there are no radio buttons
+function getCheckedValue(radioObj) 
 {
-	adminLvl = 2;
-	if ($("#adminLvl")[0].checked)
-		adminLvl = 0;
-	else
-	if ($("mantLvl").checked)
-		adminLvl = 1;	
+	if(!radioObj)
+		return "";
+	var radioLength = radioObj.length;
+	if(radioLength == undefined)
+		if(radioObj.checked)
+			return radioObj.value;
+		else
+			return "";
+	for(var i = 0; i < radioLength; i++) 
+	{
+		if(radioObj[i].checked) 
+		{
+			return radioObj[i].value;
+		}
+	}
+	return "";
+}
+
+function addUser()
+{
+	strUser = $("#username").val();
+	strPassword = $("#passw").val();
+	rePassw = $("#rePassw").val();
+	
+	radioObj = document.getElementsByName('adminLvl');
+	adminLvl = getCheckedValue(radioObj);
 	if ( (strPassword == "") || (rePassw == "") )
-		return "ERROR: Passwords can't be empty";
+		$("#userMsg").addClass('message').text("ERROR: Passwords can't be empty");
 	else	
 	if ( strPassword == rePassw )
 	{
-		ajaxpage("./exec.php?k=<?php echo $cur_key; ?>&action=addNewUser&user=" + strUser + "&passw=" + strPassword + "&adminLvl=" + adminLvl, "newUserResults");
+		alert("hola");
+		//ajaxpage("./exec.php?k=<?php echo $cur_key; ?>&action=addNewUser&user=" + strUser + "&passw=" + strPassword + "&adminLvl=" + adminLvl, "newUserResults");
 	}
 	else
-		return "ERROR: Passwords don't match";	
+		$("#userMsg").addClass('message').text("ERROR: Passwords don't match");
 }
 
 /*
