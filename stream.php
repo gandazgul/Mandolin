@@ -1,11 +1,11 @@
 <?php
 $dbh = new PDO("sqlite:./db/users.db");
-$cur_key = $_GET["k"]; 
-$song_id = $_GET["s"];
-$query = $dbh->query("SELECT last_key_date FROM users WHERE `last_key`='$cur_key'");
-$queryArr = $query->fetchAll();
-$last_key_date = $queryArr[0][0];
-//echo $last_key_date;
+	$cur_key = $_GET["k"]; 
+	$song_id = $_GET["s"];
+	$query = $dbh->query("SELECT last_key_date FROM users WHERE `last_key`='$cur_key'");
+	$queryArr = $query->fetchAll();
+	$last_key_date = $queryArr[0][0];
+	//echo $last_key_date;
 $dbh = null;
 
 if ($last_key_date == "") die("The key is invalid");
@@ -13,18 +13,19 @@ if ((time() - $last_key_date) > 604800) die("The key is old");
 if ($song_id == "")	die("No Song ID? I dont read minds :P");
 
 $dbh = new PDO("sqlite:./db/music.db");
-$query = $dbh->query("SELECT song_path, song_name FROM music WHERE `song_id`='$song_id'");
-$queryArr = $query->fetchAll();
-//print_r($queryArr);
-$song_path = $queryArr[0][0];
-$song_name = $queryArr[0][1];
+	$query = $dbh->query("SELECT song_path, song_name FROM music WHERE `song_id`='$song_id'");
+	$queryArr = $query->fetchAll();
+	//print_r($queryArr);
+	$song_path = $queryArr[0][0];
+	$song_name = $queryArr[0][1];
+$dbh = null;
 $ext = substr($song_name, strrpos($song_name, ".") + 1);
 //echo $ext;
 switch ($ext)
 {
   case "mp3" : 
   {
-	header('Content-type: audio/mpeg');
+	header('Content-type: audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3, audio/mpeg, audio/x-mp3');
   	break;
   }
   case "ogg" : 
@@ -41,6 +42,20 @@ switch ($ext)
 header("Content-length: ".filesize($song_path) );
 header("Content-Disposition: filename=\"".$song_name."\"");
 header("Content-Transfer-Encoding: binary");
-readfile($song_path);
-$dbh = null;
+
+if (isset($_GET['b']))
+{
+	$bitrate = $_GET['b'];
+	$cmd = "/usr/bin/lame --silent --nores --mp3input -m j -b $bitrate -h \"$song_path\" -";
+	$blocksize=($bitrate*1024)+1024;
+	//echo $bitrate."<br>".$cmd."<br>".$blocksize."<br>";
+	$temp = @popen($cmd, "r");
+	while ($data = @fread($temp, $blocksize))
+		echo $data;
+	pclose($temp);	
+}
+else
+{
+	readfile($song_path);	
+}
 ?>

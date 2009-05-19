@@ -65,13 +65,13 @@
 		function hideError()
 		{
 			setTimeout(function(){
-				$("#errorDiv").removeClass("info").hide();
+				$("#errorDiv").removeClass("important").hide();
 			}, 10000);
 		}
 		
 		function displayError(data)
 		{
-			$("#errorDiv").addClass("info").text(data).effect('slide', {}, 500, hideError);
+			$("#errorDiv").addClass("important").text(data).effect('slide', {}, 500, hideError);
 		}	
 	</script>
 </head>

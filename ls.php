@@ -261,7 +261,10 @@ function play()//makes a list of the tracks selected in the sng list
 		$ext = substr($song_name, strrpos($song_name, "."));
 		$name = substr($song_name, 0, strrpos($song_name, "."));
 		echo "#EXTINF:0,$name\n";
-		echo $musicURL."stream.php?k=".$_SESSION["key"]."&s=$song_id&$ext\n";		
+		if (isset($_REQUEST['for']) and ($_REQUEST['for'] == 'bb'))
+			echo $musicURL."stream.php?k=".$_SESSION["key"]."&b=96&s=$song_id&$ext\n";
+		else
+			echo $musicURL."stream.php?k=".$_SESSION["key"]."&s=$song_id&$ext\n";		
 	}
 	$dbh = null;
 }
