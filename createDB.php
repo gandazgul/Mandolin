@@ -1,5 +1,5 @@
 <?php
-if (!isset($sess_id))
+if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
 {
 	header("Location: ./index.php");
 	exit();
@@ -7,8 +7,8 @@ if (!isset($sess_id))
 
 ini_set('max_execution_time', '6000');
 
-@unlink("../db/music.db");
-$dbh = new PDO("sqlite:../db/music.db");
+@unlink("./db/music.db");
+$dbh = new PDO("sqlite:./db/music.db");
 //-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------
 $result = $dbh->exec("CREATE TABLE artists (
   art_id    integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -161,7 +161,7 @@ $artCount = 0;
 $albCount = 0;
 $sngCount = 0;
 
-$fset = fopen("../settings", "rt");
+$fset = fopen("./settings", "rt");
 fgets($fset);//musicURL
 $root = fgets($fset);
 $root = substr($root, strpos($root, "=") + 1, -1);
@@ -224,35 +224,57 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
 }
 
 ?>
-<strong>Creating the Database</strong><br/><br />
-- Database deleted and new one created<br />
-- Scaning music directory(<?php echo $root; ?>)... DO NOT HIT THE BACK BUTTON ON YOUR BROWSER<br />
-&nbsp;&nbsp; - Artists: <span id='art'></span><br />
-&nbsp;&nbsp; - Albums: <span id='alb'></span><br />
-&nbsp;&nbsp; - Songs: <span id='sng'></span><br />
-<?php
-//functions
-$dirH = opendir($root);
-if(!$dirH)
-  die ("FATAL ERROR: Can't read the root directory($root)");
-while (($file = readdir($dirH)) !== false)
-{
-    if (($file == ".") or ($file == ".."))
-        continue;
-    if (is_dir($root.$file))
-    {
-        $dir = $root.$file."/";
-        $file = str_replace("'", "''", $file);
-        //echo "$artCount - $file<br/>";
-        $dbh->exec("INSERT INTO artists(art_id, art_name) VALUES ('$artCount', '$file')") or        
-                die("FATAL ERROR: Inserting: $file into artists\n".implode(" ", $dbh->errorInfo()));
-        processArtDir($dir, $artCount);
-        $artCount++;
-		echo "<script language=\"javascript\">document.getElementById('art').innerHTML = $artCount;</script>";
-		flush(); ob_flush();
-    }
-}
-closedir($dirH);
-$dbh = null;
-?>
-<br/><p style="font-size: 16px; color: red; ">DONE</p>
+<div id="nav">
+	<!-- skiplink anchor: navigation -->
+	<a id="navigation" name="navigation"></a>
+	<div class="hlist">
+		<!-- main navigation: horizontal list -->
+		<ul>
+			<li><a href="./index.php?p=main">Search/Browse</a></li>
+			<li><a href="./index.php?p=pl">My Playlists</a></li>
+			<li><a href="./index.php?p=adm">Aministration</a></li>
+			<li><a href="./index.php?p=about">About</a></li>
+			<li><a href="./logout.php">Logout</a></li>	
+		</ul>
+	</div>
+</div>
+<div id="teaser">
+	<div id="errorDiv"></div>
+</div>
+<div id="main">
+	<p style="font-weight: bold; ">Creating the Database</p>
+	- Database deleted and new one created<br />
+	- Scaning music directory(<?php echo $root; ?>)... DO NOT HIT THE BACK BUTTON ON YOUR BROWSER<br />
+	&nbsp;&nbsp; - Artists: <span id='art'></span><br />
+	&nbsp;&nbsp; - Albums: <span id='alb'></span><br />
+	&nbsp;&nbsp; - Songs: <span id='sng'></span><br />
+	<?php
+	//functions
+	$dirH = opendir($root);
+	if(!$dirH)
+		echo ("FATAL ERROR: Can't read the root directory($root)");
+	else
+	{
+		while (($file = readdir($dirH)) !== false)
+		{
+		    if (($file == ".") or ($file == ".."))
+		        continue;
+		    if (is_dir($root.$file))
+		    {
+		        $dir = $root.$file."/";
+		        $file = str_replace("'", "''", $file);
+		        //echo "$artCount - $file<br/>";
+		        $dbh->exec("INSERT INTO artists(art_id, art_name) VALUES ('$artCount', '$file')") or        
+		                die("FATAL ERROR: Inserting: $file into artists\n".implode(" ", $dbh->errorInfo()));
+		        processArtDir($dir, $artCount);
+		        $artCount++;
+				echo "<script language=\"javascript\">document.getElementById('art').innerHTML = $artCount;</script>";
+				flush(); ob_flush();
+		    }
+		}
+		closedir($dirH);
+		echo "<p style='font-size: 16px; color: red; '>DONE</p>";
+	}
+	$dbh = null;
+	?>
+</div>

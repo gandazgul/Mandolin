@@ -19,11 +19,11 @@
 	<div class="hlist">
 		<!-- main navigation: horizontal list -->
 		<ul>
-			<li><a href="./index.php">Search/Browse</a></li>
+			<li><a href="./index.php?p=main">Search/Browse</a></li>
 			<li class="active"><strong>My Playlists</strong></li>
 			<li><a href="./index.php?p=adm">Aministration</a></li>
 			<li><a href="./index.php?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>			
+			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>

@@ -52,19 +52,19 @@
 	      <div class="c33l">
 	        <div class="subcl">
 				<p class="title">Artists:&nbsp;<span id="artTotal"></span></p>
-				<select id="artList" size="20" style="width: 240px; " onchange="_artOnChange(this)" multiple="multiple"></select>			 
+				<select id="artList" size="20" style="width: 100%; " onchange="_artOnChange(this)" multiple="multiple"></select>			 
 	        </div>
 	      </div>
 	      <div class="c33l">
-	        <div class="subc">
+	        <div class="subcl">
 				<p class="title">Albums:&nbsp;<span id="albTotal"></span></p>
-				<select id="albList" size="20" style="width: 240px; " onchange="_albOnChange(this)" multiple="multiple"></select>
+				<select id="albList" size="20" style="width: 100%; " onchange="_albOnChange(this)" multiple="multiple"></select>
 	        </div>
 	      </div>
 	      <div class="c33r">
-	        <div class="subcr">
+	        <div class="subcl">
 				<p class="title">Songs:&nbsp;<span id="sngTotal"></span></p>
-				<select id="songList" size="20" style="width: 240px; " onchange="sngOnChange(this.value)" multiple="multiple"></select>
+				<select id="songList" size="20" style="width: 100%; " onchange="sngOnChange(this.value)" multiple="multiple"></select>
 	        </div>
 	      </div>
 	    </div>

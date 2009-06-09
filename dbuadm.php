@@ -42,12 +42,12 @@ function updDB()
 	echo $art." TODO: implement this";
 }
 
-function addNewUser()
+function nuser()
 {
 	global $dbh;
-	$user = $_GET["user"];
-	$passw = md5($_GET["passw"]);
-	$adminLvl = $_GET["adminLvl"];
+	$user = $_REQUEST["usr"];
+	$passw = sha1($_REQUEST["pw"]);
+	$adminLvl = $_REQUEST["adm"];
 	
 	$dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user', '$passw', $adminLvl)") or
 		die("FATAL ERROR: While adding a new user to the database. ".implode(" ", $dbh->errorInfo()));

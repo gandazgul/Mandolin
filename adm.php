@@ -18,7 +18,7 @@
 			<li><a href="./index.php">My Playlists</a></li>
 			<li class="active"><strong>Aministration</strong></li>
 			<li><a href="./index.php?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>	
+			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>
@@ -54,9 +54,9 @@
 						<div id="userMsg"></div>
 						<label for="username">Username:</label>
 						<input type="text" id="username" />
-						<label for="username">Password:</label>
+						<label for="passw">Password:</label>
 						<input type="text" id="passw" />
-						<label for="username">Re-Type Password:</label>
+						<label for="rePassw">Re-Type Password:</label>
 						<input type="text" id="rePassw" />
 					</div>
 				</fieldset>
