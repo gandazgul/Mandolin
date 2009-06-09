@@ -25,7 +25,7 @@
 <div id="teaser">
 	<div id="errorDiv"></div>
 </div>
-<div id="main">
+<div id="main" style="padding: 0 20px;">
 	<div id="accordion">
 		<h3><a href="#">Change Password</a></h3>
 		<div>

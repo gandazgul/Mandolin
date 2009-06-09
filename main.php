@@ -40,8 +40,8 @@
 <div id="teaser">
 	<div id="errorDiv"></div>
 	<p>
-		<label for="sQuery"><p class="title">Type in Artist, Album or Song name: 
-		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" /></p></label>
+		<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
+		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />
 	</p>
 </div>
 <div id="main">
@@ -85,6 +85,7 @@
 				<div class="type-text">
 					<input type="hidden" id="sngID" />
 					<label for="sngComm">This is a note left by another user for the selected song, you can change it here</label>
+					<br />
 					<input type="text" id="sngComm" style="width: auto;" />
 				</div>
 				<div class="type-button">

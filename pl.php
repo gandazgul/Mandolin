@@ -33,19 +33,19 @@
 <div id="main">
 	<div class="subcolumns">
 	  <div class="c33l">
-	    <div class="subcl">
+	    <div class="subcl" style="padding-left: 20px; ">
 			<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
-			<select id="plList" size="20" style="width: 240px; " onchange="_plOnChange(this)"></select>		
-	    </div>
-	  </div>
-	  <div class="c33l">
-	    <div class="subl">
-			<p class="title">List content:&nbsp;<span id="listName"></span></p>
-			<select id="plContents" size="20" style="width: 240px; " multiple="multiple"></select>			 
+			<select id="plList" size="20" style="width: 100%; " onchange="_plOnChange(this)"></select>		
 	    </div>
 	  </div>
 	  <div class="c33l">
 	    <div class="subcl">
+			<p class="title">List content:&nbsp;<span id="listName"></span></p>
+			<select id="plContents" size="20" style="width: 100%; " multiple="multiple"></select>			 
+	    </div>
+	  </div>
+	  <div class="c33l">
+	    <div class="subcl" style="border-left: 1px dotted #DDDDDD; padding-left: 10px; padding-right: 20px; ">
 			<h6 class="vlist">Current Playlist Selection</h6>
 			<ul class="vlist">
 			  <li><a href="javascript:playPL()">Play Selected</a></li>

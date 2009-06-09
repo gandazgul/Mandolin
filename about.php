@@ -19,7 +19,7 @@
 		</ul>
 	</div>
 </div>
-<div id="main">
+<div id="main" style="padding-left: 20px">
 	<p>newMusicServer is a rewrite of mstServer 0.5, I decided to start anew with all the experiences 
 	I acumulated developing mstServer I am writing this one much cleaner.</p>
 	<p class="title">You can download the last version of mstServer from here:</p><a href="https://launchpad.net/mstserver">https://launchpad.net/mstserver</a><br /><br />
