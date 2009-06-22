@@ -178,9 +178,11 @@ function _addToPlaylist()
 }
 
 $(document).ready(function(){
-	postData = 'a=gett&SID=' + SID;
-	$.post('./ls.php', postData, putTotals, 'json');
-	_getArt();
+	//postData = 'a=gett&SID=' + SID;
+	//$.post('./ls.php', postData, putTotals, 'json');
+	//_getArt();
+
+	$("#artistsList").selectable();
 	
 	$("#dialog").dialog({
 		bgiframe: true,

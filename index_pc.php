@@ -30,7 +30,7 @@
 	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css">
 	
 	<script type="text/javascript" src="./js/lib/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.1.custom.min.js"></script>	
+	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.2.custom.min.js"></script>	
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		

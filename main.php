@@ -8,6 +8,13 @@
 <script type="text/javascript">
 	<?php include_once("./js/main.js"); ?>
 </script>
+<style type="text/css">
+	#feedback { font-size: 1.4em; }
+	#artistsList .ui-selecting { background: #FECA40; }
+	#artistsList .ui-selected { background: #F39814; color: white; }
+	#artistsList { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+	#artistsList li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+</style>
 <form method="post" action="./ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="sng" id="sng" />
@@ -47,27 +54,15 @@
 <div id="main">
 	<div id="col1">
 	  <div id="col1_content" class="clearfix">
-	    <!-- add your content here -->
-	    <div class="subcolumns">
-	      <div class="c33l">
-	        <div class="subcl">
-				<p class="title">Artists:&nbsp;<span id="artTotal"></span></p>
-				<select id="artList" size="20" style="width: 100%; " onchange="_artOnChange(this)" multiple="multiple"></select>			 
-	        </div>
-	      </div>
-	      <div class="c33l">
-	        <div class="subcl">
-				<p class="title">Albums:&nbsp;<span id="albTotal"></span></p>
-				<select id="albList" size="20" style="width: 100%; " onchange="_albOnChange(this)" multiple="multiple"></select>
-	        </div>
-	      </div>
-	      <div class="c33r">
-	        <div class="subcl">
-				<p class="title">Songs:&nbsp;<span id="sngTotal"></span></p>
-				<select id="songList" size="20" style="width: 100%; " onchange="sngOnChange(this.value)" multiple="multiple"></select>
-	        </div>
-	      </div>
-	    </div>
+		<ol id="artistsList">
+			<li class="ui-widget-content">Item 1</li>
+			<li class="ui-widget-content">Item 2</li>
+			<li class="ui-widget-content">Item 3</li>
+			<li class="ui-widget-content">Item 4</li>
+			<li class="ui-widget-content">Item 5</li>
+			<li class="ui-widget-content">Item 6</li>
+			<li class="ui-widget-content">Item 7</li>
+		</ol>
 	  </div>
 	</div>
 	<div id="col3">
