@@ -85,6 +85,23 @@
 		</div>
 		<h3><a href="#">Database Administration</a></h3>
 		<div>
+			<form class="yform">
+				<fieldset>
+					<legend>Database settings</legend>
+					<div class="type-text">
+						<label for="serverURL">musicServer URL: </label>
+						<input type="text" id="serverURL" />
+					</div>
+					<div class="type-text">
+						<label for="serverURL">music library URL: </label>
+						<input type="text" id="serverURL" />
+					</div>
+					<div class="type-button">
+						<label for="serverURL">musicServer URL: </label>
+						<input type="text" id="serverURL" />
+					</div>										
+				</fieldset>
+			</form>
 			<p>Recreate database (faster than update but will probably invalidate the saved playlists) 
 			This will delete the existing database and scan the music directory to recreate it.</p>
 			<input type="button" value="Create DB" onclick='createDB()'>
