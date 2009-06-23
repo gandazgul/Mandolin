@@ -12,8 +12,8 @@
 	#feedback { font-size: 1.4em; }
 	#artistsList .ui-selecting { background: #FECA40; }
 	#artistsList .ui-selected { background: #F39814; color: white; }
-	#artistsList { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-	#artistsList li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+	#artistsList { list-style-type: none; margin: 0; padding: 0; }
+	#artistsList li { list-style-type: none; margin: 3px 0; padding: 0.3em; font-size: 1.4em; }
 </style>
 <form method="post" action="./ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
@@ -54,15 +54,26 @@
 <div id="main">
 	<div id="col1">
 	  <div id="col1_content" class="clearfix">
-		<ol id="artistsList">
-			<li class="ui-widget-content">Item 1</li>
-			<li class="ui-widget-content">Item 2</li>
-			<li class="ui-widget-content">Item 3</li>
-			<li class="ui-widget-content">Item 4</li>
-			<li class="ui-widget-content">Item 5</li>
-			<li class="ui-widget-content">Item 6</li>
-			<li class="ui-widget-content">Item 7</li>
-		</ol>
+	  <div class="subcolumns">
+		  <div class="c33l">
+		    <div class="subcl" style="padding-left: 20px; height: 300px; overflow-y: auto; overflow-x: hidden; padding: 0;">
+				<ol id="artistsList">
+					<li class="ui-widget-content">Item 1</li>
+					<li class="ui-widget-content">Item 2</li>
+					<li class="ui-widget-content">Item 3</li>
+					<li class="ui-widget-content">Item 4</li>
+					<li class="ui-widget-content">Item 5</li>
+					<li class="ui-widget-content">Item 6</li>
+					<li class="ui-widget-content">Item 7</li>
+				</ol>
+		    </div>
+		  </div>
+		  <div class="c66l">
+		    <div class="subcl" style="padding: 0 1em;">
+hola
+		    </div>
+		  </div>
+		</div>
 	  </div>
 	</div>
 	<div id="col3">
