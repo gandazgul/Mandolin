@@ -49,7 +49,7 @@
 		<div>
 			<form class="yform">
 				<fieldset>
-					<legend>Enter New User Information</legend>
+					<legend> Enter New User Information </legend>
 					<div class="type-text">
 						<div id="userMsg"></div>
 						<label for="username">Username:</label>
@@ -61,7 +61,7 @@
 					</div>
 				</fieldset>
 				<fieldset>
-					<legend>Select permission level</legend>
+					<legend> Select permission level </legend>
 					<div class="type-check">
 						<input type="radio" name="adminLvl" value="0" />Administrator
 						<div class="message">
@@ -87,18 +87,17 @@
 		<div>
 			<form class="yform">
 				<fieldset>
-					<legend>Database settings</legend>
+					<legend> Database settings </legend>
 					<div class="type-text">
 						<label for="serverURL">musicServer URL: </label>
 						<input type="text" id="serverURL" />
 					</div>
 					<div class="type-text">
-						<label for="serverURL">music library URL: </label>
-						<input type="text" id="serverURL" />
+						<label for="serverURL">Music Library path: </label>
+						<input type="text" id="mlpath" />
 					</div>
 					<div class="type-button">
-						<label for="serverURL">musicServer URL: </label>
-						<input type="text" id="serverURL" />
+						<input type="button" id="btnSaveSettings" value="Save Settings" onclick="saveSettings()" />
 					</div>										
 				</fieldset>
 			</form>
