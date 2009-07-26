@@ -5,15 +5,19 @@
 		exit();
 	}
 ?>
+<script type="text/javascript" src="./js/lib/jquery.contextMenu.js"></script>
+<link type="text/css" rel="stylesheet" href="./css/jquery.contextMenu.css" />
 <script type="text/javascript">
 	<?php include_once("./js/main.js"); ?>
 </script>
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
-	#artistsList .ui-selecting { background: #FECA40; }
-	#artistsList .ui-selected { background: #F39814; color: white; }
-	#artistsList { list-style-type: none; margin: 0; padding: 0; }
-	#artistsList li { list-style-type: none; margin: 3px 0; padding: 0.3em; font-size: 1.4em; }
+	#artistsList .ui-selecting, #albumList .ui-selecting, #songList .ui-selecting { background: #EDF2F8; }
+	#artistsList .ui-selected, #albumList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
+	#artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
+	#artistsList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
+	#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 0.8em; text-align: center;  }	
+	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
 </style>
 <form method="post" action="./ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
@@ -29,6 +33,39 @@
 	</fieldset>
 	</form>
 </div>
+
+<ul id="artnAlbMenu" class="contextMenu">
+	<li class="play"><a href="#play">Play</a></li>
+	<li class="playrand"><a href="#playrand">Play Random</a></li>	
+	<li class="rename separator"><a href="#rename">Rename</a></li>
+	<li class="delete"><a href="#delete">Delete</a></li>
+	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
+</ul>
+
+<ul id="songsMenu" class="contextMenu">
+	<li class="play"><a href="#play">Play</a></li>
+	<li class="playrand"><a href="#playrand">Play Random</a></li>	
+	<li class="rename separator"><a href="#rename">Rename</a></li>
+	<li class="delete"><a href="#delete">Delete</a></li>
+	<li class="createpl separator"><a href="#createpl">Create Playlist</a></li>
+	<li class="addtopl"><a href="#addtopl">Add to Existing Playlist</a></li>
+	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
+</ul>
+
+<form class="yform" style="display: none">
+	<fieldset>
+		<!--legend></legend-->
+		<div class="type-text">
+			<input type="hidden" id="sngID" />
+			<label for="sngComm">This is a note left by another user for the selected song, you can change it here</label>
+			<br />
+			<input type="text" id="sngComm" style="width: auto;" />
+		</div>
+		<div class="type-button">
+			<input type="button" onclick="setComm()" value="Save new note" />
+		</div>
+	</fieldset>
+</form>
 
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
@@ -52,55 +89,21 @@
 	</p>
 </div>
 <div id="main">
-	<div id="col1">
-	  <div id="col1_content" class="clearfix">
-	  <div class="subcolumns">
-		  <div class="c33l">
-		    <div class="subcl" style="padding-left: 20px; height: 300px; overflow-y: auto; overflow-x: hidden; padding: 0;">
-				<ol id="artistsList">
-					<li class="ui-widget-content">Item 1</li>
-					<li class="ui-widget-content">Item 2</li>
-					<li class="ui-widget-content">Item 3</li>
-					<li class="ui-widget-content">Item 4</li>
-					<li class="ui-widget-content">Item 5</li>
-					<li class="ui-widget-content">Item 6</li>
-					<li class="ui-widget-content">Item 7</li>
-				</ol>
-		    </div>
-		  </div>
-		  <div class="c66l">
-		    <div class="subcl" style="padding: 0 1em;">
-hola
-		    </div>
-		  </div>
+	<div class="subcolumns">
+		<div class="c25l">
+			<div class="subcl" id="artistsListDiv" style="padding-left: 20px; height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0;">
+				<ol id="artistsList"></ol>
+			</div>
 		</div>
-	  </div>
-	</div>
-	<div id="col3">
-	  <div id="col3_content" class="clearfix">
-		<h6 class="vlist">Current Song Selection</h6>
-		<ul class="vlist">
-		  <li><a href="javascript:selPlay()">Play Selected</a></li>
-		  <li><a href="javascript:selRandPlay()">Play Selected Randomly</a></li>
-		  <li><a href="javascript:createPlaylist()">Create a new playlist</a></li>
-		  <li><a href="javascript:_addToPlaylist()">Add to a playlist</a></li>
-		</ul>
-		<form class="yform">
-			<fieldset>
-				<!--legend></legend-->
-				<div class="type-text">
-					<input type="hidden" id="sngID" />
-					<label for="sngComm">This is a note left by another user for the selected song, you can change it here</label>
-					<br />
-					<input type="text" id="sngComm" style="width: auto;" />
-				</div>
-				<div class="type-button">
-					<input type="button" onclick="setComm()" value="Save new note" />
-				</div>
-			</fieldset>
-		</form>
-	  </div>
-	  <!-- IE Column Clearing -->
-	  <div id="ie_clearing"> &#160; </div>
+		<div class="c50l">
+			<div class="subcl" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 1em;">
+				<ol id="albumList" style="width: 475px;"></ol>
+			</div>
+		</div>
+		<div class="c25l">
+			<div class="subcl" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0;">
+				<ol id="songList"></ol>
+			</div>
+		</div>
 	</div>
 </div>

@@ -14,9 +14,9 @@ function setComm()
 
 function procSearchResults(results)
 {
-	getArt(results["art"]);
-	artOnChange(results["alb"]);
-	albOnChange(results["sng"]);
+	displayArtists(results["art"]);
+	displayAlbums(results["alb"]);
+	//albOnChange(results["sng"]);
 }
 
 function queryDB(query)
@@ -32,15 +32,15 @@ function queryDB(query)
 	$.post("./ls.php", postData, procSearchResults, "json");
 }
 
-var timerID;
+var srchTimerID;
 
 function search(query, reschedule)
 {
+	clearTimeout(srchTimerID);
 	if (reschedule)
 	{
 		//alert(query);
-		clearTimeout(timerID);
-		timerID = setTimeout("search('" + query + "', false)", 1000);
+		srchTimerID = setTimeout("search('" + query + "', false)", 1000);
 	}
 	else
 	{
@@ -61,54 +61,99 @@ function sngOnChange(sng_value)
 	$("#sngID").val(data[0]);
 }
 
-function albOnChange(sngArr)
+function displaySongs(sngArr)
 {
-	$("#songList")[0].options.length = 0;
+	$("#songList").html('');
 	for (i = 0; i < sngArr.length; i++)
 	{
-		$("#songList").append("<option value='["+ sngArr[i].id + ", \"" + sngArr[i].comm + "\"]'>"+ sngArr[i].name +"</option>");	
-	}			
+		$("#songList").append("<li class='ui-widget-content' id='["+ sngArr[i].id + ", \"" + sngArr[i].comm + "\"]'>"+ sngArr[i].name +"</li>");	
+	}
+	
+	$("#songList li").contextMenu({
+		menu: 'songsMenu'
+	}, function(action, el, pos) {
+		switch (action)
+		{
+			case "play":
+			case "playrand": 
+			{ 
+				alert("TODO: Implement this. Song: " + $(el).attr('id')); 
+				break; 
+			}
+		}
+	});
+	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
 }
 
-function _albOnChange(objSelect)
+function getSongs(albIDs)
 {
-	alb_id = getSelectedOptions(objSelect);
-	postData = "a=sng&alb=" + alb_id + "&SID=" + SID;
-	$.post("./ls.php", postData, albOnChange, "json");
+	postData = "a=sng&alb=" + albIDs + "&SID=" + SID;
+	$.post("./ls.php", postData, displaySongs, "json");
 }
 
-function artOnChange(albArr)
+function displayAlbums(albArr)
 {
-	$("#albList")[0].options.length = 0;
-	$("#songList")[0].options.length = 0;
+	$("#albumList").html('');
+	$("#songList").html('');
 	//alert(albArr[0].id);
 	for (i = 0; i < albArr.length; i++)
 	{
-		$("#albList").append("<option value='"+ albArr[i].id +"'>"+ albArr[i].name +"</option>");	
+		$("#albumList").append("<li class='ui-widget-content' id='"+ albArr[i].id +"'>"+ albArr[i].name +"</li>");	
 	}
+	
+	$("#albumList li").contextMenu({
+		menu: 'artnAlbMenu'
+	}, function(action, el, pos) {
+		switch (action)
+		{
+			case "play":
+			case "playrand": 
+			{ 
+				alert("TODO: Implement this. Album: " + $(el).attr('id')); 
+				break; 
+			}
+		}
+	});
+	//$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
 }
 
-function _artOnChange(objSelect)
+function getAlbums(artIDs)
 {
-	art_id = getSelectedOptions(objSelect);
-	postData = "a=alb&artist=" + art_id + "&SID=" + SID;
+	postData = "a=alb&artist=" + artIDs + "&SID=" + SID;
 	//alert(postData);
-	$.post("./ls.php", postData, artOnChange, "json");
+	$.post("./ls.php", postData, displayAlbums, "json");
 }
 
-function getArt(artArr)
+function displayArtists(artArr)
 {
-	$("#artList")[0].options.length = 0;
+	$("#artistsList").html('');
 	for (i = 0; i < artArr.length; i++)
 	{
-		$("#artList").append("<option value='"+ artArr[i].id +"'>"+ artArr[i].name +"</option>");	
+		$("#artistsList").append("<li class='ui-widget-content' id='"+ artArr[i].id +"'>"+ artArr[i].name +"</li>");
 	}
+	
+	// Show menu when a list item is clicked
+	$("#artistsList li").contextMenu({
+		menu: 'artnAlbMenu'
+	}, function(action, el, pos) {
+		switch (action)
+		{
+			case "play":
+			case "playrand": 
+			{ 
+				alert("TODO: Implement this. Artist: " + $(el).attr('id')); 
+				
+				break; 
+			}
+		}
+	});
+	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
 }
 
-function _getArt()
+function getArtists()
 {
 	postData = "a=art&SID=" + SID;
-	$.post("./ls.php", postData, getArt, "json");
+	$.post("./ls.php", postData, displayArtists, "json");
 }
 
 function putTotals(data)
@@ -180,9 +225,49 @@ function _addToPlaylist()
 $(document).ready(function(){
 	//postData = 'a=gett&SID=' + SID;
 	//$.post('./ls.php', postData, putTotals, 'json');
-	//_getArt();
+	getArtists();
 
-	$("#artistsList").selectable();
+	$("#artistsList").selectable({
+		stop: function(){
+			var strResult = "";
+			//alert(this.id);
+			$(".ui-selected", this).each(function(){
+				//var index = $("#artistsList li").index(this);
+				var art_id = this.id;
+				strResult += art_id + "|";
+			});
+			//alert(strResult);
+			getAlbums(strResult);
+		}
+	});
+	
+	$("#albumList").selectable({
+		stop: function(){
+			var strResult = "";
+			//alert(this.id);
+			$(".ui-selected", this).each(function(){
+				//var index = $("#artistsList li").index(this);
+				var alb_id = this.id;
+				strResult += alb_id + "|";
+			});
+			//alert(strResult);
+			getSongs(strResult);
+		}
+	});	
+
+	$("#songList").selectable({
+		/*stop: function(){
+			var strResult = "";
+			//alert(this.id);
+			$(".ui-selected", this).each(function(){
+				//var index = $("#artistsList li").index(this);
+				var alb_id = this.id;
+				strResult += alb_id + "|";
+			});
+			alert(strResult);
+			getSongs(strResult);
+		}*/
+	});
 	
 	$("#dialog").dialog({
 		bgiframe: true,
