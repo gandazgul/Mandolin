@@ -80,6 +80,58 @@ function sng()
 	$dbh = null;
 }
 
+function mov()
+{
+	$dbh = new PDO("sqlite:./db/movies.db");
+	$movArr = array();	
+	$query = $dbh->query("SELECT DISTINCT category FROM movies ORDER BY `category`");
+	$catArr = $query->fetchAll();
+	//print_r($queryArr);
+	$sth = $dbh->prepare("SELECT title, mID FROM movies WHERE category = ?");
+	for($i = 0; $i < count($catArr); $i++)
+	{
+		$cat = $catArr[$i][0];
+		$sth->execute(array($cat));
+		$movArr = $sth->fetchAll();
+		$movies[$i][] = $catArr[$i][0];
+		for ($j = 0; $j < count($movArr); $j++)
+		{	
+			$movies[$i][] = array("id" => $movArr[$j]["mID"], "title" => $movArr[$j]["title"]);
+		}
+	}
+	echo json_encode($movies);
+	$dbh = null;
+}
+
+function playmov()
+{
+	$id = $_REQUEST["id"];
+	
+	$dbh = new PDO("sqlite:./db/movies.db");
+	$query = $dbh->query("SELECT title, path FROM movies WHERE mID=$id");
+	$queryArr = $query->fetchAll();
+	$dbh = null;
+	
+	$fh = fopen("pl.xml", "wt");
+	fwrite($fh, "<?xml version=\"1.0\" encoding=\"utf-8\"?><playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">
+		<trackList>
+			<track>
+				<title>{$queryArr[0]['title']}</title>
+				<location>{$queryArr[0]['path']}</location>
+			</track>
+		</trackList>
+	</playlist>");
+	fclose($fh);
+	
+	echo "<embed src='./jwPlayer.swf' width='512' height='404' type='application/x-shockwave-flash' 
+			pluginspage='http://www.macromedia.com/go/getflashplayer' 
+			bgcolor='#FFFFFF' 
+			name='theMediaPlayer' 
+			allowfullscreen='true' 
+			flashvars='file=pl.xml'>
+		  </embed>";
+}
+
 function addc()//add a comment to a track
 {
 	$sng = $_REQUEST["sng"];

@@ -1,14 +1,14 @@
 <?php
 	if (!isset($sess_id))
 	{
-		header("Location: ./index.php");
+		header("Location: .");
 		exit();
 	}
 ?>
 <script type="text/javascript" src="./js/lib/jquery.contextMenu.js"></script>
 <link type="text/css" rel="stylesheet" href="./css/jquery.contextMenu.css" />
 <script type="text/javascript">
-	<?php include_once("./js/main.js"); ?>
+	<?php include_once("./js/music.js"); ?>
 </script>
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
@@ -73,10 +73,11 @@
 	<div class="hlist">
 		<!-- main navigation: horizontal list -->
 		<ul>
-			<li class="active"><strong>Search/Browse</strong></li>
-			<li><a href="./index.php?p=pl">My Playlists</a></li>
-			<li><a href="./index.php?p=adm">Aministration</a></li>
-			<li><a href="./index.php?p=about">About</a></li>
+			<li class="active"><strong>Music</strong></li>
+			<li><a href="./?p=pl">Music Playlists</a></li>
+			<li><a href="./?p=movies">Movies</a></li>
+			<li><a href="./?p=adm">Aministration</a></li>
+			<li><a href="./?p=about">About</a></li>
 			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>

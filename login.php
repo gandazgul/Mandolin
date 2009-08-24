@@ -41,7 +41,7 @@
 			$_SESSION["userAdminLevel"] = $queryArr[0][3];
 			$_SESSION["id"] = sha1(session_id());
 			//print_r($_SESSION);
-			header("Location: ./index.php?p=main");
+			header("Location: .");
 			exit();
 	    }
 		header("Location: ./index.php?passw=false");

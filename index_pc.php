@@ -7,7 +7,7 @@
 	fclose($fver);
 	//VERSION END
 
-	$p = (isset($_GET["p"])) ? $_GET["p"] : "main";
+	$p = (isset($_GET["p"])) ? $_GET["p"] : "music";
 	if (isset($_SESSION["id"]))
 		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
 	else

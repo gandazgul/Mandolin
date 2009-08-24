@@ -16,16 +16,17 @@ function procSearchResults(results)
 {
 	displayArtists(results["art"]);
 	displayAlbums(results["alb"]);
-	//albOnChange(results["sng"]);
+	displaySongs(results["sng"]);
 }
 
 function queryDB(query)
 {
+	//alert(query);
 	if (query == "")
 	{
-		_getArt();
-		$("#albList")[0].options.length = 0;
-		$("#songList")[0].options.length = 0;
+		getArtists();
+		$("#albumList").html('');
+		$("#songList").html('');
 		return;
 	}
 	postData = "a=search&q=" + query + "&SID=" + SID;
@@ -36,6 +37,7 @@ var srchTimerID;
 
 function search(query, reschedule)
 {
+	//TODO Exclude ctrl from triggering this function
 	clearTimeout(srchTimerID);
 	if (reschedule)
 	{
@@ -45,6 +47,7 @@ function search(query, reschedule)
 	else
 	{
 		queryDB(query);
+		
 	}	
 }
 
@@ -242,7 +245,7 @@ $(document).ready(function(){
 	});
 	
 	$("#albumList").selectable({
-		stop: function(){
+		/*stop: function(){
 			var strResult = "";
 			//alert(this.id);
 			$(".ui-selected", this).each(function(){
@@ -252,7 +255,7 @@ $(document).ready(function(){
 			});
 			//alert(strResult);
 			getSongs(strResult);
-		}
+		}*/
 	});	
 
 	$("#songList").selectable({
