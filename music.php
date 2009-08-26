@@ -16,9 +16,9 @@
 	#artistsList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
 	#albumList .ui-selected { border: 1px solid orange; }
 	#artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
-	#artistsList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
-	#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 0.8em; text-align: center;  }	
-	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 10px; }
+	#artistsList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 11px; font-weight: bold; }
+	#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 11px; font-weight: bold; text-align: center;  }	
+	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 11px; font-weight: bold; }
 </style>
 <form method="post" action="./ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
