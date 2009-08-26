@@ -83,7 +83,7 @@
 		</div>
 		<div class="page">
 			<div id="header">    	
-				<img alt="newMusicServer logo" src="logo.jpg" />
+				<img alt="newMusicServer logo" src="./images/logo.jpg" />
 				<div style="position: absolute; top: 10px; left: 200px">
 					<?php
 						$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";

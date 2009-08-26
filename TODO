@@ -1,0 +1,24 @@
+TODO:
+- Settings in admin page.
+- Existing users table, with options to delete, add, rename, reset passw, etc
+
+- add option to play music in the browser using the flash player.
+
+- revise createDB and updateDB.
+- Make option to add a scpecific directory to the db.
+- Change createDB to search for everything, parse the path, if path does not provide all info put it under artist: unknown or album: unknown
+- Make playlists permanent.
+
+- Add more settings.
+
+- Revamp playlists section.
+
+- Finish Movies!
+- Make the movies list an accordion and make it 100% wide, make the movie player popup.
+
+- Make playlists XML XSPF   :(  I dont like XML but it seems this format is supported everywhere.
+- concat MP3 for blackberry.
+
+- Finish the install script.
+
+
