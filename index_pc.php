@@ -7,7 +7,7 @@
 	fclose($fver);
 	//VERSION END
 
-	$p = (isset($_GET["p"])) ? $_GET["p"] : "main";
+	$p = (isset($_GET["p"])) ? $_GET["p"] : "music";
 	if (isset($_SESSION["id"]))
 		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
 	else
@@ -65,13 +65,13 @@
 		function hideError()
 		{
 			setTimeout(function(){
-				$("#errorDiv").removeClass("important").hide();
+				$("#errorDiv").css("height", "0px").css("padding", "0px").hide().text("");
 			}, 10000);
 		}
 		
 		function displayError(data)
 		{
-			$("#errorDiv").addClass("important").text(data).effect('slide', {}, 500, hideError);
+			$("#errorDiv").text(data).show().animate({height: "15px", padding: "10px"}, 500, "linear", hideError);
 		}	
 	</script>
 </head>

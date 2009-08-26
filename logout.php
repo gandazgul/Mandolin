@@ -10,7 +10,7 @@
 	    //setcookie($sName, '', time()-42000, '/');
 		setcookie(session_name(), session_id(), 1, '/');
 		session_destroy();
-		header("Location: ./index.php");	
+		header("Location: .");	
 	}
 	else
 		echo "There was a problem with the session handling. Reload the page.";

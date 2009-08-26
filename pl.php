@@ -1,7 +1,7 @@
 <?php
 	if (!isset($sess_id))
 	{
-		header("Location: ./index.php");
+		header("Location: .");
 		exit();
 	}
 ?>
@@ -19,16 +19,17 @@
 	<div class="hlist">
 		<!-- main navigation: horizontal list -->
 		<ul>
-			<li><a href="./index.php?p=main">Search/Browse</a></li>
-			<li class="active"><strong>My Playlists</strong></li>
-			<li><a href="./index.php?p=adm">Aministration</a></li>
-			<li><a href="./index.php?p=about">About</a></li>
+			<li><a href=".">Music</a></li>
+			<li class="active"><strong>Music Playlists</strong></li>
+			<li><a href="./?p=movies">Movies</a></li>
+			<li><a href="./?p=adm">Aministration</a></li>
+			<li><a href="./?p=about">About</a></li>
 			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv"></div>
+	<div id="errorDiv" class="important" style="display: none"></div>
 </div>
 <div id="main">
 	<div class="subcolumns">

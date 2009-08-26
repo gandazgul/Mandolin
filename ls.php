@@ -67,17 +67,69 @@ function sng()
 	$tok = strtok($alb, "|");
 	while($tok !== false)
 	{
-		$query = $dbh->query("SELECT song_id, song_name, song_comments FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
+		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
 		$queryArr = $query->fetchAll();
 		//print_r($queryArr);
 		for($i = 0; $i < count($queryArr); $i++)
 		{
-			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => utf8_encode($queryArr[$i]["song_comments"]));
+			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
 		}
 		$tok = strtok("|");
 	}//from the while
 	echo json_encode($sngArr);
 	$dbh = null;
+}
+
+function mov()
+{
+	$dbh = new PDO("sqlite:./db/movies.db");
+	$movArr = array();	
+	$query = $dbh->query("SELECT DISTINCT category FROM movies ORDER BY `category`");
+	$catArr = $query->fetchAll();
+	//print_r($queryArr);
+	$sth = $dbh->prepare("SELECT title, mID FROM movies WHERE category = ?");
+	for($i = 0; $i < count($catArr); $i++)
+	{
+		$cat = $catArr[$i][0];
+		$sth->execute(array($cat));
+		$movArr = $sth->fetchAll();
+		$movies[$i][] = $catArr[$i][0];
+		for ($j = 0; $j < count($movArr); $j++)
+		{	
+			$movies[$i][] = array("id" => $movArr[$j]["mID"], "title" => $movArr[$j]["title"]);
+		}
+	}
+	echo json_encode($movies);
+	$dbh = null;
+}
+
+function playmov()
+{
+	$id = $_REQUEST["id"];
+	
+	$dbh = new PDO("sqlite:./db/movies.db");
+	$query = $dbh->query("SELECT title, path FROM movies WHERE mID=$id");
+	$queryArr = $query->fetchAll();
+	$dbh = null;
+	
+	$fh = fopen("pl.xml", "wt");
+	fwrite($fh, "<?xml version=\"1.0\" encoding=\"utf-8\"?><playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">
+		<trackList>
+			<track>
+				<title>{$queryArr[0]['title']}</title>
+				<location>{$queryArr[0]['path']}</location>
+			</track>
+		</trackList>
+	</playlist>");
+	fclose($fh);
+	
+	echo "<embed src='./jwPlayer.swf' width='512' height='404' type='application/x-shockwave-flash' 
+			pluginspage='http://www.macromedia.com/go/getflashplayer' 
+			bgcolor='#FFFFFF' 
+			name='theMediaPlayer' 
+			allowfullscreen='true' 
+			flashvars='file=pl.xml'>
+		  </embed>";
 }
 
 function addc()//add a comment to a track
@@ -247,14 +299,15 @@ function play()//makes a list of the tracks selected in the sng list
 	
 	//echo $listContents;
 	$arr = json_decode($listContents);
-	if($_REQUEST["rnd"] == "true") shuffle($arr);
+	if (isset($_REQUEST["rnd"]) && ($_REQUEST["rnd"] == "true")) 
+		shuffle($arr);
 	//print_r($arr);
 	
 	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=:sng_id");
+	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
 	for ($i = 0; $i < count($arr); $i++)
 	{
-		$query->execute(array(':sng_id' => $arr[$i]));
+		$query->execute(array($arr[$i]));
 		$queryArr = $query->fetchAll();
 		$song_name = $queryArr[0][1];
 		$song_id = $queryArr[0][0];
@@ -276,10 +329,15 @@ function cpl()//creates a playlist
 	$sng = $_REQUEST["sng"];
 	//echo "$name, $sng, $userName";
 	$dbh = new PDO("sqlite:./db/users.db");
+	$query = $dbh->query("SELECT * FROM playlists WHERE pl_name='$name'");
+	if (count($query->fetchAll()) != 0)
+	{
+		echo "ERROR: Playlist \"$name\" already exists. Please enter a different name.";
+		return;
+	}
 	$query = $dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$name', '$sng', '$userName')");
 	if ($query == 0)
-	{
-		//echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());		
+	{		
 		$errorArr = $dbh->errorInfo();
 		echo "ERROR: Creating the playlist \"$name\": ".$errorArr[2];
 		return;
