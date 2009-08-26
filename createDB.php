@@ -230,11 +230,12 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
 	<div class="hlist">
 		<!-- main navigation: horizontal list -->
 		<ul>
-			<li><a href="./index.php?p=main">Search/Browse</a></li>
-			<li><a href="./index.php?p=pl">My Playlists</a></li>
-			<li><a href="./index.php?p=adm">Aministration</a></li>
-			<li><a href="./index.php?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>	
+			<li><a href="./?p=music">Music</a></li>
+			<li><a href="./?p=pl">Music Playlists</a></li>
+			<li><a href="./?p=movies">Movies</a></li>
+			<li><a href="./?p=adm">Aministration</a></li>
+			<li><a href="./?p=about">About</a></li>
+			<li><a href="./logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>
