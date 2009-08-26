@@ -67,12 +67,12 @@ function sng()
 	$tok = strtok($alb, "|");
 	while($tok !== false)
 	{
-		$query = $dbh->query("SELECT song_id, song_name, song_comments FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
+		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
 		$queryArr = $query->fetchAll();
 		//print_r($queryArr);
 		for($i = 0; $i < count($queryArr); $i++)
 		{
-			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"], "comm" => utf8_encode($queryArr[$i]["song_comments"]));
+			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
 		}
 		$tok = strtok("|");
 	}//from the while
@@ -299,14 +299,15 @@ function play()//makes a list of the tracks selected in the sng list
 	
 	//echo $listContents;
 	$arr = json_decode($listContents);
-	if($_REQUEST["rnd"] == "true") shuffle($arr);
+	if (isset($_REQUEST["rnd"]) && ($_REQUEST["rnd"] == "true")) 
+		shuffle($arr);
 	//print_r($arr);
 	
 	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=:sng_id");
+	$query = $dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
 	for ($i = 0; $i < count($arr); $i++)
 	{
-		$query->execute(array(':sng_id' => $arr[$i]));
+		$query->execute(array($arr[$i]));
 		$queryArr = $query->fetchAll();
 		$song_name = $queryArr[0][1];
 		$song_id = $queryArr[0][0];
@@ -328,10 +329,15 @@ function cpl()//creates a playlist
 	$sng = $_REQUEST["sng"];
 	//echo "$name, $sng, $userName";
 	$dbh = new PDO("sqlite:./db/users.db");
+	$query = $dbh->query("SELECT * FROM playlists WHERE pl_name='$name'");
+	if (count($query->fetchAll()) != 0)
+	{
+		echo "ERROR: Playlist \"$name\" already exists. Please enter a different name.";
+		return;
+	}
 	$query = $dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$name', '$sng', '$userName')");
 	if ($query == 0)
-	{
-		//echo "ERROR: Inserting new playlist: $name from user: $userName with this content: $sng<br/>Error Info: ".implode(" ", $dbh->errorInfo());		
+	{		
 		$errorArr = $dbh->errorInfo();
 		echo "ERROR: Creating the playlist \"$name\": ".$errorArr[2];
 		return;

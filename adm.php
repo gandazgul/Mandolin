@@ -24,7 +24,7 @@
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv"></div>
+	<div id="errorDiv" class="important" style="display: none"></div>
 </div>
 <div id="main" style="padding: 0 20px;">
 	<div id="accordion">

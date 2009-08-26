@@ -13,11 +13,12 @@
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
 	#artistsList .ui-selecting, #albumList .ui-selecting, #songList .ui-selecting { background: #EDF2F8; }
-	#artistsList .ui-selected, #albumList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
+	#artistsList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
+	#albumList .ui-selected { border: 1px solid orange; }
 	#artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
 	#artistsList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
 	#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 0.8em; text-align: center;  }	
-	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
+	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 10px; }
 </style>
 <form method="post" action="./ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
@@ -37,18 +38,19 @@
 <ul id="artnAlbMenu" class="contextMenu">
 	<li class="play"><a href="#play">Play</a></li>
 	<li class="playrand"><a href="#playrand">Play Random</a></li>	
-	<li class="rename separator"><a href="#rename">Rename</a></li>
-	<li class="delete"><a href="#delete">Delete</a></li>
+	<!--li class="rename separator"><a href="#rename">Rename</a></li>
+	<li class="delete"><a href="#delete">Delete</a></li-->
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
 <ul id="songsMenu" class="contextMenu">
 	<li class="play"><a href="#play">Play</a></li>
 	<li class="playrand"><a href="#playrand">Play Random</a></li>	
-	<li class="rename separator"><a href="#rename">Rename</a></li>
-	<li class="delete"><a href="#delete">Delete</a></li>
+	<li class="selectall separator"><a href="#selectall">Select All</a></li>
 	<li class="createpl separator"><a href="#createpl">Create Playlist</a></li>
 	<li class="addtopl"><a href="#addtopl">Add to Existing Playlist</a></li>
+	<!--li class="rename separator"><a href="#rename">Rename</a></li>
+	<li class="delete"><a href="#delete">Delete</a></li-->
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
@@ -83,7 +85,7 @@
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv"></div>
+	<div id="errorDiv" class="important" style="display: none"></div>
 	<p>
 		<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
 		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />

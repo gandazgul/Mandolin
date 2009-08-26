@@ -64,27 +64,80 @@ function sngOnChange(sng_value)
 	$("#sngID").val(data[0]);
 }
 
+function getSelected(list)
+{
+	selected = $(list + " .ui-selected");
+	result = "";
+	for (i = 0; i < selected.length; i++)
+	{
+		result += selected[i].id + "|";
+	}
+	return result;
+}
+
+function displayAddToPLDiag(savedPLArr)
+{
+	$("#tmpPlList")[0].options.length = 0;
+	for (i = 0; i < savedPLArr.length; i++)
+	{
+		$("#tmpPlList").append("<option value='" + savedPLArr[i] + "'>" + savedPLArr[i] + "</option>");	
+	}
+	$("#dialog").dialog('open');
+}
+
 function displaySongs(sngArr)
 {
 	$("#songList").html('');
 	for (i = 0; i < sngArr.length; i++)
 	{
-		$("#songList").append("<li class='ui-widget-content' id='["+ sngArr[i].id + ", \"" + sngArr[i].comm + "\"]'>"+ sngArr[i].name +"</li>");	
+		$("#songList").append("<li class='ui-widget-content' id='" + sngArr[i].id + "'>"+ sngArr[i].name +"</li>");	
 	}
 	
-	$("#songList li").contextMenu({
-		menu: 'songsMenu'
-	}, function(action, el, pos) {
-		switch (action)
+	$("#songList li").contextMenu(
+		{menu: 'songsMenu'}, 
+		function(action, el, pos)
 		{
-			case "play":
-			case "playrand": 
-			{ 
-				alert("TODO: Implement this. Song: " + $(el).attr('id')); 
-				break; 
-			}
-		}
-	});
+			switch (action)
+			{
+				case "playrand":
+				case "play": {
+					sngIDs = getSelected("#songList");
+					if (sngIDs == "") displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+					if (action == "playrand")
+						$("#rnd").val("true");
+					else
+						$("#rnd").val("false");
+					$("#sng").val(sngIDs);
+					$("#playForm").get(0).submit();
+					break;
+				}
+				case "selectall": {
+					$("#songList").children().addClass("ui-selected");
+					break;
+				}
+				case "createpl": {
+					sngIDs = getSelected("#songList");
+					if (sngIDs == "") 
+					{
+						displayError("I can't create an empty Playlist. Select some tracks first or click Select All, then Create Playlist.");
+						break;
+					}
+					name = prompt("Enter a name for the new playlist: ");
+					if ((name == null) || (name == "")) break;
+					
+					postData = "a=cpl&sng=" + sngIDs + "&pl=" + name + "&SID=" + SID;
+					$.post("./ls.php", postData, displayError);
+					break;
+				}
+				case "addtopl": {
+					postData = "a=saved&un=<?php if(isset($_SESSION['username'])) echo $_SESSION['username']; ?>&SID=" + SID;
+					$.post("./ls.php", postData, displayAddToPLDiag, "json");
+					break;
+				}
+			}//switch
+			
+		}//function
+	);
 	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
 }
 
@@ -245,7 +298,7 @@ $(document).ready(function(){
 	});
 	
 	$("#albumList").selectable({
-		/*stop: function(){
+		stop: function(){
 			var strResult = "";
 			//alert(this.id);
 			$(".ui-selected", this).each(function(){
@@ -255,7 +308,7 @@ $(document).ready(function(){
 			});
 			//alert(strResult);
 			getSongs(strResult);
-		}*/
+		}
 	});	
 
 	$("#songList").selectable({
@@ -281,7 +334,7 @@ $(document).ready(function(){
 			'Add to playlist': function() 
 			{
 				pl_name = $("#tmpPlList").val();
-				postData = "a=adds&name=" + pl_name + "&pl=" + getSelectedOptions($("#songList")[0]) + "&SID=" + SID;
+				postData = "a=adds&name=" + pl_name + "&pl=" + getSelected("#songList") + "&SID=" + SID;
 				$.post("./ls.php", postData, displayError);
 				$(this).dialog('close');
 			},

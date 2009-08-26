@@ -29,7 +29,7 @@
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv"></div>
+	<div id="errorDiv" class="important" style="display: none"></div>
 </div>
 <div id="main">
 	<div class="subcolumns">

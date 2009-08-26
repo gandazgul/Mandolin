@@ -41,7 +41,7 @@
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv"></div>
+	<div id="errorDiv" class="important" style="">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
 	<p>
 		<label for="sQuery" class="title">Type in a movie title: </label>
 		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />

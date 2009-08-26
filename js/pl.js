@@ -1,9 +1,9 @@
 $(document).ready(function(){
 	postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
-	$.post("./ls.php", postData, getSavedPL, "json");
+	$.post("./ls.php", postData, displaySavedPL, "json");
 });
 
-function getSavedPL(savedPLArr)
+function displaySavedPL(savedPLArr)
 {
 	$("#plList")[0].options.length = 0;
 	$("#plContents")[0].options.length = 0;
@@ -60,18 +60,17 @@ function renPL()
 {
 	plSelect = $("#plList")[0];
 	
-	if (plSelect.selectedIndex == -1)
-	{
-		alert("Please select a list first.");
+	if (plSelect.selectedIndex == -1)//no list selected
 		return;
-	}
 	else
 	{
 		plName = plSelect.options[plSelect.selectedIndex].value;
-		plNewName = trim(prompt("Enter a new name for \"" + plName + "\"", plName));
+		plNewName = prompt("Enter a new name for \"" + plName + "\"", plName);
+		if ((plNewName == null) || (plNewName == "")) return;
+		plNewName = trim(plNewName);
 		//alert(plName + " " + plNewName);
 		postData = "a=ren&pl=" + plName + "&npl=" + plNewName + "&SID=" + SID;
-		$.post("./ls.php", postData, getSavedPL, 'json');
+		$.post("./ls.php", postData, displaySavedPL, 'json');
 	}
 }
 
@@ -79,17 +78,14 @@ function delPL()
 {
 	plSelect = $("#plList")[0];
 	
-	if (plSelect.selectedIndex == -1)
-	{
-		alert("Please select a list first.");
-		return;
-	}
+	if (plSelect.selectedIndex == -1)//no list selected
+		 return;
 	else
 	{
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
 		postData = "a=del&pl=" + pl_name + "&SID=" + SID;
-		$.post("./ls.php", postData, getSavedPL, 'json');
+		$.post("./ls.php", postData, displaySavedPL, 'json');
 	}
 }
 
