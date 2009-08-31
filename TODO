@@ -1,12 +1,13 @@
 TODO:
 - Settings in admin page.
+- revise createDB and updateDB.
+- Make option to add a scpecific directory to the db.
+- Change createDB to search for everything, parse the path, if path does not provide all info put it under artist: unknown or album: unknown
+
 - Existing users table, with options to delete, add, rename, reset passw, etc
 
 - add option to play music in the browser using the flash player.
 
-- revise createDB and updateDB.
-- Make option to add a scpecific directory to the db.
-- Change createDB to search for everything, parse the path, if path does not provide all info put it under artist: unknown or album: unknown
 - Make playlists permanent.
 
 - Add more settings.

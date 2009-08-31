@@ -157,20 +157,11 @@ if ($result === false)
 }
 //---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------
 //config
-$artCount = 0;
-$albCount = 0;
 $sngCount = 0;
-
-$fset = fopen("./settings", "rt");
-fgets($fset);//musicURL
-$root = fgets($fset);
-$root = substr($root, strpos($root, "=") + 1, -1);
-if (substr($root, -1) != "/")
-	$root .= "/";
-fclose($fset);
+$ext = array("mp3", "ogg", "flac", "wma", "mp4"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
 
 //functions
-function processArtDir($root, $art_id)//processes the second level (Artist dir) looking for albums(folders)
+/*function processArtDir($root, $art_id)//processes the second level (Artist dir) looking for albums(folders)
 {
     global $dbh, $albCount;
 
@@ -221,7 +212,7 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
         }
     }
     closedir($dirH);
-}
+}*/
 
 ?>
 <div id="nav">
@@ -243,12 +234,16 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
 	<div id="errorDiv"></div>
 </div>
 <div id="main">
-	<p style="font-weight: bold; ">Creating the Database</p>
-	- Database deleted and new one created<br />
-	- Scaning music directory(<?php echo $root; ?>)... DO NOT HIT THE BACK BUTTON ON YOUR BROWSER<br />
-	&nbsp;&nbsp; - Artists: <span id='art'></span><br />
-	&nbsp;&nbsp; - Albums: <span id='alb'></span><br />
-	&nbsp;&nbsp; - Songs: <span id='sng'></span><br />
+	<h1>Creating the Database</h1>
+	<ul>
+		<li>Database deleted and new one created</li>
+		<li>Scanning directories to add music to the new DB - <span style="color: FFCC00">DO NOT HIT THE BACK BUTTON ON YOUR BROWSER!!!</span></li>
+		<li><ul>
+			<!--li>Artists: <span id='art'></span></li-->
+			<!--li>Albums:  <span id='alb'></span></li-->
+			<li>Songs: <span id='sng'></span></li>
+		</ul></li>
+	</ul>
 	<?php
 	//functions
 	$dirH = opendir($root);

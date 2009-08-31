@@ -84,7 +84,7 @@
 	</td>
   </tr>
   <tr>
-  	<td colspan="2"><br><strong>Checking Permissions</strong><br><br></tr>
+  	<td colspan="2"><br><strong>Checking Permissions</strong><br><br>
   </tr>
   <tr>
     <td>Settings</td>

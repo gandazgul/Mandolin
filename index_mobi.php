@@ -1,11 +1,6 @@
 <?php
 	session_name("newMusicServer");	
 	session_start();
-	//VERSION
-	$fver = fopen("./version", "rt");
-	$version = fgets($fver);
-	fclose($fver);
-	//VERSION END
 
 	if (!isset($_SESSION["id"]) or ($_SESSION["id"] != sha1(session_id())))
 	{
@@ -15,10 +10,10 @@
 ?>
 <html>
 	<head>
-		<title>newMusicServer <?php echo $version; ?></title>
+		<title>newMusicServer <?php echo $settings['version']; ?></title>
 	</head>
 	<body>
-		<p>newMusicServer <?php echo $version; ?></p>
+		<p>newMusicServer <?php echo $settings['version']; ?></p>
 		<div id="plList">
 			<?php
 				$userName = $_SESSION["username"];

@@ -90,6 +90,9 @@
 
 	} // ends function mobile_device_detect
 	
+	$settings = json_decode(file_get_contents("./settings"), true);
+	//print_r($settings);
+	
 	if(device_detect(true,true,true,true,true,true,false,false))
 	{
 		include('index_mobi.php');

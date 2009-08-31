@@ -1,12 +1,8 @@
 <?php
-//VERSION
-$fver = fopen("../version", "rt");
-$version = fgets($fver);
-fclose($fver);
-//VERSION END
-
 $usersDB = "../db/users.db";//sqlite
 $setFile = "../settings";
+
+$settings = json_decode(file_get_contents($setFile), true); 
 
 $sess_id = "to fool createDB";
 
@@ -28,7 +24,7 @@ $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 		}
 	</script>
 	<div style="float: top" align="center">
-		Thanks for downloading SCTree newMusicServer v<?php echo $version ?><br />
+		Thanks for downloading SCTree newMusicServer v<?php echo $settings["version"] ?><br />
 		Installation - Step <?php echo $step; ?>
 	</div><br />
 <?php
@@ -95,9 +91,7 @@ if ($step == 4)
 else
 if ($step == 5)
 {
-	$fset = fopen($setFile, "wt");
-	fputs($fset, "mstURL={$_POST[mstURL]}\n");
-	fclose($fset);
+	$settings["mstURL"] = $_POST[mstURL];
 ?>
 	<form action='./index.php?step=6' method='post'>
 		<strong>Where is the music?</strong><br />
@@ -112,9 +106,10 @@ if ($step == 6)
 {
 	//add the root to the settings file
 	$musicRoot = str_replace("\\", "/", $_POST["musicRoot"]);
-	$fset = fopen($setFile, "at");
-	fputs($fset, "musicRoot=$musicRoot\n");
-	fclose($fset);
+	$settings["musicRoot"] = $musicRoot;
+	
+	file_put_contents($setFile, json_encode($settings));
+	
 	//get the key
 	$dbh = new PDO("sqlite:../db/users.db"); //this code can be merged with the same one on login.php
 		$query = $dbh->query("SELECT last_key, user_name FROM users");
