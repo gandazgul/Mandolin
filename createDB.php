@@ -1,13 +1,15 @@
 <?php
-if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
+/*if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
 {
 	header("Location: ./index.php");
 	exit();
-}
+}*/
 
 ini_set('max_execution_time', '6000');
 
-@unlink("./db/music.db");
+require_once './backend/MusicDB.php';
+
+unlink("./db/music.db");
 $dbh = new PDO("sqlite:./db/music.db");
 //-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------
 $result = $dbh->exec("CREATE TABLE artists (
@@ -60,6 +62,13 @@ if ($result === false)
 	print_r($dbh->errorInfo());
 	die();
 }
+$result = $dbh->exec("INSERT INTO artists(art_id, art_name) VALUES (0, 'unknown')");
+if ($result === false)
+{
+	echo("FATAL ERROR: Inserting 'unknown' artist entry\n");
+	print_r($dbh->errorInfo());
+	die();
+}
 //-------------------------------------------------TABLE ALBUMS DEFINITION------------------------------
 $result = $dbh->exec("CREATE TABLE albums (
   alb_id      integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
@@ -95,14 +104,22 @@ if ($result === false)
 	print_r($dbh->errorInfo());
 	die();
 }
+$result = $dbh->exec("INSERT INTO albums(alb_id, alb_name, alb_art_id) VALUES (0, 'unknown', 0)");
+if ($result === false)
+{
+	echo("FATAL ERROR: Inserting 'unknown' album for the 'unknown' artist entry\n");
+	print_r($dbh->errorInfo());
+	die();
+}
 //-------------------------------------------------TABLE MUSIC DEFINITION------------------------------
 $result = $dbh->exec("CREATE TABLE music (
-  song_id        integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
-  song_path      varchar(255) NOT NULL UNIQUE,
-  song_name      varchar(60) NOT NULL,
-  song_album     integer NOT NULL DEFAULT 0,
-  song_art       integer NOT NULL DEFAULT 0,
-  song_comments  varchar(255),
+  song_id		varchar(40) PRIMARY KEY NOT NULL UNIQUE,
+  song_path		varchar(255) NOT NULL UNIQUE,
+  song_name		varchar(60) NOT NULL,
+  song_ext		varchar(4) NOT NULL,
+  song_album	integer NOT NULL DEFAULT 0,
+  song_art		integer NOT NULL DEFAULT 0,
+  song_comments	varchar(255),
   /* Foreign keys */
   FOREIGN KEY (song_album)
     REFERENCES artists(alb_id), 
@@ -156,64 +173,6 @@ if ($result === false)
 	die();
 }
 //---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------
-//config
-$sngCount = 0;
-$ext = array("mp3", "ogg", "flac", "wma", "mp4"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
-
-//functions
-/*function processArtDir($root, $art_id)//processes the second level (Artist dir) looking for albums(folders)
-{
-    global $dbh, $albCount;
-
-    $dirH = opendir($root);
-    if(!$dirH)
-       die ("FATAL ERROR: Can't read the directory: $root");
-    while (($file = readdir($dirH)) !== false)
-    {
-        if (($file == ".") or ($file == ".."))
-            continue;
-        if (is_dir($root.$file))
-        {
-            $dir = $root.$file."/";
-            $file = str_replace("'", "''", $file);
-            $dbh->exec("INSERT INTO albums(alb_id, alb_name, alb_art_id) VALUES ($albCount, '$file', $art_id)") or
-                die("FATAL ERROR: Inserting: $file into albums\n".implode(" ", $dbh->errorInfo()));
-            processAlbDir($dir, $art_id, $albCount);
-            $albCount++;
-			echo "<script language=\"javascript\">document.getElementById('alb').innerHTML = $albCount;</script>";
-			flush(); //ob_flush();			
-        }
-    }
-    closedir($dirH);
-}
-
-function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir), looking for music(mp3 file)
-{
-    global $dbh, $sngCount;
-
-    $dirH = opendir($root);
-    if(!$dirH)
-       die ("FATAL ERROR: Can't read the directory: $root");
-    while (($file = readdir($dirH)) !== false)
-    {
-        if (($file == ".") or ($file == ".."))
-            continue;
-        $ext = substr($file, strrpos($file, '.'));
-        if ((strtolower($ext) == ".mp3") or (strtolower($ext) == ".ogg") or (strtolower($ext) == ".flac") or (strtolower($ext) == ".wma")  or (strtolower($ext) == ".m4a") or (strtolower($ext) == ".mp4"))
-        {
-            $dir =  str_replace("'", "''", $root.$file);
-            $file = str_replace("'", "''", $file);
-            //echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$sngCount - $file<br/>";
-            $dbh->exec("INSERT INTO music(song_id, song_path, song_name, song_album, song_art) VALUES ('$sngCount', '$dir', '$file', '$alb_id', '$art_id')") or
-                die("FATAL ERROR: Inserting: $dir into music\n".implode(" ", $dbh->errorInfo()));
-            $sngCount++;
-			echo "<script language=\"javascript\">document.getElementById('sng').innerHTML = $sngCount;</script>";
-			flush(); //ob_flush();				
-        }
-    }
-    closedir($dirH);
-}*/
-
 ?>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
@@ -238,39 +197,18 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
 	<ul>
 		<li>Database deleted and new one created</li>
 		<li>Scanning directories to add music to the new DB - <span style="color: FFCC00">DO NOT HIT THE BACK BUTTON ON YOUR BROWSER!!!</span></li>
-		<li><ul>
-			<!--li>Artists: <span id='art'></span></li-->
-			<!--li>Albums:  <span id='alb'></span></li-->
+		<ul>
+			<li>Artists: <span id='art'></span></li>
+			<li>Albums:  <span id='alb'></span></li>
 			<li>Songs: <span id='sng'></span></li>
-		</ul></li>
+		</ul>
 	</ul>
-	<?php
-	//functions
-	$dirH = opendir($root);
-	if(!$dirH)
-		echo ("FATAL ERROR: Can't read the root directory($root)");
-	else
-	{
-		while (($file = readdir($dirH)) !== false)
-		{
-		    if (($file == ".") or ($file == ".."))
-		        continue;
-		    if (is_dir($root.$file))
-		    {
-		        $dir = $root.$file."/";
-		        $file = str_replace("'", "''", $file);
-		        //echo "$artCount - $file<br/>";
-		        $dbh->exec("INSERT INTO artists(art_id, art_name) VALUES ('$artCount', '$file')") or        
-		                die("FATAL ERROR: Inserting: $file into artists\n".implode(" ", $dbh->errorInfo()));
-		        processArtDir($dir, $artCount);
-		        $artCount++;
-				echo "<script language=\"javascript\">document.getElementById('art').innerHTML = $artCount;</script>";
-				flush(); //ob_flush();
-		    }
-		}
-		closedir($dirH);
-		echo "<p style='font-size: 16px; color: red; '>DONE</p>";
-	}
-	$dbh = null;
-	?>
 </div>
+<?php 
+//ob_flush();
+ob_end_flush();
+$musicDB = new MusicDB("./db/music.db"); 
+//echo $musicDB->getTotals_json();
+$musicDB->addToDB('C:/httpdocs/newmusicserver/', strlen('C:/httpdocs/newmusicserver/'));
+
+?>

@@ -37,11 +37,6 @@ function cpassw()
 		echo "ERROR: The password you entered is wrong";
 }
 
-function updDB()
-{
-	echo $art." TODO: implement this";
-}
-
 function nuser()
 {
 	global $dbh;
@@ -53,4 +48,6 @@ function nuser()
 		die("FATAL ERROR: While adding a new user to the database. ".implode(" ", $dbh->errorInfo()));
 	echo "User successfully added.";
 }
+
+
 ?>

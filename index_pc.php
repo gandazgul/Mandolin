@@ -7,6 +7,7 @@
 		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
 	else
 		$p = "login";
+	
 	$sess_id = session_id();
 
 	//print_r($_SESSION);

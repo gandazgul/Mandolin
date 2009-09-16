@@ -1,5 +1,6 @@
 <?php
 //TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
+//TODO: covert all this into the DB.
 session_name("newMusicServer");
 session_start();
 //print_r($_POST);
@@ -7,7 +8,10 @@ session_start();
 	header("Location: ./index.php");
 */
 
+require_once './backend/MusicDB.php';
+
 $action = $_REQUEST["a"];
+$musicDB = new MusicDB("./db/music.db");
 
 try
 {
@@ -20,64 +24,23 @@ catch(Exception $e)
 
 function art()
 {
-	global $action;
-	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->query("SELECT * FROM artists ORDER BY `art_name`");
-	$queryArr = $query->fetchAll();
-	//print_r($queryArr);		
-	$artArr = array();
-	for ($i = 0; $i < count($queryArr); $i++)
-	{
-		$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-	}
-	echo json_encode($artArr);
-	$dbh = null;
+	global $musicDB;
+	
+	echo $musicDB->getArtists_json();
 }
 
 function alb()
 {
-	global $action;
-	
-	$artist = $_REQUEST["artist"];
+	global $musicDB;
 
-	$dbh = new PDO("sqlite:./db/music.db");
-	$albArr = array();	
-	$tok = strtok($artist, "|");
-	while($tok !== false)
-	{
-		$query = $dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);
-		for($i = 0; $i < count($queryArr); $i++)
-		{
-			$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
-		}
-		$tok = strtok("|");
-	}//from the while
-	echo json_encode($albArr);
-	$dbh = null;
+	echo $musicDB->getAlbums_json($_REQUEST["artist"]);
 }
 
 function sng()
 {
-	$alb = $_REQUEST["alb"];
+	global $musicDB;
 	
-	$dbh = new PDO("sqlite:./db/music.db");
-	$sngArr = array();	
-	$tok = strtok($alb, "|");
-	while($tok !== false)
-	{
-		$query = $dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);
-		for($i = 0; $i < count($queryArr); $i++)
-		{
-			$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
-		}
-		$tok = strtok("|");
-	}//from the while
-	echo json_encode($sngArr);
-	$dbh = null;
+	echo $musicDB->getSongs_json($_REQUEST["alb"]);
 }
 
 function mov()
@@ -194,24 +157,9 @@ function search()
 
 function gett()//returns total artists, albums and songs
 {
-	$dbh = new PDO("sqlite:./db/music.db");
-	$queries = array();
-	$queries[] = "SELECT COUNT(art_id) FROM artists";
-	$queries[] = "SELECT COUNT(alb_id) FROM albums";
-	$queries[] = "SELECT COUNT(song_id) FROM music";
+	global $musicDB;
 	
-	$resultArr = array();
-	
-	for ($i = 0; $i < 3; $i++)
-	{
-		$query = $dbh->query($queries[$i]);
-		$queryArr = $query->fetchAll();
-		$resultArr[] = $queryArr[0][0];		
-	}
-	
-	echo json_encode($resultArr);
-	
-	$dbh = null;
+	echo $musicDB->getTotals_json();
 }
 
 function saved()//returns the list of playlists
