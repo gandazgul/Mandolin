@@ -112,7 +112,7 @@ class MusicDB
 	//------------------------------------------------------------ ADD Folder to DB --------------------------------------------------------
 	function _addToDB($folder, $root_length) 
 	{
-		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "php"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
+		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "php", "sys", "inf", "dll"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
 		if (substr($folder, -1) != '/')
 		{
 			$folder .= '/';
@@ -121,6 +121,8 @@ class MusicDB
 		$songStmt = $this->dbh->prepare("INSERT INTO music(song_id, song_path, song_name, song_ext, song_album, song_art) VALUES (:song_id, :song_path, :song_name, :song_ext, :alb_id, :art_id)");
 		$artStmt = $this->dbh->prepare("INSERT INTO artists(art_name) VALUES (?)");
 		$albStmt = $this->dbh->prepare("INSERT INTO albums(alb_name, alb_art_id) VALUES (?, ?)");
+		
+		//echo $folder;
 		
 		$dirH = opendir($folder);
 		if(!$dirH)
@@ -131,32 +133,35 @@ class MusicDB
 			{
 				if (($file == ".") or ($file == ".."))
 					continue;
-				//echo $file."\n";	
+				//echo $file."\n";
 				if (is_dir($folder.$file))
 				{
+					echo $folder.$file."\n";
 					$this->_addToDB($folder.$file, $root_length);
 				}
 				else
 				{
-					$ext = substr($file, strrpos($file, '.') + 1);
-					//echo $ext."\n";
-					if (array_search($ext,  $extArr) != 0)
+					//echo $folder.$file."\n";
+					$song_ext = strtolower(substr($file, strrpos($file, '.') + 1));
+					//echo $song_ext."\n";
+					if (array_search($song_ext,  $extArr) !== false)
 					{
 			        	$song_path = $folder.$file;
 			        	$song_name = substr($file, 0, strpos($file, '.'));
-						$song_ext = substr($file, strrpos($file, '.') + 1);
 						$sng_path_no_root = substr($song_path, $root_length, (strlen($song_name.$song_ext) + 1) * -1);
 						//echo $sng_path_no_root."\n";
 						$pathArr = explode("/", $sng_path_no_root);
 						//print_r($pathArr);
 						if (isset($pathArr[0])) $artist = $pathArr[0]; else $artist = ""; 
 						if (isset($pathArr[1])) $album = $pathArr[1]; else $album = "";
-						//echo "art: $artist, alb: $album\n";
+						//echo "art: $artist, alb: $album\n\n";
 						
 						$art_id = 0;
 						$alb_id = 0;
 						if ($artist != '')
 						{
+							$artist = $this->dbh->quote($artist);
+							echo $artist."\n";
 							try
 							{
 								$artStmt->execute(array($artist));
@@ -178,8 +183,10 @@ class MusicDB
 							{
 								if ($e->getCode() == 23000)
 								{
-									$query = $this->dbh->query("SELECT art_id FROM artists WHERE art_name='$artist'");
+									$query = $this->dbh->query("SELECT art_id FROM artists WHERE art_name=$artist");
+									echo "SELECT art_id FROM artists WHERE art_name=$artist\n";
 									$art_id = $query->fetchAll();
+									print_r($art_id);
 									$art_id = $art_id[0][0];
 								}
 								else
@@ -193,8 +200,10 @@ class MusicDB
 
 						if ($album != '')
 						{
-							//echo $album;
-							$query = $this->dbh->query("SELECT alb_id FROM albums WHERE alb_name='$album' AND alb_art_id=$art_id");
+							$album = $this->dbh->quote($album);
+							echo $album."\n";
+							$query = $this->dbh->query("SELECT alb_id FROM albums WHERE alb_name=$album AND alb_art_id=$art_id");
+							echo "SELECT alb_id FROM albums WHERE alb_name=$album AND alb_art_id=$art_id\n";
 							$alb_id = $query->fetchAll();
 							//print_r($alb_id);
 							if (count($alb_id) == 0)
@@ -221,7 +230,7 @@ class MusicDB
 						
 						$paramArr = array(':song_id' => sha1($folder.$file), ':song_path' => $song_path, 
 											':song_name' => $song_name, ':song_ext' => $song_ext, ':art_id' => $art_id, ':alb_id' => $alb_id);
-						//print_r($paramArr);
+						print_r($paramArr);
 						try
 						{
 							$songStmt->execute($paramArr);
