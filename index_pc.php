@@ -30,28 +30,6 @@
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		
-		function getSelectedOptions(objSelect)//get all selected options in a <select> and separate them with |
-		{
-			//alert(objSelect.options.length);
-			txt = "";
-			for (i = 0; i < objSelect.options.length; i++)
-			{
-				if(objSelect.options[i].selected)
-				{
-					value = objSelect.options[i].value;
-					c = value.toString().substr(0, 1);
-					
-					if (c == "[")
-					{
-						value = eval(value)[0];
-					}
-					//alert(value);
-					txt = txt + escape(value) + "|";
-				}
-			}
-			return txt;
-		}
-		
 		function trim(str) 
 		{
 			return str.replace(/^\s+|\s+$/g,"");

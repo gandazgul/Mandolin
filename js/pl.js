@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
+	postData = "a=saved&SID=" + SID;
 	$.post("./ls.php", postData, displaySavedPL, "json");
 });
 
@@ -9,11 +9,11 @@ function displaySavedPL(savedPLArr)
 	$("#plContents")[0].options.length = 0;
 	for (i = 0; i < savedPLArr.length; i++)
 	{
-		$("#plList").append("<option value='" + savedPLArr[i] + "'>" + savedPLArr[i] + "</option>");	
+		$("#plList").append("<option value=\"" + savedPLArr[i] + "\">" + savedPLArr[i] + "</option>");	
 	}
 }
 
-function plOnChange(plContArr)
+function _plOnChange(plContArr)
 {
 	$("#plContents")[0].options.length = 0;
 	for (i = 0; i < plContArr.length; i++)
@@ -22,13 +22,14 @@ function plOnChange(plContArr)
 	}
 }
 
-function _plOnChange(objSelect)
+function plOnChange()
 {
-	pl_name = getSelectedOptions(objSelect);
+	plSelect = $("#plList")[0];
+	pl_name = getSelectedOptions(plSelect);
 	//alert(pl_name);
-	postData = "a=retrPL&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&pl=" + pl_name + "&SID=" + SID;
+	postData = "a=retrPL&pl=" + pl_name + "&SID=" + SID;
 	//alert(postData);
-	$.post("./ls.php", postData, plOnChange, "json");
+	$.post("./ls.php", postData, _plOnChange, "json");
 }
 
 function ranPlayPL()
@@ -67,9 +68,8 @@ function renPL()
 		plName = plSelect.options[plSelect.selectedIndex].value;
 		plNewName = prompt("Enter a new name for \"" + plName + "\"", plName);
 		if ((plNewName == null) || (plNewName == "")) return;
-		plNewName = trim(plNewName);
 		//alert(plName + " " + plNewName);
-		postData = "a=ren&pl=" + plName + "&npl=" + plNewName + "&SID=" + SID;
+		postData = "a=ren&pl=" + escape(plName) + "&npl=" + escape(trim(plNewName)) + "&SID=" + SID;
 		$.post("./ls.php", postData, displaySavedPL, 'json');
 	}
 }
@@ -84,7 +84,7 @@ function delPL()
 	{
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
-		postData = "a=del&pl=" + pl_name + "&SID=" + SID;
+		postData = "a=del&pl=" + escape(pl_name) + "&SID=" + SID;
 		$.post("./ls.php", postData, displaySavedPL, 'json');
 	}
 }
@@ -103,11 +103,11 @@ function shuffle()
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
 		postData = "a=shuf&pl=" + pl_name + "&SID=" + SID;
-		$.post("./ls.php", postData, plOnChange, 'json');
+		$.post("./ls.php", postData, _plOnChange, 'json');
 	}
 }
 
-function getOptions(objSelect)//get all selected options in a <select> and separate them with |
+function getSelectedOptions(objSelect)//get all selected options in a <select> and separate them with |
 {
 	txt = "";
 	for (i = 0; i < objSelect.options.length; i++)
@@ -126,12 +126,13 @@ function delFromPl()
 	{
 		objSelect.options[objSelect.options.selectedIndex] = null;
 	}
-	sng_id = getOptions(objSelect);
+	sng_id = getSelectedOptions(objSelect);
 	//alert(sng_id);
-	plSelect = $("#plList")[0];
+	
+	plSelect = $("#plList")[0]; 
 	pl_name = plSelect.options[plSelect.selectedIndex].value
-	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id;
-	$.post("./ls.php", postData, displayError);
+	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
+	$.post("./ls.php", postData);
 }
 
 function move(up)
@@ -162,10 +163,10 @@ function move(up)
 		objSelect.options[x].selected = false;
 	}
 	
-	sng_id = getOptions(objSelect);
+	sng_id = getSelectedOptions(objSelect);
 	//alert(sng_id);
 	plSelect = $("#plList")[0];
 	pl_name = plSelect.options[plSelect.selectedIndex].value
-	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id;
+	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
 	$.post("./ls.php", postData);
 }

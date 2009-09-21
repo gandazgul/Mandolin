@@ -1,4 +1,4 @@
-function setComm()
+/*function setComm()
 {
 	comm = $("#sngComm").val();
 	alb_id = getSelectedOptions($("#albList")[0]);
@@ -10,7 +10,7 @@ function setComm()
 	postData += "&SID=" + SID;
 	//alert(postData);
 	$.post("./ls.php", postData, albOnChange, "json");
-}
+}*/
 
 function procSearchResults(results)
 {
@@ -102,6 +102,7 @@ function displaySongs(sngArr)
 				case "playrand":
 				case "play": {
 					sngIDs = getSelected("#songList");
+					//alert(sngIDs);
 					if (sngIDs == "") displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
 					if (action == "playrand")
 						$("#rnd").val("true");
@@ -115,22 +116,9 @@ function displaySongs(sngArr)
 					$("#songList").children().addClass("ui-selected");
 					break;
 				}
-				case "createpl": {
-					sngIDs = getSelected("#songList");
-					if (sngIDs == "") 
-					{
-						displayError("I can't create an empty Playlist. Select some tracks first or click Select All, then Create Playlist.");
-						break;
-					}
-					name = prompt("Enter a name for the new playlist: ");
-					if ((name == null) || (name == "")) break;
-					
-					postData = "a=cpl&sng=" + sngIDs + "&pl=" + name + "&SID=" + SID;
-					$.post("./ls.php", postData, displayError);
-					break;
-				}
+				case "createpl": { createPlaylist(); break;	}
 				case "addtopl": {
-					postData = "a=saved&un=<?php if(isset($_SESSION['username'])) echo $_SESSION['username']; ?>&SID=" + SID;
+					postData = "a=saved&SID=" + SID;
 					$.post("./ls.php", postData, displayAddToPLDiag, "json");
 					break;
 				}
@@ -225,57 +213,21 @@ function selRandPlay()
 	selPlay();
 }
 
-function selPlay()
-{
-	sng = getSelectedOptions($("#songList")[0]);
-	
-	if (sng == "") 
-	{
-		alert("The song list is empty, please select an album first.");
-	}
-	else 
-	{
-		$("#sng").val(sng);
-		$("#playForm")[0].submit();
-		$("#rnd").val("false");
-	}
-}
-
 function createPlaylist()
 {
-	sng = getSelectedOptions($("#songList")[0]);
+	sng = getSelected("#songList");
 	if (sng == "") 
 	{
 		alert("The song list is empty, please select an album first.");
 		exit();
 	}			
 	plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+	//alert(plName);
 	if (plName != null)
 	{
-		postData = "a=cpl&sng=" + sng + "&pl=" + plName + "&SID=" + SID;
+		postData = "a=cpl&content=" + sng + "&pl=" + escape(plName) + "&SID=" + SID;
 		$.post("./ls.php", postData, displayError);
 	}
-}
-
-function addToPlaylist(plArr)
-{
-	$("#tmpPlList")[0].options.length = 0;
-	for (i = 0; i < plArr.length; i++)
-	{
-		$("#tmpPlList").append("<option value='" + plArr[i] + "'>" + plArr[i] + "</option>");	
-	}
-	$('#dialog').dialog('open');
-}
-
-function _addToPlaylist()
-{
-	if ($("#songList")[0].selectedIndex == -1)
-	{
-		alert("There are no songs selected, please make a selection first.");
-		return;
-	}
-	postData = "a=saved&un=<?php if(isset($_SESSION["username"])) echo $_SESSION["username"]; ?>&SID=" + SID;
-	$.post("./ls.php", postData, addToPlaylist, "json");
 }
 
 $(document).ready(function(){
@@ -334,7 +286,7 @@ $(document).ready(function(){
 			'Add to playlist': function() 
 			{
 				pl_name = $("#tmpPlList").val();
-				postData = "a=adds&name=" + pl_name + "&pl=" + getSelected("#songList") + "&SID=" + SID;
+				postData = "a=updPL&name=" + pl_name + "&newC=" + getSelected("#songList") + "&concat=true&SID=" + SID;
 				$.post("./ls.php", postData, displayError);
 				$(this).dialog('close');
 			},

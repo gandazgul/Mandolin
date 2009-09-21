@@ -36,7 +36,7 @@
 	  <div class="c33l">
 	    <div class="subcl" style="padding-left: 20px; ">
 			<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
-			<select id="plList" size="20" style="width: 100%; " onchange="_plOnChange(this)"></select>		
+			<select id="plList" size="20" style="width: 100%; " onchange="plOnChange()"></select>		
 	    </div>
 	  </div>
 	  <div class="c33l">
