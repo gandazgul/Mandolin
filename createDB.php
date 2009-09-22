@@ -5,7 +5,7 @@ if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
 	exit();
 }
 
-require_once './backend/MusicDB.php';
+require_once './models/MusicDB.php';
 ini_set('max_execution_time', '6000');
 
 $musicDB = new MusicDB("./db/music.db");

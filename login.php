@@ -61,13 +61,15 @@
 						<?php endif; ?>
 						<label for="username">Username:</label>
 						<input type="text" size="20" name="username" id="username" />
+					</div>
+					<div class="type-text">
 						<label for="passw">Password:</label>
 						<input type="password" size="20" name="passw" id="passw" />
 					</div>
-					<div class="type-button">
-						<input type="submit" value="Login" />
-					</div>
 				</fieldset>
+				<div class="type-button">
+					<input type="submit" value="Login" />
+				</div>
 			</form>
 		</div>
 	<?php endif; ?>

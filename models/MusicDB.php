@@ -91,6 +91,48 @@ class MusicDB
 		return json_encode($this->getSongs($alb_id));
 	}
 	
+	//-------------------------------------------------------Search-------------------------------------------------------------------------
+	function search_json($queryStr)
+	{
+		$resultArr = array();
+		$queryArr = array();
+		
+		$queries = array();
+		$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '%$queryStr%'";
+		$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '%$queryStr%'";
+		$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '%$queryStr%'";
+		$sections = array();
+		$sections[] = "art";
+		$sections[] = "alb";
+		$sections[] = "sng";
+		$attributes = array();
+		$attributes[] = "id";
+		$attributes[] = "name";
+		$attributes[] = "comm";
+		
+		for ($section = 0; $section < 3; $section++)//go thru the 3 queries and sections
+		{
+			$queryArr = $this->dbh->query($queries[$section])->fetchAll();
+			$curSection = $sections[$section];
+			
+			if (count($queryArr) != 0)// if we found something
+			{
+				for ($result = 0; $result < count($queryArr); $result++)//go thru all the results
+				{
+					for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
+					{
+						$resultArr[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr]; //I dont remeber why but it was utf8_encode here.
+					}
+				}
+			}
+			else
+				$resultArr[$curSection] = array();
+		}
+	
+		//print_r($resultArr);
+		return json_encode($resultArr);
+	}	
+	
 	//-----------------------------------------------------GET TOTALS----------------------------------------------------------------------
 	function getTotals_json()
 	{

@@ -94,17 +94,17 @@
 <div id="main">
 	<div class="subcolumns">
 		<div class="c25l">
-			<div class="subcl" id="artistsListDiv" style="padding-left: 20px; height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0;">
+			<div class="subcl" id="artistsListDiv" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 0 0 20px;">
 				<ol id="artistsList"></ol>
 			</div>
 		</div>
-		<div class="c50l">
-			<div class="subcl" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 1em;">
-				<ol id="albumList" style="width: 475px;"></ol>
+		<div class="c50l" style="width: 49.9%; "><!-- IE7 Hack -->
+			<div class="subcl" id="albumListDiv" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 0 0 10px;">
+				<ol id="albumList"></ol>
 			</div>
 		</div>
 		<div class="c25l">
-			<div class="subcl" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0;">
+			<div class="subcl" id="songListDiv" style="height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 0 0 10px;"">
 				<ol id="songList"></ol>
 			</div>
 		</div>

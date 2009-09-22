@@ -8,8 +8,8 @@ session_start();
 	header("Location: ./index.php");
 */
 
-require_once './backend/MusicDB.php';
-require_once './backend/UsersDB.php';
+require_once './models/MusicDB.php';
+require_once './models/UsersDB.php';
 
 $settings = json_decode(file_get_contents("./settings"), true);
 $action = $_REQUEST["a"];
@@ -59,49 +59,11 @@ function sng()
 
 function search()
 {
-	//init ------------------------------------------------------------------------------------------------------------
+	global $musicDB;
+	
 	$queryStr = $_REQUEST["q"];
-	$dbh = new PDO("sqlite:./db/music.db");
-	$resultArr = array();
-	$queryArr = array();
 	
-	$queries = array();
-	$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '%$queryStr%'";
-	$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '%$queryStr%'";
-	$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '%$queryStr%'";
-	$sections = array();
-	$sections[] = "art";
-	$sections[] = "alb";
-	$sections[] = "sng";
-	$attributes = array();
-	$attributes[] = "id";
-	$attributes[] = "name";
-	$attributes[] = "comm";
-	
-	for ($i = 0; $i < 3; $i++)//go thru the 3 queries and sections
-	{
-		$query = $dbh->query($queries[$i]);
-		$queryArr = $query->fetchAll();		
-		$section = $sections[$i];
-		
-		if (count($queryArr) != 0)// if we found something
-		{
-			for ($j = 0; $j < count($queryArr); $j++)//go thru all the results
-			{
-				for ($k = 0; $k < count($queryArr[$j]) / 2; $k++)//go thru all the attributes in each result
-				{
-					$resultArr[$section][$j][$attributes[$k]] = utf8_encode($queryArr[$j][$k]);
-				}
-			}
-		}
-		else
-			$resultArr[$section] = array();
-	}
-
-	//print_r($resultArr);
-	echo json_encode($resultArr);
-	
-	$dbh = null;
+	echo $musicDB->search_json($queryStr); 
 }
 
 function addc()//add a comment to a track

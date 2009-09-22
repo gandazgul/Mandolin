@@ -20,8 +20,8 @@
 	<!-- add your meta tags here -->
 	
 	<link href="css/my_layout.css" rel="stylesheet" type="text/css" />
-	<!--[if lte IE 7]>
-	<link href="css/patches/patch_my_layout.css" rel="stylesheet" type="text/css" />
+	<!--[if IE]>
+	<link href="css/patches/ie.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css" />
 	

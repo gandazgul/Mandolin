@@ -245,9 +245,9 @@
   
   /* IE5.x & IE6 */
   * html form.yform legend { position:absolute; top: -.5em; left: .5em; }
-  * html form.yform fieldset { overflow:visible; height: 1%; margin-top:1.5em; padding-top:1.5em; }
+  * html form.yform fieldset { overflow:visible; height: 1%; margin-top: 1.5em; padding-top: 1.5em; }
 
   /* IE7 */
-  *+html form.yform legend { position:absolute; top: -.5em; left: .5em; }
-  *+html form.yform fieldset { overflow:visible; height:1%; margin-top:1.5em; padding-top:1.5em; }
+  * html form.yform legend { position:absolute; top: -.5em; left: .5em; }
+  * html form.yform fieldset { overflow:visible; height: 1%; margin-top: 1.5em; padding-top: 1.5em; }
 }

@@ -5,12 +5,12 @@
  * (de) IE-Anpassungs-Stylesheet
  *
  * @creator       YAML Builder V1.2b (http://builder.yaml.de)
- * @file          patch_my_layout.css
+ * @file          ie.css  --renamed from patch_my_layout.css
  * @-yaml-minver  3.1
  */
 
 /* Layout independent adjustments | Layout-unabhängige Anpassungen  */
-@import url(../../yaml/core/iehacks.css);
+@import url(../lib/yaml/core/iehacks.css);
 
 /* Layout-dependent adjustments | Layout-abhängige Anpassungen */
 @media screen, projection
