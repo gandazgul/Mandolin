@@ -1,5 +1,25 @@
 $(document).ready(function(){
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
+
+	$("#addFolderDiag").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 150,
+		modal: true,
+		buttons: {
+			'Add this folder': function() 
+			{
+				folderPath = $("#folderName").val(); 
+				$("#musicFoldersList").append("<option>" + folderPath + "</option>");
+				
+				$(this).dialog('close');
+			},
+			'Cancel': function() 
+			{
+				$(this).dialog('close');
+			}
+		}			
+	});
 });
 
 function changePassw()
@@ -65,14 +85,9 @@ function addUser()
 
 function createDB()
 {
-	res = confirm("Are you sure you want to recreate the database? The saved playlists will probably become invalid, and they can't be fixed.");
+	res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
 	if (res)
 	{
 		document.location = "./index.php?p=createDB";
 	}
-}
-
-function updateDB()
-{
-    document.location = "./index.php?p=updateDB";
 }

@@ -8,6 +8,14 @@
 <script type="text/javascript">
 	<?php include_once("./js/adm.js"); ?>
 </script>
+<div id="addFolderDiag" title="Add a folder to music library">
+	<form>
+		<fieldset>
+			<label for="folderName">Folder Full Path:</label>
+			<input type="text" id="folderName" />
+		</fieldset>
+	</form>
+</div>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -31,18 +39,22 @@
 		<h3><a href="#">Change Password</a></h3>
 		<div>
 			<form class="yform" style="margin-bottom: 0px">
-				<fieldset><div class="type-text">
-					<label for="oldPassw">Old password:</label>
-					<input type="password" id="oldPassw" />
-					<label for="oldPassw">New password:</label>
-					<input type="password" id="newPassw" />
-					<label for="oldPassw">Re-Type New password:</label>
-					<input type="password" id="reNewPassw" />						
-				</div></fieldset>
 				<fieldset>
+					<div class="type-text">
+						<label for="oldPassw">Old password:</label>
+						<input type="password" id="oldPassw" />
+					</div>
+					<div class="type-text">
+						<label for="oldPassw">New password:</label>
+						<input type="password" id="newPassw" />
+					</div>
+					<div class="type-text">
+						<label for="oldPassw">Re-Type New password:</label>
+						<input type="password" id="reNewPassw" />						
+					</div>
 					<div class="type-button">
 						<input type="button" value="Change Password" onclick="changePassw()">
-					</div>
+					</div>					
 				</fieldset>
 			</form>
 		</div>
@@ -52,11 +64,14 @@
 				<fieldset>
 					<legend> Enter New User Information </legend>
 					<div class="type-text">
-						<div id="userMsg"></div>
 						<label for="username">Username:</label>
 						<input type="text" id="username" />
+					</div>
+					<div class="type-text">
 						<label for="passw">Password:</label>
 						<input type="text" id="passw" />
+					</div>
+					<div class="type-text">
 						<label for="rePassw">Re-Type Password:</label>
 						<input type="text" id="rePassw" />
 					</div>
@@ -64,17 +79,21 @@
 				<fieldset>
 					<legend> Select permission level </legend>
 					<div class="type-check">
-						<input type="radio" name="adminLvl" value="0" />Administrator
+						<input type="radio" name="adminLvl" id="adminLvl0" value="0" />&nbsp;<label for="adminLvl0">Administrator</label>
 						<div class="message">
 							(Can delete, rename songs and users and 
 							also update or recreate the database)
 						</div>
-						<input type="radio" name="adminLvl" value="1" />Mantainer
+					</div>
+					<div class="type-check">
+						<input type="radio" name="adminLvl" id="adminLvl1" value="1" />&nbsp;<label for="adminLvl1">Mantainer</label>
 						<div class="message">
 							(Can rename songs, change passwords of users 
 							and update the database)
 						</div>
-						<input type="radio" name="adminLvl" value="2" checked="checked" />User
+					</div>
+					<div class="type-check">
+						<input type="radio" name="adminLvl" id="adminLvl2" value="2" checked="checked" />&nbsp;<label for="adminLvl2">User</label>
 					</div>
 				</fieldset>
 				<fieldset>
@@ -85,6 +104,31 @@
 			</form>
 		</div>
 		<h3><a href="#">Database Administration</a></h3>
+		<div>
+			<p>Recreate database - This will delete the existing database and scan the music directories to recreate it.</p>
+			<form class="yform">
+				<fieldset>
+					<legend> Music Folders </legend>
+					<div class="" style="float: left; width: 60%;">
+						<select id="musicFoldersList" size="10" style="width: 100%">
+						<?php
+							for ($i = 0; $i < count($settings["musicFolders"]); $i++)
+							{
+								echo "<option>{$settings["musicFolders"][$i]}</option>";
+							}
+						?>
+						</select>
+					</div>
+					<div class="type-button" style="float: left; margin-top: 0; margin-left: 10px;">
+						<input type="button" id="btnNewFolder" value="Add Folder" onclick="$('#addFolderDiag').dialog('open')" /><br />
+						<input type="button" id="btnRemoveFolder" value="Remove Folder" onclick="removeFolder()" /><br />
+						<input type="button" value="Create DB" onclick='createDB()'>
+					</div>
+					<div style="width: 100%; float: left; height: 10px;"><!-- SEPARATOR --></div>								
+				</fieldset>
+			</form>
+		</div>
+		<h3><a href="#">Settings</a></h3>
 		<div>
 			<form class="yform">
 				<fieldset>
@@ -102,13 +146,6 @@
 					</div>										
 				</fieldset>
 			</form>
-			<p>Recreate database (faster than update but will probably invalidate the saved playlists) 
-			This will delete the existing database and scan the music directory to recreate it.</p>
-			<input type="button" value="Create DB" onclick='createDB()'>
-			<br /><br />
-			<p>Automatic update (slower but will maintain saved playlists) - 
-			This will scan the music directory looking for new stuff that is not on the database.</p>
-			<input type="button" value="Update DB" onclick='updateDB()'>			
 		</div>
 	</div>
 </div>

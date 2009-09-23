@@ -40,7 +40,15 @@ $musicDB->recreateDB();
 			<li>Artists: <span id='art'></span></li>
 			<li>Albums:  <span id='alb'></span></li>
 			<li>Songs: <span id='sng'></span></li>
+			<li>-------------------------------------------</li>
+			<?php 
+				for ($i = 0; $i < count($settings["musicFolders"]); $i++)
+				{
+					$curFolder = $settings["musicFolders"][$i];
+					$musicDB->addToDB($curFolder, strlen($curFolder));
+					echo "<li>$curFolder - DONE</li>";		 
+				}
+			?>			
 		</ul>
 	</ul>
 </div>
-<?php $musicDB->addToDB('C:/drivers/', strlen('C:/drivers/')); ?>

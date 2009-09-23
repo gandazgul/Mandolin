@@ -1,1 +1,1 @@
-{"baseURL": "http://sctree-it.sytes.net:50324/musicserver/", "musicRoot": ["/media/disk2/Music/"], "version": "0.6"}
+{"baseURL": "http://sctree-it.sytes.net:50324/musicserver/", "musicFolders": ["/media/disk2/Music/", "testing", "test 2"], "version": "0.6"}

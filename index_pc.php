@@ -19,9 +19,9 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<!-- add your meta tags here -->
 	
-	<link href="css/my_layout.css" rel="stylesheet" type="text/css" />
+	<link href="./css/my_layout.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]>
-	<link href="css/patches/ie.css" rel="stylesheet" type="text/css" />
+	<link href="./css/ie.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css" />
 	

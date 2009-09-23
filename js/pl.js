@@ -112,6 +112,19 @@ function getSelectedOptions(objSelect)//get all selected options in a <select> a
 	txt = "";
 	for (i = 0; i < objSelect.options.length; i++)
 	{
+		if (objSelect.options[i].selected)
+		{
+			txt = txt + escape(objSelect.options[i].value) + "|";
+		}
+	}
+	return txt;
+}
+
+function getAllOptions(objSelect)//get all selected options in a <select> and separate them with |
+{
+	txt = "";
+	for (i = 0; i < objSelect.options.length; i++)
+	{
 		value = objSelect.options[i].value;
 		txt = txt + escape(value) + "|";
 	}
@@ -126,7 +139,7 @@ function delFromPl()
 	{
 		objSelect.options[objSelect.options.selectedIndex] = null;
 	}
-	sng_id = getSelectedOptions(objSelect);
+	sng_id = getAllOptions(objSelect);
 	//alert(sng_id);
 	
 	plSelect = $("#plList")[0]; 
@@ -163,7 +176,7 @@ function move(up)
 		objSelect.options[x].selected = false;
 	}
 	
-	sng_id = getSelectedOptions(objSelect);
+	sng_id = getAllOptions(objSelect);
 	//alert(sng_id);
 	plSelect = $("#plList")[0];
 	pl_name = plSelect.options[plSelect.selectedIndex].value
