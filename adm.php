@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	<?php include_once("./js/adm.js"); ?>
 </script>
+
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form>
 		<fieldset>
@@ -16,6 +17,7 @@
 		</fieldset>
 	</form>
 </div>
+
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -105,7 +107,7 @@
 		</div>
 		<h3><a href="#">Database Administration</a></h3>
 		<div>
-			<p>Recreate database - This will delete the existing database and scan the music directories to recreate it.</p>
+			<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
 			<form class="yform">
 				<fieldset>
 					<legend> Music Folders </legend>
@@ -122,7 +124,7 @@
 					<div class="type-button" style="float: left; margin-top: 0; margin-left: 10px;">
 						<input type="button" id="btnNewFolder" value="Add Folder" onclick="$('#addFolderDiag').dialog('open')" /><br />
 						<input type="button" id="btnRemoveFolder" value="Remove Folder" onclick="removeFolder()" /><br />
-						<input type="button" value="Create DB" onclick='createDB()'>
+						<input type="button" value="Recreate Database" onclick='createDB()'>
 					</div>
 					<div style="width: 100%; float: left; height: 10px;"><!-- SEPARATOR --></div>								
 				</fieldset>
