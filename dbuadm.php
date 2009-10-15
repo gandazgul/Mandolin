@@ -6,7 +6,8 @@ session_start();
 /*if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
 	header("Location: ./index.php");
 */
-$dbh = new PDO("sqlite:./db/users.db");
+require_once("./models/UsersDB.php");
+$usersDB = new UsersDB(); 
 $action = $_REQUEST["a"];
 
 try
@@ -16,6 +17,20 @@ try
 catch(Exception $e)
 {
 	echo $e->getMessage();
+}
+
+function settings()
+{
+	$settings = json_decode(file_get_contents("./settings"), true);
+	
+	$valuesArr = array_keys($_POST);
+	for ($i = 1; $i < count($valuesArr); $i++)
+	{
+		$settings[$valuesArr[$i]] = $_POST[$valuesArr[$i]];
+	}
+	print_r($settings);
+	
+	file_put_contents("./settings", json_encode($settings));
 }
 
 function cpassw()

@@ -255,8 +255,7 @@ $(document).ready(function(){
 			//alert(this.id);
 			$(".ui-selected", this).each(function(){
 				//var index = $("#artistsList li").index(this);
-				var alb_id = this.id;
-				strResult += alb_id + "|";
+				strResult += this.id + "|";
 			});
 			//alert(strResult);
 			getSongs(strResult);

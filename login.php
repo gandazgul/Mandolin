@@ -7,38 +7,26 @@
 		session_regenerate_id();
 		$username = $_POST["username"];
 		$passw = $_POST["passw"];
-	    //echo $username;
-	    //get the existing password
-	    $dbh = new PDO("sqlite:./db/users.db");
-	    $query = $dbh->query("SELECT user_password, last_key, last_key_date, user_admin_level FROM users WHERE `user_name`='$username'");
-	    $queryArr = $query->fetchAll();
-	    $t_passw = $queryArr[0][0];  //password
-	    $last_key = $queryArr[0][1]; //last key stored
-	    $last_key_date = $queryArr[0][2]; //last key date
-	    //print_r($queryArr);
-		//echo sha1($passw);
-	    if ($t_passw == sha1($passw))//if the passwords match
+		//echo sha1($passw)."<br />\n";
+		//echo "$username<br />\n";
+	    require_once("./models/UsersDB.php");
+	    $usersDB = new UsersDB();
+	    if ($usersDB->verifyPassw($username, $passw))//if the passwords match
 	    {
+			$authDataArr = json_decode($usersDB->getAuthInfo_json($username), true);
+			$key = $authDataArr['last_key']; //last key stored
+			$last_key_date = $authDataArr['last_key_date']; //last key date
+			$settings = json_decode(file_get_contents("./settings"), true);
 	    	//echo "<br/>last key date: $last_key_date<br/>";
 			//echo "current date: ".time()."<br/>";
-		    //86400 is the number of seconds in a day, this number should be a global variable (settings)
-			//add the timestamp of creation for new users and eliminate the check if empty
-			if (($last_key_date == "") or ((time() - $last_key_date) > 86400)) //we didnt find a key or the key is old lets create one.
+		    if (($last_key_date == "") or ((time() - $last_key_date) > $settings['keyLastsFor'])) //we didnt find a key or the key is old lets create one.
 			{
-	            $last_key = sha1($username."@".$passw.":".time());
-	            $result = $dbh->exec("UPDATE users SET last_key='$last_key', last_key_date='".time()."' WHERE `user_name`='$username'");
-				if ($result == 0)
-				{
-				    die("Error updating database for new key and time. Check the write permissions on the database. Error Info: ".implode(" ", $dbh->errorInfo()));
-				}
-		        //echo "Result of Updating users: $result <br/>\n";
-		        //print_r($dbh->errorInfo());
-		        //echo "<br/>";
-	            $dbh = null;
+	            $key = sha1($username."@".$passw.":".time());
+	            $usersDB->updateKey($username, $key);
 			}
-			$_SESSION["key"] = $last_key;
+			$_SESSION["key"] = $key;
 			$_SESSION["username"] = $username;
-			$_SESSION["userAdminLevel"] = $queryArr[0][3];
+			$_SESSION["userAdminLevel"] = $usersDB->isAdmin($username);
 			$_SESSION["id"] = sha1(session_id());
 			//print_r($_SESSION);
 			header("Location: .");

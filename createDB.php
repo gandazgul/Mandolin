@@ -4,11 +4,10 @@ if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
 	header("Location: ./index.php");
 	exit();
 }
-
-require_once './models/MusicDB.php';
 ini_set('max_execution_time', '6000');
 
-$musicDB = new MusicDB("./db/music.db");
+require_once './models/MusicDB.php';
+$musicDB = new MusicDB();
 
 $musicDB->recreateDB();
 //---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------

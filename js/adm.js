@@ -12,6 +12,16 @@ $(document).ready(function(){
 				folderPath = $("#folderName").val(); 
 				$("#musicFoldersList").append("<option>" + folderPath + "</option>");
 				
+				folders = "[";
+				$("#musicFoldersList option").each(function()
+				{
+					folders += $(this).val() + ",";
+				});
+				folders += "]";
+				
+				postData = "a=settings&musicFolders=" + folders;
+				$.post("./dbuadm.php", postData, displayError);
+				
 				$(this).dialog('close');
 			},
 			'Cancel': function() 

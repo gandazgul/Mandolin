@@ -4,7 +4,7 @@ Class MoviesDB
 	private $dbfilepath;
 	private $dbh;
 	
-	function __construct($dbfilepath)
+	function __construct($dbfilepath = "./models/dbfiles/movies.db")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = new PDO("sqlite:$dbfilepath");

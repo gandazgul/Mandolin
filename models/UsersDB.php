@@ -4,7 +4,7 @@ class UsersDB
 	private $dbfilepath;
 	private $dbh;
 	
-	function __construct($dbfilepath)
+	function __construct($dbfilepath="./models/dbfiles/users.db")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = new PDO("sqlite:$dbfilepath");
@@ -14,6 +14,46 @@ class UsersDB
 	function __destruct()
 	{
 		$this->dbh = null;
+	}
+	
+	//-------------------------------------------------------------- User functions ----------------------------------------------------------
+	function getAuthInfo_json($userName)
+	{
+		$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE `user_name`='$userName'");
+		$queryArr = $query->fetchAll();
+	    $resultArr = array();
+	    $resultArr['last_key'] = $queryArr[0][0];
+	    $resultArr['last_key_date'] = $queryArr[0][1];
+
+	    return json_encode($resultArr);
+	}
+	
+	function verifyPassw($userName, $passw)
+	{
+		$query = $this->dbh->query("SELECT user_password FROM users WHERE `user_name`='$userName'");
+		$queryArr = $query->fetchAll();
+	    
+		return (sha1($passw) == $queryArr[0]['user_password']);
+	}
+	
+	function updateKey($userName, $newKey)
+	{
+		try
+		{
+			$this->dbh->exec("UPDATE users SET last_key='$newKey', last_key_date='".time()."' WHERE `user_name`='$userName'");
+		}
+		catch (PDOException $e)
+		{
+			echo "ERROR: Updating database with new key and time. Check the write permissions on the databasefile.<br />System Error Message: ".$e->getMessage();
+		}
+	}
+	
+	function isAdmin($userName)
+	{
+		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE `user_name`='$userName'");
+		$queryArr = $query->fetchAll();
+	    
+		return ($queryArr[0]['user_admin_level'] == 0);
 	}
 	
 	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------

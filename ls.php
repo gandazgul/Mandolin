@@ -9,12 +9,13 @@ session_start();
 */
 
 require_once './models/MusicDB.php';
+$musicDB = new MusicDB();
+
 require_once './models/UsersDB.php';
+$usersDB = new UsersDB();
 
 $settings = json_decode(file_get_contents("./settings"), true);
 $action = $_REQUEST["a"];
-$musicDB = new MusicDB("./db/music.db");
-$usersDB = new UsersDB("./db/users.db");
 
 try
 {

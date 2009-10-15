@@ -8,7 +8,7 @@ class MusicDB
 	private $artCount;
 	private $albCount;
 	
-	function __construct($dbfilepath)
+	function __construct($dbfilepath = "./models/dbfiles/music.db")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = new PDO("sqlite:$dbfilepath");
