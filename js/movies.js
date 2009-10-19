@@ -13,7 +13,7 @@ function queryDB(query)
 		return;
 	}
 	postData = "a=search&q=" + query + "&SID=" + SID;
-	$.post("./ls.php", postData, procSearchResults, "json");
+	$.post("./server/ls.php", postData, procSearchResults, "json");
 }
 
 var srchTimerID;
@@ -34,6 +34,7 @@ function search(query, reschedule)
 
 function embedTheMovie(movieTAG)
 {
+	alert(movieTAG);
 	$("#movieContainer").html(movieTAG);
 }
 
@@ -73,7 +74,7 @@ function displayMovies(movArr)
 			$(this).addClass("ui-selected");
 
 			postData = "a=playmov&id=" + $(this).get(0).id + "&SID=" + SID;
-			$.post("./ls.php", postData, embedTheMovie);			
+			$.post("./server/ls.php", postData, embedTheMovie);			
 		});
 	});
 }
@@ -81,7 +82,7 @@ function displayMovies(movArr)
 function getMovies()
 {
 	postData = "a=mov&SID=" + SID;
-	$.post("./ls.php", postData, displayMovies, "json");
+	$.post("./server/ls.php", postData, displayMovies, "json");
 }
 
 $(document).ready(function(){

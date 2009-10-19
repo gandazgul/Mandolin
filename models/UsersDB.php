@@ -4,10 +4,10 @@ class UsersDB
 	private $dbfilepath;
 	private $dbh;
 	
-	function __construct($dbfilepath="./models/dbfiles/users.db")
+	function __construct($dbfilepath = "../models/dbfiles/users.db")
 	{
 		$this->dbfilepath = $dbfilepath;
-		$this->dbh = new PDO("sqlite:$dbfilepath");
+		$this->dbh = new PDO("sqlite:$this->dbfilepath");
 		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 	

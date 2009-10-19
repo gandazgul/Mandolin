@@ -23,7 +23,7 @@ $musicDB->recreateDB();
 			<li><a href='./?p=movies'>Movies</a></li>
 			<li><a href='./?p=adm'>Aministration</a></li>
 			<li><a href='./?p=about'>About</a></li>
-			<li><a href='./logout.php'>Logout</a></li>
+			<li><a href='./?p=logout'>Logout</a></li>
 		</ul>
 	</div>
 </div>

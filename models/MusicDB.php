@@ -7,11 +7,11 @@ class MusicDB
 	private $sngCount;
 	private $artCount;
 	private $albCount;
-	
-	function __construct($dbfilepath = "./models/dbfiles/music.db")
+		
+	function __construct($dbfilepath = "../models/dbfiles/music.db")
 	{
 		$this->dbfilepath = $dbfilepath;
-		$this->dbh = new PDO("sqlite:$dbfilepath");
+		$this->dbh = new PDO("sqlite:$this->dbfilepath");
 		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
 	
@@ -356,9 +356,9 @@ class MusicDB
 			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
 
 			if ($forBB)
-				$result .= $musicURL."stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=96&amp;$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=96&amp;$song_ext";
 			else
-				$result .= $musicURL."stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;$song_ext";
 			
 			$result .= "</location>\n\t\t</track>\n";
 		}

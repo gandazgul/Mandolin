@@ -2,7 +2,7 @@
 ../index.php
 ../login.php
 ../logo.jpg
-../logout.php
+../?p=logout
 ../ls.php
 ../main.php
 ../pl.php

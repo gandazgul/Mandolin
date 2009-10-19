@@ -8,13 +8,15 @@ session_start();
 	header("Location: ./index.php");
 */
 
-require_once './models/MusicDB.php';
+require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();
-
-require_once './models/UsersDB.php';
+require_once '../models/MoviesDB.php';
+$moviesDB = new MoviesDB();
+require_once '../models/UsersDB.php';
 $usersDB = new UsersDB();
+require_once '../models/Settings.php';
+$settings = new Settings();
 
-$settings = json_decode(file_get_contents("./settings"), true);
 $action = $_REQUEST["a"];
 
 try
@@ -86,7 +88,7 @@ function play()//makes a list of the tracks selected in the sng list
 	global $settings, $musicDB, $usersDB;
 	
 	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
-	$musicURL = $settings['baseURL'];
+	$musicURL = $settings->get('baseURL');
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
 
@@ -197,43 +199,16 @@ function ren()//rename a saved playlist
 //--------------------------------------------------------------Functions for Movies---------------------------------------
 function mov()//list all movies by category
 {
-	$dbh = new PDO("sqlite:./db/movies.db");
-	$movArr = array();	
-	$query = $dbh->query("SELECT DISTINCT category FROM movies ORDER BY `category`");
-	$catArr = $query->fetchAll();
-	//print_r($queryArr);
-	$sth = $dbh->prepare("SELECT title, mID FROM movies WHERE `category`=?");
-	for($i = 0; $i < count($catArr); $i++)
-	{
-		$cat = $catArr[$i][0];
-		$sth->execute(array($cat));
-		$movArr = $sth->fetchAll();
-		$movies[$i][] = $catArr[$i][0];
-		for ($j = 0; $j < count($movArr); $j++)
-		{	
-			$movies[$i][] = array("id" => $movArr[$j]["mID"], "title" => $movArr[$j]["title"]);
-		}
-	}
-	echo json_encode($movies);
-	$dbh = null;
+	global $moviesDB;
+	
+	echo $moviesDB->getMovies_json();
 }
 
 function playmov()//play selected movie
 {
-	$id = $_REQUEST["id"];
+	global $moviesDB, $settings;
 	
-	$dbh = new PDO("sqlite:./db/movies.db");
-	$query = $dbh->query("SELECT path FROM movies WHERE mID=$id");
-	$queryArr = $query->fetchAll();
-	$dbh = null;
-	
-	echo "<embed src='./jwPlayer.swf' width='512' height='404' type='application/x-shockwave-flash' 
-			pluginspage='http://www.macromedia.com/go/getflashplayer' 
-			bgcolor='#FFFFFF' 
-			name='theMediaPlayer' 
-			allowfullscreen='true' 
-			flashvars='file={$queryArr[0]['path']}'>
-		  </embed>";
+	echo $moviesDB->getMovieEmbedCode($_REQUEST["id"], $settings->get('baseURL'));
 }
 
 ?>

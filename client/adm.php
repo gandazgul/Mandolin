@@ -5,9 +5,7 @@
 		exit();
 	}
 ?>
-<script type="text/javascript">
-	<?php include_once("./js/adm.js"); ?>
-</script>
+<script type="text/javascript" src="./js/adm.js"></script>
 
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form>
@@ -29,7 +27,7 @@
 			<li><a href="./?p=movies">Movies</a></li>
 			<li class="active"><strong>Aministration</strong></li>
 			<li><a href="./?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>
+			<li><a href="./?p=logout">Logout</a></li>
 		</ul>
 	</div>
 </div>
@@ -114,9 +112,10 @@
 					<div class="" style="float: left; width: 60%;">
 						<select id="musicFoldersList" size="10" style="width: 100%">
 						<?php
-							for ($i = 0; $i < count($settings["musicFolders"]); $i++)
+							$musicFolders = $settings->get("musicFolders");
+							for ($i = 0; $i < count($musicFolders); $i++)
 							{
-								echo "<option>{$settings["musicFolders"][$i]}</option>";
+								echo "<option>{$musicFolders[$i]}</option>";
 							}
 						?>
 						</select>

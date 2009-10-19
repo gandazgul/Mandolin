@@ -16,7 +16,7 @@
 			<li><a href="./?p=movies">Movies</a></li>
 			<li><a href="./?p=adm">Aministration</a></li>
 			<li class="active"><strong>About</strong></li>
-			<li><a href="./logout.php">Logout</a></li>							
+			<li><a href="./?p=logout">Logout</a></li>							
 		</ul>
 	</div>
 </div>

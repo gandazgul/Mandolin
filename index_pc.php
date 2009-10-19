@@ -15,7 +15,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>newMusicServer v<?php echo $settings["version"]; ?></title>
+	<title>newMusicServer v<?php echo $settings->get("version"); ?></title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<!-- add your meta tags here -->
 	
@@ -62,13 +62,13 @@
 					<?php
 						$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";
 						
-						echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v{$settings['version']}</h1>\n";	
+						echo "<h1>Welcome <strong>{$username}</strong> to newMusicServer v".$settings->get('version')."</h1>\n";	
 					?>
 					<h2><em>"Because music is important"</em></h2>
 				</div>	
 			</div>
 			
-			<?php include("{$p}.php"); ?>
+			<?php include("./client/$p.php"); ?>
 			
 			<!-- begin: #footer -->
 			<div id="footer">

@@ -8,7 +8,7 @@
 <script type="text/javascript">
 	<?php include_once("./js/pl.js"); ?>
 </script>
-<form method="post" action="./ls.php" id="downForm">
+<form method="post" action="./server/ls.php" id="downForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="pl" id="pl" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
@@ -24,7 +24,7 @@
 			<li><a href="./?p=movies">Movies</a></li>
 			<li><a href="./?p=adm">Aministration</a></li>
 			<li><a href="./?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>
+			<li><a href="./?p=logout">Logout</a></li>
 		</ul>
 	</div>
 </div>

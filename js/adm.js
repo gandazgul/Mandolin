@@ -15,12 +15,12 @@ $(document).ready(function(){
 				folders = "[";
 				$("#musicFoldersList option").each(function()
 				{
-					folders += $(this).val() + ",";
+					folders += "\"" + $(this).val() + "\",";
 				});
 				folders += "]";
 				
 				postData = "a=settings&musicFolders=" + folders;
-				$.post("./dbuadm.php", postData, displayError);
+				$.post("./server/dbuadm.php", postData, displayError);
 				
 				$(this).dialog('close');
 			},
@@ -40,7 +40,7 @@ function changePassw()
     if ($("reNewPassw").value == $("newPassw").value)
 	{
 		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val();
-		$.post("./dbuadm.php", postData, displayError);
+		$.post("./server/dbuadm.php", postData, displayError);
 	}
 	else
 		displayError("ERROR: Passwords don't match");
@@ -87,7 +87,7 @@ function addUser()
 		postData += "&pw=" + $("#passw").val();
 		//alert(getCheckedValue(document.getElementsByName('adminLvl')));
 		postData += "&adm=" + getCheckedValue(document.getElementsByName('adminLvl'));
-		$.post("./dbuadm.php", postData, displayError);
+		$.post("./server/dbuadm.php", postData, displayError);
 	}
 	else
 		displayError("ERROR: Passwords don't match");

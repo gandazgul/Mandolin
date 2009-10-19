@@ -24,17 +24,17 @@ $video_path = $queryArr[0][0];
 $video_name = $queryArr[0][1];*/
 $video_path = "./a.flv";
 $video_name = "a.flv";
-$ext = substr($song_name, strrpos($song_name, ".") + 1);
+$ext = substr($video_name, strrpos($video_name, ".") + 1);
 //echo $ext;
 
-header('Content-type: video/x-flv');
+header("Content-type: video/x-flv");
 header("Content-length: ".filesize($video_path) );
 header("Content-Disposition: filename=\"".$video_name."\"");
 header("Content-Transfer-Encoding: binary");
 
 if ($ext != 'flv')
 {
-	//encode with ffmpeg then play.	
+	//encode with ffmpeg then play.
 }
 else
 {

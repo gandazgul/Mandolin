@@ -7,9 +7,7 @@
 ?>
 <script type="text/javascript" src="./js/lib/jquery.contextMenu.js"></script>
 <link type="text/css" rel="stylesheet" href="./css/jquery.contextMenu.css" />
-<script type="text/javascript">
-	<?php include_once("./js/movies.js"); ?>
-</script>
+<script type="text/javascript" src="./js/movies.js"></script>
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
 	#moviesList .ui-selecting { background: #EDF2F8; }
@@ -36,7 +34,7 @@
 			<li class="active"><strong>Movies</strong></li>
 			<li><a href="./?p=adm">Aministration</a></li>
 			<li><a href="./?p=about">About</a></li>
-			<li><a href="./logout.php">Logout</a></li>
+			<li><a href="./?p=logout">Logout</a></li>
 		</ul>
 	</div>
 </div>
