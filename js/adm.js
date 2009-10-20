@@ -17,7 +17,7 @@ $(document).ready(function(){
 					folders.push($(this).val());
 				});
 				
-				postData = "a=folders&musicFolders=" + JSON.stringify(folders);
+				postData = "a=set&key=musicFolders&value=" + JSON.stringify(folders);
 				$.post("./server/dbuadm.php", postData, displayError);
 				
 				$(this).dialog('close');
@@ -30,9 +30,33 @@ $(document).ready(function(){
 	});
 });
 
+function loadSettings()
+{
+	$(".settings").each(function()
+	{
+		thisvar.keys.push($(this)[0].id);
+		thisvar.values.push($(this).val());
+	});	
+}
+
 function saveSettings()
 {
+	settings = function(){
+		this.keys = new Array();
+		this.values = new Array();
+		var thisvar = this;
+		
+		$(".settings").each(function()
+		{
+			thisvar.keys.push($(this)[0].id);
+			thisvar.values.push($(this).val());
+		});	
+	};
 	
+	setObj = new settings();	
+	alert(JSON.stringify(setObj));
+	postData = "a=set&data=" + JSON.stringify(setObj);
+	$.post("./server/dbuadm.php", postData, displayError);
 }
 
 function changePassw()

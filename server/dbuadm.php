@@ -21,13 +21,32 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-function folders()
+function set()
 {
 	global $settings;
 	
-	$settings->set('musicFolders', $_POST['musicFolders']);
+	//echo $_POST['data'];
+	$data = json_decode($_POST['data'], true);
+	for ($i = 0; $i < count($data['keys']); $i++)
+	{	
+		$settings->set($data['keys'][$i], $data['values'][$i]);
+	}
 	
-	echo "Folder list was saved successfuly.";
+	echo "Settings saved successfully";
+}
+
+function get()
+{
+	global $settings;
+	
+	$keys = json_decode($_POST['keys'], true);
+	//TODO here
+	for ($i = 0; $i < count($data['keys']); $i++)
+	{	
+		$settings->set($data['keys'][$i], $data['values'][$i]);
+	}
+	
+	echo "Settings saved successfully";
 }
 
 function cpassw()

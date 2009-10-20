@@ -138,8 +138,8 @@
 				<fieldset>
 					<legend> Settings </legend>
 					<div class="type-text">
-						<label for="serverURL">musicServer URL: </label>
-						<input type="text" id="serverURL" />
+						<label for="baseURL">musicServer URL: </label>
+						<input type="text" id="baseURL" class="settings" />
 					</div>
 					<div class="type-button">
 						<input type="button" id="btnSaveSettings" value="Save Settings" onclick="saveSettings()" />
