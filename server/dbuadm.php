@@ -6,8 +6,10 @@ session_start();
 /*if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
 	header("Location: ./index.php");
 */
-require_once("./models/UsersDB.php");
-$usersDB = new UsersDB(); 
+require_once("../models/UsersDB.php");
+$usersDB = new UsersDB();
+require_once("../models/Settings.php");
+$settings = new Settings();
 $action = $_REQUEST["a"];
 
 try
@@ -19,18 +21,13 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-function settings()
+function folders()
 {
-	$settings = json_decode(file_get_contents("./settings"), true);
+	global $settings;
 	
-	$valuesArr = array_keys($_POST);
-	for ($i = 1; $i < count($valuesArr); $i++)
-	{
-		$settings[$valuesArr[$i]] = $_POST[$valuesArr[$i]];
-	}
-	print_r($settings);
+	$settings->set('musicFolders', $_POST['musicFolders']);
 	
-	file_put_contents("./settings", json_encode($settings));
+	echo "Folder list was saved successfuly.";
 }
 
 function cpassw()

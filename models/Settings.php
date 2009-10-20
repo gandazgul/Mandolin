@@ -28,7 +28,7 @@ class Settings
 	
 	function commit()
 	{
-		file_put_contents($dbfilepath, json_encode($this->dbh));
+		file_put_contents($this->dbfilepath, json_encode($this->dbh));
 	}
 }
 

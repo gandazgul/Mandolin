@@ -9,17 +9,15 @@ $(document).ready(function(){
 		buttons: {
 			'Add this folder': function() 
 			{
-				folderPath = $("#folderName").val(); 
-				$("#musicFoldersList").append("<option>" + folderPath + "</option>");
+				$("#musicFoldersList").append("<option>" + $("#folderName").val() + "</option>");
+				folders = new Array();
 				
-				folders = "[";
 				$("#musicFoldersList option").each(function()
 				{
-					folders += "\"" + $(this).val() + "\",";
+					folders.push($(this).val());
 				});
-				folders += "]";
 				
-				postData = "a=settings&musicFolders=" + folders;
+				postData = "a=folders&musicFolders=" + JSON.stringify(folders);
 				$.post("./server/dbuadm.php", postData, displayError);
 				
 				$(this).dialog('close');
@@ -31,6 +29,11 @@ $(document).ready(function(){
 		}			
 	});
 });
+
+function saveSettings()
+{
+	
+}
 
 function changePassw()
 {

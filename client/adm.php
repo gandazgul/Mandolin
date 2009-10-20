@@ -5,6 +5,7 @@
 		exit();
 	}
 ?>
+<script type="text/javascript" src="./js/lib/json2_mini.js"></script>
 <script type="text/javascript" src="./js/adm.js"></script>
 
 <div id="addFolderDiag" title="Add a folder to music library">
@@ -58,6 +59,7 @@
 				</fieldset>
 			</form>
 		</div>
+		<?php if ($_SESSION['userAdminLevel'] == 1): ?>
 		<h3><a href="#">Add New User</a></h3>
 		<div>
 			<form class="yform">
@@ -112,10 +114,11 @@
 					<div class="" style="float: left; width: 60%;">
 						<select id="musicFoldersList" size="10" style="width: 100%">
 						<?php
-							$musicFolders = $settings->get("musicFolders");
+							$musicFolders = json_decode($settings->get("musicFolders"));
+							//print_r($musicFolders);
 							for ($i = 0; $i < count($musicFolders); $i++)
 							{
-								echo "<option>{$musicFolders[$i]}</option>";
+								echo "<option>{$musicFolders[$i]}</option>\n";
 							}
 						?>
 						</select>
@@ -133,14 +136,10 @@
 		<div>
 			<form class="yform">
 				<fieldset>
-					<legend> Database settings </legend>
+					<legend> Settings </legend>
 					<div class="type-text">
 						<label for="serverURL">musicServer URL: </label>
 						<input type="text" id="serverURL" />
-					</div>
-					<div class="type-text">
-						<label for="serverURL">Music Library path: </label>
-						<input type="text" id="mlpath" />
 					</div>
 					<div class="type-button">
 						<input type="button" id="btnSaveSettings" value="Save Settings" onclick="saveSettings()" />
@@ -148,5 +147,6 @@
 				</fieldset>
 			</form>
 		</div>
+		<?php endif; ?>
 	</div>
 </div>
