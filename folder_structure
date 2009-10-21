@@ -1,0 +1,19 @@
+index.php - detects the user's browser (mobil or PC) and includes the correct index file.
+index_pc.php - the index file for the PC version of the application
+index_mobi.php - the index file for the mobil version of the application
+
+/client  - client files, HTML, JS, CSS->YAML everything that its rendered by the browser goes here. 
+/client/js - javascript files
+/client/css - css files
+	./lib - JS or CSS libraries used.
+/client/images - images used within the application
+
+/server - the ajax server, this files process the ajax requests coming from the JS in the client. and use the DB models to retrieve data and format it accordingly.
+
+/models - here resides the classes for each of the DBs used in the application. Each DB or Table within the DB needs its own model, naming convention is:
+[DB or Tablename] + DB  <--- first letter should be Uppercase. Class takes the same name as the file. the variable is usually the same name but with the first letter lowercase.
+/models/dbfiles - if the application uses JSON or sqlite, the DB files should be stored here. if not then this folder is not needed.
+
+/install - install script, this will run if it exists, it should be deleted in production instances after running it once.
+
+all other files not on this list are development files and can be deleted in a production instance.
