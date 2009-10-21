@@ -52,7 +52,12 @@
 
 	require_once './models/Settings.php';
 	$settings = new Settings("./models/dbfiles/settings.json");
-	//print_r($settings);
+	$p = $settings->get("mainPage");
+	$page = "./client/$p.php";
+	if (!file_exists($page))
+	{
+		exit("FATAL ERROR: The page configured in the settings as main ($p) doesnt exist, plase correct this before using the application. Default Value: music");
+	}
 	
 	if($mobile_browser > 0) 
 	{

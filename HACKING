@@ -1,3 +1,4 @@
+-- FOLDER STRUCTURE --
 index.php - detects the user's browser (mobil or PC) and includes the correct index file.
 index_pc.php - the index file for the PC version of the application
 index_mobi.php - the index file for the mobil version of the application
@@ -17,3 +18,8 @@ index_mobi.php - the index file for the mobil version of the application
 /install - install script, this will run if it exists, it should be deleted in production instances after running it once.
 
 all other files not on this list are development files and can be deleted in a production instance.
+
+
+-- HOW DOES IT WORK --
+The index file includes all other client files based on a parameter passed thru the URI called "p", so for example: index.php?p=music will load the music.php page in the client folder.
+if "p" is not a valid file, then a defined "main" page will be loaded, the main page could any of them, is defined in the settings.

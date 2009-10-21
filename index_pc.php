@@ -2,12 +2,15 @@
 	session_name("newMusicServer");	
 	session_start();
 
-	$p = (isset($_GET["p"])) ? $_GET["p"] : "music";
+	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
 	if (isset($_SESSION["id"]))
 		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
 	else
 		$p = "login";
 	
+	$page = "./client/$p.php";
+	if (($p == $settings->get("mainPage")) and !file_exists($page))
+		
 	$sess_id = session_id();
 
 	//print_r($_SESSION);
