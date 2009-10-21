@@ -5,9 +5,7 @@
 		exit();
 	}
 ?>
-<script type="text/javascript" src="./js/lib/jquery.contextMenu.js"></script>
-<link type="text/css" rel="stylesheet" href="./css/jquery.contextMenu.css" />
-<script type="text/javascript" src="./js/movies.js"></script>
+<link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
 	#moviesList .ui-selecting { background: #EDF2F8; }
@@ -15,6 +13,9 @@
 	#moviesList { list-style-type: none; margin: 0; padding: 0; }
 	#moviesList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
 </style>
+
+<script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="./client/js/movies.js"></script>
 
 <ul id="moviesMenu" class="contextMenu">
 	<li class="ccat"><a href="#changecat">Change Category</a></li>

@@ -5,9 +5,7 @@
 		exit();
 	}
 ?>
-<script type="text/javascript">
-	<?php include_once("./js/pl.js"); ?>
-</script>
+<script type="text/javascript" language="javascript" src="./client/js/pl.js"></script>
 <form method="post" action="./server/ls.php" id="downForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="pl" id="pl" />

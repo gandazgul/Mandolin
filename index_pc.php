@@ -19,14 +19,14 @@
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<!-- add your meta tags here -->
 	
-	<link href="./css/my_layout.css" rel="stylesheet" type="text/css" />
+	<link href="./client/css/my_layout.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]>
-	<link href="./css/ie.css" rel="stylesheet" type="text/css" />
+	<link href="./client/css/ie.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<link type="text/css" rel="stylesheet" href="./css/jquery-ui-1.7.1.custom.css" />
+	<link type="text/css" rel="stylesheet" href="./client/css/jquery-ui-1.7.1.custom.css" />
 	
-	<script type="text/javascript" src="./js/lib/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="./js/lib/jquery-ui-1.7.2.custom.min.js"></script>	
+	<script type="text/javascript" src="./client/js/lib/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="./client/js/lib/jquery-ui-1.7.2.custom.min.js"></script>	
 	<script type="text/javascript">
 		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
 		
@@ -57,7 +57,7 @@
 		</div>
 		<div class="page">
 			<div id="header">    	
-				<img alt="newMusicServer logo" src="./images/logo.jpg" />
+				<img alt="newMusicServer logo" src="./client/images/logo.jpg" />
 				<div style="position: absolute; top: 10px; left: 200px">
 					<?php
 						$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";

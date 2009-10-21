@@ -5,8 +5,8 @@
 		exit();
 	}
 ?>
-<script type="text/javascript" src="./js/lib/json2_mini.js"></script>
-<script type="text/javascript" src="./js/adm.js"></script>
+<script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
+<script type="text/javascript" src="./client/js/adm.js"></script>
 
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form>

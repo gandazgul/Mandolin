@@ -11,19 +11,19 @@
  */
 
 /* import core styles | Basis-Stylesheets einbinden */
-@import url(../lib/yaml/core/base.css);
+@import url(./lib/yaml/core/base.css);
 
 /* import screen layout | Screen-Layout einbinden */
-@import url(../lib/yaml/navigation/nav_slidingdoor.css);
-@import url(../lib/yaml/navigation/nav_vlist.css);
+@import url(./lib/yaml/navigation/nav_slidingdoor.css);
+@import url(./lib/yaml/navigation/nav_vlist.css);
 @import url(./screen/basemod.css);
 @import url(./screen/content.css);
 
 /* import print layout | Druck-Layout einbinden */
-@import url(../lib/yaml/print/print_draft.css);
+@import url(./lib/yaml/print/print_draft.css);
 
 /*Added by Carlos*/
-@import url(../lib/yaml/screen/forms.css);
+@import url(./lib/yaml/screen/forms.css);
 
 .title {
 	font-family: "Courier New", Courier, monospace;

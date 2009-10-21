@@ -5,9 +5,7 @@
 		exit();
 	}
 ?>
-<link type="text/css" rel="stylesheet" href="./css/jquery.contextMenu.css" />
-<script type="text/javascript" language="javascript" src="./js/lib/jquery.contextMenu.js"></script>
-<script type="text/javascript" language="javascript" src="./js/music.js"></script>
+<link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
 <style type="text/css">
 	#feedback { font-size: 1.4em; }
 	#artistsList .ui-selecting, #albumList .ui-selecting, #songList .ui-selecting { background: #EDF2F8; }
@@ -18,6 +16,10 @@
 	#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 11px; font-weight: bold; text-align: center;  }	
 	#songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 11px; font-weight: bold; }
 </style>
+
+<script type="text/javascript" language="javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
+<script type="text/javascript" language="javascript" src="./client/js/music.js"></script>
+
 <form method="post" action="./server/ls.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="sng" id="sng" />
