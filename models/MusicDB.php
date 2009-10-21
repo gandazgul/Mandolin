@@ -121,7 +121,7 @@ class MusicDB
 				{
 					for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
 					{
-						$resultArr[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr]; //I dont remeber why but it was utf8_encode here.
+						$resultArr[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
 					}
 				}
 			}

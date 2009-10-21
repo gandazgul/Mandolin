@@ -1,12 +1,12 @@
 TODO HIGH PRIORITY: 
-- Settings in admin page - Also gui to add a specific dir to the DB. Keep list. Go thru all of them when recreating the DB.
+- recreateDB is not calling the addtodb function ever.
+- break up addtoDB, make and add album, addArtist, addSong. and maybe something else.
+- Settings in admin page. 
+- revise this right now, it puts unknown album in every artists even if there are no loose files. It also creates an unknown artists even when there are no loose files in the music folder. - if path does not provide all info put it under artist: unknown or album: unknown - DONE
+- make the models always return the same object,
+	isError: bool
+	result_json: str (will contain the result of the query or the message of success/failure)
 
-DONE:
-- revise createDB and updateDB - DONE
-- Make option to add a scpecific directory to the db - DONE (Have to do GUI)
-- Change createDB to search for everything, parse the path, if path does not provide all info put it under artist: unknown or album: unknown - DONE
-- Make playlists XML XSPF   :(  I dont like XML but it seems this format is supported everywhere - DONE
-- Make playlists permanent. - DONE
 
 TODO:
 - Existing users table, with options to delete, add, rename, reset passw, etc
@@ -22,5 +22,7 @@ TODO:
 - concat MP3 for blackberry.
 
 - Finish the install script.
+
+- do security tests, with the sessions.
 
 

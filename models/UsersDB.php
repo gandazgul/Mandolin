@@ -21,11 +21,11 @@ class UsersDB
 	{
 		$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE `user_name`='$userName'");
 		$queryArr = $query->fetchAll();
-	    $resultArr = array();
-	    $resultArr['last_key'] = $queryArr[0][0];
-	    $resultArr['last_key_date'] = $queryArr[0][1];
+		$resultArr = array();
+		$resultArr['last_key'] = $queryArr[0][0];
+		$resultArr['last_key_date'] = $queryArr[0][1];
 
-	    return json_encode($resultArr);
+		return json_encode($resultArr);
 	}
 	
 	function verifyPassw($userName, $passw)
