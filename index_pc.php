@@ -9,7 +9,8 @@
 		$p = "login";
 	
 	$page = "./client/$p.php";
-	if (($p == $settings->get("mainPage")) and !file_exists($page))
+	if (!file_exists($page))
+		$page = $page = "./client/".$settings->get("mainPage").".php";
 		
 	$sess_id = session_id();
 
