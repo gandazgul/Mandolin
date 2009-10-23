@@ -21,5 +21,13 @@ all other files not on this list are development files and can be deleted in a p
 
 
 -- HOW DOES IT WORK --
-The index file includes all other client files based on a parameter passed thru the URI called "p", so for example: index.php?p=music will load the music.php page in the client folder.
-if "p" is not a valid file, then a defined "main" page will be loaded, the main page could any of them, is defined in the settings.
+The index file includes all other client files based on a parameter passed thru a parameter called "p", so for example: index.php?p=music will load the music.php page 
+in the client folder. if "p" is not a valid file, then a defined "main" page will be loaded, the main page could any of them, is defined in the settings. 
+
+all client pages have a corresponding javascript file, that makes AJAX requests to a server-side php file with the same name, that then uses the DB models (/models/) 
+classes to perform the requested operations in the DBs, the result is always given in the same object that has the following structure:
+
+DBModelResponse - isError : bool
+				  errorCode: int - if isError is tru this will contain the error code
+				  result_json: string - if isError is true this contains a string with the error, if is false then it contains the rested data in json format.
+				  
