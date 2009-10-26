@@ -26,12 +26,14 @@
 	stream them later at any time.</p>
 	<p><span class="title">newMusicServer</span> is cross-browser compatible:<br />
 	<ul>
-		<li class="ulTitle">Tested in:</li>
-		<li>FF2.x, FF3.x, IE7, Google Chrome, Safari 3.2.2</li>
+		<li class="ulTitle">Tested and works fully in:</li>
+		<li>FF3.x, Chrome 2.x and 3.x, Safari for Windows 3.2.2, IE8</li>
+		<li class="ulTitle">Works, but it has several problems, mainly visual not affecting function:</li>
+		<li>IE6 and IE7</li> 
 		<li class="ulTitle">Will test in:</li>
-		<li>IE8, FF Mac, Safari 4.x PC and Mac versions.</li> 
+		<li>FF2.x, FF for Mac, Safari 4.x for PC and Mac</li> 
 		<li class="ulTitle">Backburner:</li>
-		<li>IE6</li>
+		<li>Opera, Netscape, other Browsers</li>
 	</ul> 
 	<p class="title">You can download the lastest code(branch: master) as well as the last stable release(branch: stable) of newMusicServer from here(git):<br /> 
 	<a href="git://github.com/gandazgul/newmusicserver.git">newMusicServer at GitHub</a><br />
