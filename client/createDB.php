@@ -35,6 +35,7 @@ $musicDB->recreateDB();
 	<ul>
 		<li>Database deleted and new one created</li>
 		<li>Scanning directories to add music to the new DB - <span style='color: #CC3300; '>DO NOT HIT THE BACK BUTTON ON YOUR BROWSER!!!</span></li>
+		<li>
 		<ul>
 			<li>Artists: <span id='art'></span></li>
 			<li>Albums:  <span id='alb'></span></li>
@@ -49,5 +50,6 @@ $musicDB->recreateDB();
 				}
 			?>			
 		</ul>
+		</li>
 	</ul>
 </div>

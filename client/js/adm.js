@@ -1,6 +1,72 @@
 $(document).ready(function(){
+	loadSettings();
+	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
+	$("#userTable").tablesorter({
+		headers: {
+			1: { sorter: false },
+			2: { sorter: false },
+			3: { sorter: false }				
+		},
+		sortList: [[0,0]],
+		textExtraction: function(node) {
+            return node.childNodes[1].innerHTML; 
+    	}
+	});
+});
+
+$(document).ready(function(){//intialize add user dialog
+	//TODO: check this function, complete add and remove user.
+	//TODO: revise user change password. test it.
+	
+	var name = $("#username");
+	var	passw = $("#passw");
+	var	admin = $("#admin");
+	var	allFields = $([]).add(name).add(passw).add(admin);
+	var	tips = $("#validateTips");
+	
+	$("#dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		modal: true,
+		buttons: {
+			'Create an account': function() 
+			{
+				var bValid = true;
+				allFields.removeClass('ui-state-error');
+
+				bValid = bValid && checkLength(name,"username",3,16);
+				bValid = bValid && checkLength(passw,"password",6,15);
+
+				bValid = bValid && checkRegexp(name,/^[a-z]([0-9a-z_])+$/i,"Username may consist of a-z, 0-9, underscores, begin with a letter.");
+				bValid = bValid && checkRegexp(passw,/^([0-9a-zA-Z])+$/,"Password field only allow : a-z 0-9");
+				
+				if (bValid) 
+				{
+					postData =  "a=addu";
+					postData += "&u=" + name.val();
+					postData += "&p=" + passw.val();						
+					postData += "&adm=" + admin.attr('checked');
+					postData += "&SID=" + SID;
+					$.post("./exec.php", postData, addUser);
+					$(this).dialog('close');
+				}
+			},
+			Cancel: function() 
+			{
+				$(this).dialog('close');
+			}
+		},
+		close: function() 
+		{
+			allFields.val('').removeClass('ui-state-error');
+		}
+	});
+});
+
+$(document).ready(function(){//add folder dialog init
 	$("#addFolderDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
@@ -30,13 +96,24 @@ $(document).ready(function(){
 	});
 });
 
-function loadSettings()
+function fillOutSettings(data)
 {
 	$(".settings").each(function()
 	{
-		thisvar.keys.push($(this)[0].id);
-		thisvar.values.push($(this).val());
-	});	
+		$(this).val(data[$(this)[0].id]);
+	});
+}
+
+function loadSettings()
+{
+	keysArr = new Array();
+	$(".settings").each(function()
+	{
+		keysArr.push($(this)[0].id);
+	});
+	//alert(keysArr[0]);
+	postData = "a=get&keys=" + JSON.stringify(keysArr);
+	$.post("./server/dbuadm.php", postData, fillOutSettings, 'json');
 }
 
 function saveSettings()
@@ -54,7 +131,7 @@ function saveSettings()
 	};
 	
 	setObj = new settings();	
-	alert(JSON.stringify(setObj));
+	//alert(JSON.stringify(setObj));
 	postData = "a=set&data=" + JSON.stringify(setObj);
 	$.post("./server/dbuadm.php", postData, displayError);
 }
@@ -73,51 +150,28 @@ function changePassw()
 		displayError("ERROR: Passwords don't match");
 }
 
-// return the value of the radio button that is checked
-// return an empty string if none are checked, or
-// there are no radio buttons
-function getCheckedValue(radioObj) 
+function saveUser(id)
 {
-	if(!radioObj)
-		return "";
-	var radioLength = radioObj.length;
-	if(radioLength == undefined)
-		if(radioObj.checked)
-			return radioObj.value;
-		else
-			return "";
-	for(var i = 0; i < radioLength; i++) 
-	{
-		if(radioObj[i].checked) 
-		{
-			return radioObj[i].value;
-		}
-	}
-	return "";
+	//alert($("#passw" + id).val());
+	postData =  "a=saveu";
+	postData += "&id=" + id;
+	postData += "&p=" + $("#passw" + id).val();
+	postData += "&adm=" + $("#admin" + id).attr('checked');
+	postData += "&SID=" + SID;
+	$.post("./server/dbuadm.php", postData, displayError);
 }
 
-function addUser()
+function addUser(data)
 {
-	strUser = $("#username").val();
-	strPassword = $("#passw").val();
-	rePassw = $("#rePassw").val();
-	
-	radioObj = document.getElementsByName('adminLvl');
-	adminLvl = getCheckedValue(radioObj);
-	if ( (strPassword == "") || (rePassw == "") )
-		displayError("ERROR: Passwords can't be empty");
-	else	
-	if ( strPassword == rePassw )
-	{
-		postData = "a=nuser";
-		postData += "&usr=" + $("#username").val();
-		postData += "&pw=" + $("#passw").val();
-		//alert(getCheckedValue(document.getElementsByName('adminLvl')));
-		postData += "&adm=" + getCheckedValue(document.getElementsByName('adminLvl'));
-		$.post("./server/dbuadm.php", postData, displayError);
-	}
-	else
-		displayError("ERROR: Passwords don't match");
+	$('#userTable tbody').append(data);
+	$("#userTable").trigger("update");
+	var sorting = [[0,1]];
+	$("#userTable").trigger("sorton",[sorting]); 
+}
+
+function _addUser()
+{
+	$("#addUserDiag").dialog('open');
 }
 
 function createDB()

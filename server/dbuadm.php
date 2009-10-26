@@ -40,18 +40,17 @@ function get()
 	global $settings;
 	
 	$keys = json_decode($_POST['keys'], true);
-	//TODO here
-	for ($i = 0; $i < count($data['keys']); $i++)
+
+	for ($i = 0; $i < count($keys); $i++)
 	{	
-		$settings->set($data['keys'][$i], $data['values'][$i]);
+		$result[$keys[$i]] = $settings->get($keys[$i]);
 	}
 	
-	echo "Settings saved successfully";
+	echo json_encode($result);
 }
 
 function cpassw()
 {
-	global $dbh;
 	$op = $_REQUEST["op"];
 	$np = $_REQUEST["np"];
 	$user = $_SESSION["username"];
@@ -68,6 +67,13 @@ function cpassw()
 		echo "ERROR: The password you entered is wrong";
 }
 
+function saveu()
+{
+	global $usersDB;
+
+	echo $usersDB->alterUser($_POST['id'], $_POST['adm'], $_POST['p']);
+}
+
 function nuser()
 {
 	global $dbh;
@@ -79,6 +85,5 @@ function nuser()
 		die("FATAL ERROR: While adding a new user to the database. ".implode(" ", $dbh->errorInfo()));
 	echo "User successfully added.";
 }
-
 
 ?>

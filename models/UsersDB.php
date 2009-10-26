@@ -17,6 +17,41 @@ class UsersDB
 	}
 	
 	//-------------------------------------------------------------- User functions ----------------------------------------------------------
+	function listUsers()
+	{
+		$query = $this->dbh->query("SELECT user_name, user_admin_level, user_id FROM users");
+		return $query->fetchAll();
+	}
+	
+	function listUsers_json()
+	{
+		return json_encode($this->listUsers());
+	}
+	
+	function alterUser($id, $adm, $passw)
+	{
+		$queryStr = "UPDATE users SET ";
+
+		if ($adm == 'true')
+			$queryStr .= "user_admin_level='1'";
+		else
+			$queryStr .= "user_admin_level='0'";
+		if ($passw != "")
+			$queryStr .= ", user_password='".sha1($passw)."'";
+		//echo $queryStr;
+		
+		try
+		{
+			$this->dbh->exec($queryStr." WHERE user_id=$id");
+		}
+		catch(PDOException $e)
+		{
+			return "ERROR: Saving user information: ".$e->getMessage();
+		}
+		
+		return "User information saved successfully";
+	}
+	
 	function getAuthInfo_json($userName)
 	{
 		$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE `user_name`='$userName'");
@@ -53,7 +88,7 @@ class UsersDB
 		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE `user_name`='$userName'");
 		$queryArr = $query->fetchAll();
 	    
-		return ($queryArr[0]['user_admin_level'] == 0);
+		return ($queryArr[0]['user_admin_level'] == '1');
 	}
 	
 	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------

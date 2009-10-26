@@ -4,7 +4,11 @@
 		header("Location: .");
 		exit();
 	}
+	
+	include './models/UsersDB.php';
+	$usersDB = new UsersDB('./models/dbfiles/users.db'); 
 ?>
+<script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
 <script type="text/javascript" src="./client/js/adm.js"></script>
 
@@ -37,7 +41,7 @@
 </div>
 <div id="main" style="padding: 0 20px;">
 	<div id="accordion">
-		<h3><a href="#">Change Password</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/passwadm.png" alt="User Administration Icon">&nbsp;Change Password</a></h3>
 		<div>
 			<form class="yform" style="margin-bottom: 0px">
 				<fieldset>
@@ -59,11 +63,49 @@
 				</fieldset>
 			</form>
 		</div>
-		<?php if ($_SESSION['userAdminLevel'] == 1): ?>
-		<h3><a href="#">Add New User</a></h3>
+		<?php if ($_SESSION['userAdminLevel']): ?>
+		<h3><a href="#">&nbsp;<img src="./client/images/useradm.png" alt="User Administration Icon">&nbsp;User Administration</a></h3>
 		<div>
 			<form class="yform">
 				<fieldset>
+					<br />
+					<table id="userTable" class="tablesorter">
+						<thead><tr>
+							<th scope="col">Username</th>
+							<th scope="col">Password</th>
+							<th scope="col">Admin?</th>
+							<th scope="col">&nbsp;</th>
+						</tr></thead>
+						<tbody>
+						<?php
+							$uArr = $usersDB->listUsers();
+						
+							for ($i = 0; $i < count($uArr); $i++)
+							{
+								$id = $uArr[$i]["user_id"];
+								echo "<tr id='tr$id'>";
+								echo "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
+								echo "<label for='userCheck$id' style='display: inline; '>&nbsp;&nbsp;";
+								echo $uArr[$i]["user_name"]."</label></td>";
+								echo "<td><input type='password' id='passw$id' /><span></span></td>";
+								if ($uArr[$i]["user_admin_level"] == 1)
+									echo "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
+								else
+									echo "<td><input type='checkbox' id='admin$id'/><span></span></td>";
+								echo "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" /></div><span></span></td>";
+								echo "</tr>";
+							}
+						?>
+						</tbody>
+					</table>
+				</fieldset>
+				<fieldset>
+					<div class="type-button">
+						<input type="button" onclick="_addUser()" value="Add User" />
+						<input type="button" onclick="_delUser()" value="Delete User" />
+					</div>
+				</fieldset>
+				<!-- fieldset>
 					<legend> Enter New User Information </legend>
 					<div class="type-text">
 						<label for="username">Username:</label>
@@ -102,10 +144,10 @@
 					<div class="type-button">
 						<input type="button" value="Add user" onClick="addUser()" />
 					</div>
-				</fieldset>
+				</fieldset-->
 			</form>
 		</div>
-		<h3><a href="#">Database Administration</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/dbadm.png" alt="DB Administration Icon">&nbsp;Database Administration</a></h3>
 		<div>
 			<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
 			<form class="yform">
@@ -132,7 +174,7 @@
 				</fieldset>
 			</form>
 		</div>
-		<h3><a href="#">Settings</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;Settings</a></h3>
 		<div>
 			<form class="yform">
 				<fieldset>
@@ -141,6 +183,10 @@
 						<label for="baseURL">musicServer URL: </label>
 						<input type="text" id="baseURL" class="settings" />
 					</div>
+					<!--div class="type-text">
+						<label for="version">Version: </label>
+						<input type="text" id="version" class="settings" />
+					</div-->					
 					<div class="type-button">
 						<input type="button" id="btnSaveSettings" value="Save Settings" onclick="saveSettings()" />
 					</div>										
