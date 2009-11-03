@@ -20,9 +20,10 @@
 <script type="text/javascript" language="javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
 <script type="text/javascript" language="javascript" src="./client/js/music.js"></script>
 
-<form method="post" action="./server/ls.php" id="playForm">
+<form method="post" action="./server/music.php" id="playForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="sng" id="sng" />
+	<input type="hidden" name="SID" id="SID" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
 <div id="dialog" title="Add selected songs to a playlist">

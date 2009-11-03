@@ -28,7 +28,7 @@ class UsersDB
 		return json_encode($this->listUsers());
 	}
 	
-	function alterUser($id, $adm, $passw)
+	function alterUser($id, $username, $adm, $passw)
 	{
 		$queryStr = "UPDATE users SET ";
 
@@ -40,9 +40,14 @@ class UsersDB
 			$queryStr .= ", user_password='".sha1($passw)."'";
 		//echo $queryStr;
 		
+		if($username != "")
+			$whereClause = " WHERE user_name='$username'";
+		else
+			$whereClause = " WHERE user_id=$id";
+		
 		try
 		{
-			$this->dbh->exec($queryStr." WHERE user_id=$id");
+			$this->dbh->exec($queryStr.$whereClause);
 		}
 		catch(PDOException $e)
 		{

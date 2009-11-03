@@ -6,9 +6,10 @@
 	}
 ?>
 <script type="text/javascript" language="javascript" src="./client/js/pl.js"></script>
-<form method="post" action="./server/ls.php" id="downForm">
+<form method="post" action="./server/music.php" id="downForm">
 	<input type="hidden" name="a" value="play" />
 	<input type="hidden" name="pl" id="pl" />
+	<input type="hidden" name="SID" id="SID" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
 <div id="nav">

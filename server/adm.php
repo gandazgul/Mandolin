@@ -51,17 +51,14 @@ function get()
 
 function cpassw()
 {
-	$op = $_REQUEST["op"];
-	$np = $_REQUEST["np"];
-	$user = $_SESSION["username"];
-		
-    $query = $dbh->query("SELECT user_password FROM users WHERE `user_name`='$user'");
-	$queryArr = $query->fetchAll();
+	global $usersDB;
 	
-	if (sha1($op) == $queryArr[0][0])
+	$user = $_SESSION["username"];
+	
+	if ($usersDB->verifyPassw($user, $_REQUEST["op"]))
 	{
-		$dbh->query("UPDATE users SET `user_password`='".sha1($np)."' WHERE `user_name`='$user'");
-		echo "Password successfully changed.";
+		echo $_SESSION["userAdminLevel"];
+		echo $usersDB->alterUser(0, $user, $_SESSION["userAdminLevel"], $_REQUEST["np"]);
 	}
 	else
 		echo "ERROR: The password you entered is wrong";

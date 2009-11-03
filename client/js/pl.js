@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	postData = "a=saved&SID=" + SID;
-	$.post("./server/ls.php", postData, displaySavedPL, "json");
+	$.post("./server/pl.php", postData, displaySavedPL, "json");
 });
 
 function displaySavedPL(savedPLArr)
@@ -29,7 +29,7 @@ function plOnChange()
 	//alert(pl_name);
 	postData = "a=retrPL&pl=" + pl_name + "&SID=" + SID;
 	//alert(postData);
-	$.post("./server/ls.php", postData, _plOnChange, "json");
+	$.post("./server/pl.php", postData, _plOnChange, "json");
 }
 
 function ranPlayPL()
@@ -52,6 +52,7 @@ function playPL()
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
 		$("#pl").val(pl_name);
+		$("#SID").val(SID);
 		$("#downForm")[0].submit();
 		$("#rnd").val("false");
 	}
@@ -70,7 +71,7 @@ function renPL()
 		if ((plNewName == null) || (plNewName == "")) return;
 		//alert(plName + " " + plNewName);
 		postData = "a=ren&pl=" + escape(plName) + "&npl=" + escape(trim(plNewName)) + "&SID=" + SID;
-		$.post("./server/ls.php", postData, displaySavedPL, 'json');
+		$.post("./server/pl.php", postData, displaySavedPL, 'json');
 	}
 }
 
@@ -85,7 +86,7 @@ function delPL()
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
 		postData = "a=del&pl=" + escape(pl_name) + "&SID=" + SID;
-		$.post("./server/ls.php", postData, displaySavedPL, 'json');
+		$.post("./server/pl.php", postData, displaySavedPL, 'json');
 	}
 }
 
@@ -103,7 +104,7 @@ function shuffle()
 		pl_name = plSelect.options[plSelect.selectedIndex].value;
 		//alert(pl_name);
 		postData = "a=shuf&pl=" + pl_name + "&SID=" + SID;
-		$.post("./server/ls.php", postData, _plOnChange, 'json');
+		$.post("./server/pl.php", postData, _plOnChange, 'json');
 	}
 }
 
@@ -145,7 +146,7 @@ function delFromPl()
 	plSelect = $("#plList")[0]; 
 	pl_name = plSelect.options[plSelect.selectedIndex].value
 	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
-	$.post("./server/ls.php", postData);
+	$.post("./server/pl.php", postData);
 }
 
 function move(up)
@@ -181,5 +182,5 @@ function move(up)
 	plSelect = $("#plList")[0];
 	pl_name = plSelect.options[plSelect.selectedIndex].value
 	postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
-	$.post("./server/ls.php", postData);
+	$.post("./server/pl.php", postData);
 }

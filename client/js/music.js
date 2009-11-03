@@ -9,7 +9,7 @@
 	postData += "&alb=" + alb_id;
 	postData += "&SID=" + SID;
 	//alert(postData);
-	$.post("./server/ls.php", postData, albOnChange, "json");
+	$.post("./server/music.php", postData, albOnChange, "json");
 }*/
 
 function procSearchResults(results)
@@ -30,7 +30,7 @@ function queryDB(query)
 		return;
 	}
 	postData = "a=search&q=" + query + "&SID=" + SID;
-	$.post("./server/ls.php", postData, procSearchResults, "json");
+	$.post("./server/music.php", postData, procSearchResults, "json");
 }
 
 var srchTimerID;
@@ -109,6 +109,7 @@ function displaySongs(sngArr)
 					else
 						$("#rnd").val("false");
 					$("#sng").val(sngIDs);
+					$("#SID").val(SID);
 					$("#playForm").get(0).submit();
 					break;
 				}
@@ -119,7 +120,7 @@ function displaySongs(sngArr)
 				case "createpl": { createPlaylist(); break;	}
 				case "addtopl": {
 					postData = "a=saved&SID=" + SID;
-					$.post("./server/ls.php", postData, displayAddToPLDiag, "json");
+					$.post("./server/pl.php", postData, displayAddToPLDiag, "json");
 					break;
 				}
 			}//switch
@@ -132,7 +133,7 @@ function displaySongs(sngArr)
 function getSongs(albIDs)
 {
 	postData = "a=sng&alb=" + albIDs + "&SID=" + SID;
-	$.post("./server/ls.php", postData, displaySongs, "json");
+	$.post("./server/music.php", postData, displaySongs, "json");
 }
 
 function displayAlbums(albArr)
@@ -165,7 +166,7 @@ function getAlbums(artIDs)
 {
 	postData = "a=alb&artist=" + artIDs + "&SID=" + SID;
 	//alert(postData);
-	$.post("./server/ls.php", postData, displayAlbums, "json");
+	$.post("./server/music.php", postData, displayAlbums, "json");
 }
 
 function displayArtists(artArr)
@@ -197,7 +198,7 @@ function displayArtists(artArr)
 function getArtists()
 {
 	postData = "a=art&SID=" + SID;
-	$.post("./server/ls.php", postData, displayArtists, "json");
+	$.post("./server/music.php", postData, displayArtists, "json");
 }
 
 function putTotals(data)
@@ -226,13 +227,13 @@ function createPlaylist()
 	if (plName != null)
 	{
 		postData = "a=cpl&content=" + sng + "&pl=" + escape(plName) + "&SID=" + SID;
-		$.post("./server/ls.php", postData, displayError);
+		$.post("./server/pl.php", postData, displayError);
 	}
 }
 
 $(document).ready(function(){
 	//postData = 'a=gett&SID=' + SID;
-	//$.post('./server/ls.php', postData, putTotals, 'json');
+	//$.post('./server/music.php', postData, putTotals, 'json');
 	getArtists();
 
 	$("#artistsList").selectable({
@@ -286,7 +287,7 @@ $(document).ready(function(){
 			{
 				pl_name = $("#tmpPlList").val();
 				postData = "a=updPL&name=" + pl_name + "&newC=" + getSelected("#songList") + "&concat=true&SID=" + SID;
-				$.post("./server/ls.php", postData, displayError);
+				$.post("./server/pl.php", postData, displayError);
 				$(this).dialog('close');
 			},
 			'Cancel': function() 
