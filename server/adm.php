@@ -74,16 +74,11 @@ function saveu()
 	echo $usersDB->alterUser($_POST['id'], $_POST['adm'], $_POST['p']);
 }
 
-function nuser()
+function addu()
 {
-	global $dbh;
-	$user = $_REQUEST["usr"];
-	$passw = sha1($_REQUEST["pw"]);
-	$adminLvl = $_REQUEST["adm"];
+	global $usersDB;
 	
-	$dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user', '$passw', $adminLvl)") or
-		die("FATAL ERROR: While adding a new user to the database. ".implode(" ", $dbh->errorInfo()));
-	echo "User successfully added.";
+	return $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
 }
 
 ?>

@@ -4,9 +4,11 @@
 session_name("newMusicServer");
 session_start();
 //print_r($_POST);
-/*if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
-	header("Location: ./index.php");
-*/
+if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+{
+	header("Location: ..");
+	exit();	
+}
 
 require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();

@@ -52,6 +52,19 @@ class UsersDB
 		return "User information saved successfully";
 	}
 	
+	function addNewUser($user_name, $user_passw, $user_adm_level)
+	{
+		try
+		{
+			$this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '$user_passw', $user_adm_level)");
+		}	
+		catch(PDOException $e)
+		{
+			return "FATAL ERROR: While creating a new user: ".$e->getMessage();
+		}
+		return "New user was successfully created.";
+	}
+	
 	function getAuthInfo_json($userName)
 	{
 		$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE `user_name`='$userName'");

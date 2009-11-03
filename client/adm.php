@@ -21,6 +21,20 @@
 	</form>
 </div>
 
+<div id="addUserDiag" title="Create new user">
+	<p id="validateTips">All form fields are required.</p>
+	<form>
+		<fieldset>
+			<label for="username">Username:</label>
+			<input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all" />
+			<label for="passw">Password:</label>
+			<input type="password" name="passw" id="passw" value="" class="text ui-widget-content ui-corner-all" />
+			<label for="admin">Admin?&nbsp;</label>
+			<input type="checkbox" name="admin" id="admin" class="ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
+
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>

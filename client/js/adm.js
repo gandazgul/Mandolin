@@ -26,7 +26,7 @@ $(document).ready(function(){//intialize add user dialog
 	var	allFields = $([]).add(name).add(passw).add(admin);
 	var	tips = $("#validateTips");
 	
-	$("#dialog").dialog({
+	$("#addUserDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
 		height: 300,
@@ -50,7 +50,7 @@ $(document).ready(function(){//intialize add user dialog
 					postData += "&p=" + passw.val();						
 					postData += "&adm=" + admin.attr('checked');
 					postData += "&SID=" + SID;
-					$.post("./exec.php", postData, addUser);
+					$.post("./server/adm.php", postData, addUser);
 					$(this).dialog('close');
 				}
 			},
@@ -84,7 +84,7 @@ $(document).ready(function(){//add folder dialog init
 				});
 				
 				postData = "a=set&key=musicFolders&value=" + JSON.stringify(folders);
-				$.post("./server/dbuadm.php", postData, displayError);
+				$.post("./server/adm.php", postData, displayError);
 				
 				$(this).dialog('close');
 			},
@@ -113,7 +113,7 @@ function loadSettings()
 	});
 	//alert(keysArr[0]);
 	postData = "a=get&keys=" + JSON.stringify(keysArr);
-	$.post("./server/dbuadm.php", postData, fillOutSettings, 'json');
+	$.post("./server/adm.php", postData, fillOutSettings, 'json');
 }
 
 function saveSettings()
@@ -133,7 +133,7 @@ function saveSettings()
 	setObj = new settings();	
 	//alert(JSON.stringify(setObj));
 	postData = "a=set&data=" + JSON.stringify(setObj);
-	$.post("./server/dbuadm.php", postData, displayError);
+	$.post("./server/adm.php", postData, displayError);
 }
 
 function changePassw()
@@ -144,7 +144,7 @@ function changePassw()
     if ($("reNewPassw").value == $("newPassw").value)
 	{
 		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val();
-		$.post("./server/dbuadm.php", postData, displayError);
+		$.post("./server/adm.php", postData, displayError);
 	}
 	else
 		displayError("ERROR: Passwords don't match");
@@ -158,7 +158,7 @@ function saveUser(id)
 	postData += "&p=" + $("#passw" + id).val();
 	postData += "&adm=" + $("#admin" + id).attr('checked');
 	postData += "&SID=" + SID;
-	$.post("./server/dbuadm.php", postData, displayError);
+	$.post("./server/adm.php", postData, displayError);
 }
 
 function addUser(data)
