@@ -21,6 +21,21 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
+function checkFolder()
+{
+	$resultArr = array();
+	$resultArr["isError"] = false;
+	if (is_dir($_POST["f"]))
+		$resultArr["resultStr"] = $_POST["f"];
+	else
+	{
+		$resultArr["isError"] = true;
+		$resultArr["resultStr"] = "The specified folder doesn't exist.";
+	}
+	
+	echo json_encode($resultArr);
+}
+
 function set()
 {
 	global $settings;
@@ -28,7 +43,7 @@ function set()
 	//echo $_POST['data'];
 	$data = json_decode($_POST['data'], true);
 	for ($i = 0; $i < count($data['keys']); $i++)
-	{	
+	{
 		$settings->set($data['keys'][$i], $data['values'][$i]);
 	}
 	
@@ -57,11 +72,11 @@ function cpassw()
 	
 	if ($usersDB->verifyPassw($user, $_REQUEST["op"]))
 	{
-		echo $_SESSION["userAdminLevel"];
+		//echo $_SESSION["userAdminLevel"];
 		echo $usersDB->alterUser(0, $user, $_SESSION["userAdminLevel"], $_REQUEST["np"]);
 	}
 	else
-		echo "ERROR: The password you entered is wrong";
+		echo "ERROR: The password you entered is wrong.";
 }
 
 function saveu()
@@ -75,7 +90,7 @@ function addu()
 {
 	global $usersDB;
 	
-	return $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
+	echo $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
 }
 
 ?>

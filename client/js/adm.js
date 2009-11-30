@@ -20,16 +20,44 @@ $(document).ready(function(){//intialize add user dialog
 	//TODO: check this function, complete add and remove user.
 	//TODO: revise user change password. test it.
 	
-	var name = $("#username");
-	var	passw = $("#passw");
-	var	admin = $("#admin");
-	var	allFields = $([]).add(name).add(passw).add(admin);
-	var	tips = $("#validateTips");
+	var name = $("#userName"),
+		password = $("#userPassword"),
+		admin = $("#userAdmin"),
+		allFields = $([]).add(name).add(admin).add(password),
+		tips = $("#validateTips");
+
+	function updateTips(t) {
+		tips.text(t).effect("highlight",{},1500);
+	}
+
+	function checkLength(o,n,min,max) {
+
+		if ( o.val().length > max || o.val().length < min ) {
+			o.addClass('ui-state-error');
+			updateTips("Length of " + n + " must be between "+min+" and "+max+".");
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	function checkRegexp(o,regexp,n) {
+
+		if ( !( regexp.test( o.val() ) ) ) {
+			o.addClass('ui-state-error');
+			updateTips(n);
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 	
 	$("#addUserDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 300,
+		height: 280,
 		modal: true,
 		buttons: {
 			'Create an account': function() 
@@ -38,19 +66,20 @@ $(document).ready(function(){//intialize add user dialog
 				allFields.removeClass('ui-state-error');
 
 				bValid = bValid && checkLength(name,"username",3,16);
-				bValid = bValid && checkLength(passw,"password",6,15);
+				bValid = bValid && checkLength(password,"password",6,15);
 
 				bValid = bValid && checkRegexp(name,/^[a-z]([0-9a-z_])+$/i,"Username may consist of a-z, 0-9, underscores, begin with a letter.");
-				bValid = bValid && checkRegexp(passw,/^([0-9a-zA-Z])+$/,"Password field only allow : a-z 0-9");
+				bValid = bValid && checkRegexp(password,/^([0-9a-zA-Z])+$/,"Password field only allow : a-z 0-9");
 				
 				if (bValid) 
 				{
 					postData =  "a=addu";
 					postData += "&u=" + name.val();
-					postData += "&p=" + passw.val();						
+					postData += "&p=" + password.val();
+					//alert(admin.attr('checked'));
 					postData += "&adm=" + admin.attr('checked');
 					postData += "&SID=" + SID;
-					$.post("./server/adm.php", postData, addUser);
+					$.post("./server/adm.php", postData, addUser, "json");
 					$(this).dialog('close');
 				}
 			},
@@ -75,16 +104,8 @@ $(document).ready(function(){//add folder dialog init
 		buttons: {
 			'Add this folder': function() 
 			{
-				$("#musicFoldersList").append("<option>" + $("#folderName").val() + "</option>");
-				folders = new Array();
-				
-				$("#musicFoldersList option").each(function()
-				{
-					folders.push($(this).val());
-				});
-				
-				postData = "a=set&key=musicFolders&value=" + JSON.stringify(folders);
-				$.post("./server/adm.php", postData, displayError);
+				postData = "a=checkFolder&f=" + $("#folderName").val();
+				$.post("./server/adm.php", postData, addFolder, 'json');
 				
 				$(this).dialog('close');
 			},
@@ -95,6 +116,32 @@ $(document).ready(function(){//add folder dialog init
 		}			
 	});
 });
+
+function addFolder(data)
+{
+	if (data.isError)
+	{
+		displayError(data.resultStr);
+	}
+	else
+	{
+		$("#musicFoldersList").append("<option>" + data.resultStr + "</option>");
+		folders = new Array();
+		
+		$("#musicFoldersList option").each(function()
+		{
+			folders.push($(this).val());
+		});
+		
+		keys = new Array("musicFolders");
+		values = new Array(JSON.stringify(folders));
+		
+		setObj = new settings(keys, values);	
+		//alert(JSON.stringify(setObj));
+		postData = "a=set&data=" + JSON.stringify(setObj);
+		$.post("./server/adm.php", postData, displayError);
+	}
+}
 
 function fillOutSettings(data)
 {
@@ -116,21 +163,32 @@ function loadSettings()
 	$.post("./server/adm.php", postData, fillOutSettings, 'json');
 }
 
-function saveSettings()
-{
-	settings = function(){
-		this.keys = new Array();
-		this.values = new Array();
-		var thisvar = this;
-		
+var settings = function(pKeys, pValues){
+	this.keys = new Array();
+	this.values = new Array();
+	var thisvar = this;
+	
+	if (pKeys && pValues)
+	{
+		for(i = 0; i < pKeys.length; i++)
+		{
+			thisvar.keys.push(pKeys[i]);
+			thisvar.values.push(pValues[i]);
+		}
+	}
+	else
+	{
 		$(".settings").each(function()
 		{
 			thisvar.keys.push($(this)[0].id);
 			thisvar.values.push($(this).val());
-		});	
-	};
-	
-	setObj = new settings();	
+		});
+	}
+};
+
+function saveSettings()
+{
+	setObj = new settings(null, null);	
 	//alert(JSON.stringify(setObj));
 	postData = "a=set&data=" + JSON.stringify(setObj);
 	$.post("./server/adm.php", postData, displayError);
@@ -141,7 +199,7 @@ function changePassw()
 	if ( ($("#reNewPassw").val() == "" ) || ( $("#newPassw").val() == "" ) || ( $("#oldPassw").val() == "" ) )
 	   displayError("ERROR: Passwords can't be empty");
 	else
-    if ($("reNewPassw").value == $("newPassw").value)
+    if ($("#reNewPassw").val() == $("#newPassw").val())
 	{
 		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val();
 		$.post("./server/adm.php", postData, displayError);
@@ -163,10 +221,17 @@ function saveUser(id)
 
 function addUser(data)
 {
-	$('#userTable tbody').append(data);
-	$("#userTable").trigger("update");
-	var sorting = [[0,1]];
-	$("#userTable").trigger("sorton",[sorting]); 
+	if (data.isError)
+	{
+		displayError(data.resultStr);
+	}
+	else
+	{
+		$('#userTable tbody').append(data.resultStr);
+		$("#userTable").trigger("update");
+		var sorting = [[0,1]];
+		$("#userTable").trigger("sorton",[sorting]);
+	}
 }
 
 function _addUser()
@@ -181,4 +246,31 @@ function createDB()
 	{
 		document.location = "./index.php?p=createDB";
 	}
+}
+
+function removeFolder()
+{
+	index = $("#musicFoldersList").attr("selectedIndex");
+	$("#musicFoldersList option:eq("+ index +")").remove();
+	folders = new Array();
+	
+	$("#musicFoldersList option").each(function()
+	{
+		folders.push($(this).val());
+	});
+	
+	keys = new Array("musicFolders");
+	values = new Array(JSON.stringify(folders));
+	
+	setObj = new settings(keys, values);	
+	//alert(JSON.stringify(setObj));
+	postData = "a=set&data=" + JSON.stringify(setObj);
+	$.post("./server/adm.php", postData, displayError);
+}
+
+function _delUser()
+{
+	
+	postData = "a=set&data=" + JSON.stringify(setObj);
+	$.post("./server/adm.php", postData, displayError);
 }

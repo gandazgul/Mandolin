@@ -59,15 +59,37 @@ class UsersDB
 	
 	function addNewUser($user_name, $user_passw, $user_adm_level)
 	{
-		try
+		$resultArr = array();
+		$resultArr["isError"] = false;
+		$user_adm_level = ($user_adm_level == "true") ? 1 : 0;
+		
+		$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '".sha1($user_passw)."', $user_adm_level)");
+		if ($result == 0)
 		{
-			$this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '$user_passw', $user_adm_level)");
-		}	
-		catch(PDOException $e)
-		{
-			return "FATAL ERROR: While creating a new user: ".$e->getMessage();
+			$error = $this->dbh->errorInfo();
+			$resultArr["isError"] = true;
+			$resultArr["resultStr"] = "FATAL ERROR: While creating a new user: ".$error[2];
 		}
-		return "New user was successfully created.";
+		else
+		{
+			$result = $this->dbh->query("SELECT max(user_id) FROM users");
+			$result = $result->fetchAll();
+			$id = $result[0][0];
+			
+			$resultArr["resultStr"] = "<tr id='tr$id'>";
+			$resultArr["resultStr"] .= "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
+			$resultArr["resultStr"] .= "<label for='userCheck$id' style='display: inline; '>&nbsp;&nbsp;";
+			$resultArr["resultStr"] .= $user_name."</label></td>";
+			$resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
+			if ($user_adm_level)
+				$resultArr["resultStr"] .=  "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
+			else
+				$resultArr["resultStr"] .=  "<td><input type='checkbox' id='admin$id'/><span></span></td>";
+			$resultArr["resultStr"] .=  "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" /></div><span></span></td>";
+			$resultArr["resultStr"] .=  "</tr>";
+		}
+		
+		return json_encode($resultArr);
 	}
 	
 	function getAuthInfo_json($userName)
