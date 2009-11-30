@@ -1,6 +1,4 @@
 <?php
-//TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
-//TODO: covert all this into the DB Class.
 session_name("newMusicServer");
 session_start();
 //print_r($_POST);

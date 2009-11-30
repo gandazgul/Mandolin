@@ -319,7 +319,7 @@ class MusicDB
 		for ($i = 0; $i < count($plArr); $i++)
 		{
 			$sng_id = $plArr[$i];
-			
+			//echo $sng_id;
 			try	{ $sngStmt->execute(array($sng_id)); } catch(PDOException $e) { exit($e->getMessage()); }
 			
 			$queryArr = $sngStmt->fetchAll();
