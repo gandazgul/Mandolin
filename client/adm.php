@@ -11,27 +11,44 @@
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
 <script type="text/javascript" src="./client/js/adm.js"></script>
+<style type="text/css">
+table {
+	border-bottom: none;
+	border-top: none;
+	margin-bottom: none;
+	
+	width: auto;
+	border-collapse: collapse;
+}
 
+tbody td {
+	border-bottom: none;
+}
+
+.ui-form label.block, .ui-form input.text { display:block; }
+.ui-form input.text { margin-bottom:12px; width:95%; padding: .4em; }
+.ui-form fieldset { padding:0; border:0; }
+.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
+.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+
+</style>
 <div id="addFolderDiag" title="Add a folder to music library">
-	<form>
-		<fieldset>
-			<label for="folderName">Folder Full Path:</label>
-			<input type="text" id="folderName" />
-		</fieldset>
-	</form>
+	<br />
+	<label for="folderName">Folder Full Path:</label>
+	<input type="text" id="folderName" />
 </div>
-
 <div id="addUserDiag" title="Create new user">
 	<p id="validateTips">All form fields are required.</p>
-	<form>
-		<fieldset>
-			<label for="username">Username:</label>
-			<input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all" />
-			<label for="passw">Password:</label>
-			<input type="password" name="passw" id="passw" value="" class="text ui-widget-content ui-corner-all" />
-			<label for="admin">Admin?&nbsp;</label>
-			<input type="checkbox" name="admin" id="admin" class="ui-widget-content ui-corner-all" />
-		</fieldset>
+
+	<form class="ui-form">
+	<fieldset>
+		<label for="userName" class="block">Name</label>
+		<input type="text" name="userName" id="userName" class="text ui-widget-content ui-corner-all" />
+		<label for="userPassword" class="block">Password</label>
+		<input type="password" name="userPassword" id="userPassword" class="text ui-widget-content ui-corner-all" />
+		<label for="userAdmin">Admin?</label>
+		<input type="checkbox" name="userAdmin" id="userAdmin" class="ui-widget-content ui-corner-all" />
+	</fieldset>
 	</form>
 </div>
 
@@ -106,7 +123,7 @@
 									echo "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
 								else
 									echo "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-								echo "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" /></div><span></span></td>";
+								echo "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" />&nbsp;<input type='button' onclick=\"_delUser('$id')\" value='Delete' /></div><span></span></td>";
 								echo "</tr>";
 							}
 						?>
@@ -116,49 +133,8 @@
 				<fieldset>
 					<div class="type-button">
 						<input type="button" onclick="_addUser()" value="Add User" />
-						<input type="button" onclick="_delUser()" value="Delete User" />
 					</div>
 				</fieldset>
-				<!-- fieldset>
-					<legend> Enter New User Information </legend>
-					<div class="type-text">
-						<label for="username">Username:</label>
-						<input type="text" id="username" />
-					</div>
-					<div class="type-text">
-						<label for="passw">Password:</label>
-						<input type="text" id="passw" />
-					</div>
-					<div class="type-text">
-						<label for="rePassw">Re-Type Password:</label>
-						<input type="text" id="rePassw" />
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend> Select permission level </legend>
-					<div class="type-check">
-						<input type="radio" name="adminLvl" id="adminLvl0" value="0" />&nbsp;<label for="adminLvl0">Administrator</label>
-						<div class="message">
-							(Can delete, rename songs and users and 
-							also update or recreate the database)
-						</div>
-					</div>
-					<div class="type-check">
-						<input type="radio" name="adminLvl" id="adminLvl1" value="1" />&nbsp;<label for="adminLvl1">Mantainer</label>
-						<div class="message">
-							(Can rename songs, change passwords of users 
-							and update the database)
-						</div>
-					</div>
-					<div class="type-check">
-						<input type="radio" name="adminLvl" id="adminLvl2" value="2" checked="checked" />&nbsp;<label for="adminLvl2">User</label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<div class="type-button">
-						<input type="button" value="Add user" onClick="addUser()" />
-					</div>
-				</fieldset-->
 			</form>
 		</div>
 		<h3><a href="#">&nbsp;<img src="./client/images/dbadm.png" alt="DB Administration Icon">&nbsp;Database Administration</a></h3>

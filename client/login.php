@@ -34,7 +34,7 @@
 			header("Location: .");
 			exit();
 	    }
-		header("Location: ../index.php?passw=false");
+		header("Location: ./?p=login&passw=false");
 	}
 	else
 	if (is_dir("./install/")):?>
