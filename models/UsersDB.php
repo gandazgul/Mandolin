@@ -135,7 +135,7 @@ class UsersDB
 	function getPLContents($userName, $plNames)
 	{
 		$resultArr = array();
-		$plStmt = $this->dbh->prepare("SELECT pl_contents FROM playlists WHERE `pl_user_name`=? AND `pl_name`=?");
+		$plStmt = $this->dbh->prepare("SELECT pl_contents FROM playlists WHERE pl_user_name='$userName' AND pl_name=?");
 		
 		$pl = strtok($plNames, "|");
 		while($pl !== false)
@@ -143,7 +143,7 @@ class UsersDB
 			//print_r(array($userName, $pl));
 			try
 			{
-				$plStmt->execute(array($userName, $pl));
+				$plStmt->execute(array($pl));
 			}
 			catch(PDOException $e) { exit($e->getMessage()); }
 			

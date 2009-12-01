@@ -37,8 +37,8 @@
 		header("Location: ./?p=login&passw=false");
 	}
 	else
-	if (is_dir("../install")): //delete the ! before publishing?>
-		<p style="margin-top: 10px" class="title">If this is the first time you access newMusicServer, then <a href="../install/index.php">click here to install</a>. 
+	if (is_dir("./install/")):?>
+		<p style="margin-top: 10px" class="title">If this is the first time you access newMusicServer, then <a href="./install">click here to install</a>. 
 		If you already completed the installation then, delete the "install" directory before trying to login.</p>
 	<?php else: ?>
 		<div id="main">
