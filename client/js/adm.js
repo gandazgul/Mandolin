@@ -268,7 +268,7 @@ function removeFolder()
 	$.post("./server/adm.php", postData, displayError);
 }
 
-function _delUser()
+function _delUser(id)
 {
 	
 	postData = "a=set&data=" + JSON.stringify(setObj);
