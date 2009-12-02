@@ -93,4 +93,11 @@ function addu()
 	echo $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
 }
 
+function delU()
+{
+	global $usersDB;
+	
+	echo $usersDB->deleteUser($_POST['id']);
+}
+
 ?>

@@ -9,10 +9,7 @@ $(document).ready(function(){
 			2: { sorter: false },
 			3: { sorter: false }				
 		},
-		sortList: [[0,0]],
-		textExtraction: function(node) {
-            return node.childNodes[1].innerHTML; 
-    	}
+		sortList: [[0,0]]
 	});
 });
 
@@ -114,6 +111,29 @@ $(document).ready(function(){//add folder dialog init
 				$(this).dialog('close');
 			}
 		}			
+	});
+	
+	$("#delUserConfDialog").dialog({
+		bgiframe: true,
+		resizable: false,
+		autoOpen: false,
+		height: 160,
+		width: 400,
+		modal: true,
+		overlay: {
+			backgroundColor: '#000',
+			opacity: 0.5
+		},
+		buttons: {
+			'Yes. I\'m sure': function() {
+				postData = "a=delU&id=" + $(this).dialog('option', 'userID');
+				$.post("./server/adm.php", postData, delUser, 'json');
+				$(this).dialog('close');
+			},
+			Cancel: function() {
+				$(this).dialog('close');
+			}
+		}
 	});
 });
 
@@ -244,7 +264,7 @@ function createDB()
 	res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
 	if (res)
 	{
-		document.location = "./index.php?p=createDB";
+		document.location = "./?p=createDB";
 	}
 }
 
@@ -270,7 +290,18 @@ function removeFolder()
 
 function _delUser(id)
 {
-	
-	postData = "a=set&data=" + JSON.stringify(setObj);
-	$.post("./server/adm.php", postData, displayError);
+	$("#delUserConfDialog").dialog('option', 'userID', id).dialog('open');
+}
+
+function delUser(data)
+{
+	if (data.isError)
+		displayError(data.resultStr);
+	else
+	{
+		$('#tr' + data.resultStr).remove();
+		$("#userTable").trigger("update");
+		var sorting = [[0,1]];
+		$("#userTable").trigger("sorton",[sorting]);
+	}
 }

@@ -51,7 +51,9 @@ tbody td {
 	</fieldset>
 	</form>
 </div>
-
+<div id="delUserConfDialog" title="Delete user">
+	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
+</div>
 <div id="nav">
 	<!-- skiplink anchor: navigation -->
 	<a id="navigation" name="navigation"></a>
@@ -115,9 +117,8 @@ tbody td {
 							{
 								$id = $uArr[$i]["user_id"];
 								echo "<tr id='tr$id'>";
-								echo "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
-								echo "<label for='userCheck$id' style='display: inline; '>&nbsp;&nbsp;";
-								echo $uArr[$i]["user_name"]."</label></td>";
+								//echo "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
+								echo "<td>".$uArr[$i]["user_name"]."</td>";
 								echo "<td><input type='password' id='passw$id' /><span></span></td>";
 								if ($uArr[$i]["user_admin_level"] == 1)
 									echo "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";

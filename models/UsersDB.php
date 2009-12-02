@@ -3,17 +3,23 @@ class UsersDB
 {
 	private $dbfilepath;
 	private $dbh;
+	private $resultArr;
 	
 	function __construct($dbfilepath = "../models/dbfiles/users.db")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = new PDO("sqlite:$this->dbfilepath");
 		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$this->resultArr = array();
+		$this->resultArr["isError"] = false;
+		$this->resultArr["resultStr"] = "";
 	}
 	
 	function __destruct()
 	{
-		$this->dbh = null;
+		unset($this->dbh);
+		unset($this->resultArr);
 	}
 	
 	//-------------------------------------------------------------- User functions ----------------------------------------------------------
@@ -59,16 +65,16 @@ class UsersDB
 	
 	function addNewUser($user_name, $user_passw, $user_adm_level)
 	{
-		$resultArr = array();
-		$resultArr["isError"] = false;
+		$this->resultArr["isError"] = false;
+		
 		$user_adm_level = ($user_adm_level == "true") ? 1 : 0;
 		
 		$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '".sha1($user_passw)."', $user_adm_level)");
 		if ($result == 0)
 		{
 			$error = $this->dbh->errorInfo();
-			$resultArr["isError"] = true;
-			$resultArr["resultStr"] = "FATAL ERROR: While creating a new user: ".$error[2];
+			$this->resultArr["isError"] = true;
+			$this->resultArr["resultStr"] = "FATAL ERROR: While creating a new user: ".$error[2];
 		}
 		else
 		{
@@ -76,20 +82,36 @@ class UsersDB
 			$result = $result->fetchAll();
 			$id = $result[0][0];
 			
-			$resultArr["resultStr"] = "<tr id='tr$id'>";
-			$resultArr["resultStr"] .= "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
-			$resultArr["resultStr"] .= "<label for='userCheck$id' style='display: inline; '>&nbsp;&nbsp;";
-			$resultArr["resultStr"] .= $user_name."</label></td>";
-			$resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
+			$this->resultArr["resultStr"] = "<tr id='tr$id'>";
+			$this->resultArr["resultStr"] .= "<td>$user_name</td>";
+			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
 			if ($user_adm_level)
-				$resultArr["resultStr"] .=  "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
+				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
 			else
-				$resultArr["resultStr"] .=  "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-			$resultArr["resultStr"] .=  "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" /></div><span></span></td>";
-			$resultArr["resultStr"] .=  "</tr>";
+				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id'/><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" />&nbsp;";
+			$this->resultArr["resultStr"] .= "<input type='button' onclick=\"_delUser('$id')\" value='Delete' /></div><span></span></td>";
+			$this->resultArr["resultStr"] .=  "</tr>";
 		}
 		
-		return json_encode($resultArr);
+		return json_encode($this->resultArr);
+	}
+	
+	function deleteUser($id)
+	{
+		$this->resultArr['isError'] = false;
+		
+		$result = $this->dbh->exec("DELETE FROM users WHERE user_id=$id");
+		if ($result == 0)
+		{
+			$this->resultArr['isError'] = true;
+			$error = $this->dbh->errorInfo();
+			$this->resultArr['resultStr'] = "ERROR: Couldn't delete the specified user($id): ".$error[2];
+		}
+		else
+			$this->resultArr['resultStr'] = $id;
+			
+		return json_encode($this->resultArr);
 	}
 	
 	function getAuthInfo_json($userName)
