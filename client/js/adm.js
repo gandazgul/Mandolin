@@ -14,9 +14,6 @@ $(document).ready(function(){
 });
 
 $(document).ready(function(){//intialize add user dialog
-	//TODO: check this function, complete add and remove user.
-	//TODO: revise user change password. test it.
-	
 	var name = $("#userName"),
 		password = $("#userPassword"),
 		admin = $("#userAdmin"),
@@ -101,7 +98,7 @@ $(document).ready(function(){//add folder dialog init
 		buttons: {
 			'Add this folder': function() 
 			{
-				postData = "a=checkFolder&f=" + $("#folderName").val();
+				postData = "a=checkFolder&f=" + $("#folderName").val() + "&SID=" + SID;
 				$.post("./server/adm.php", postData, addFolder, 'json');
 				
 				$(this).dialog('close');
@@ -126,7 +123,7 @@ $(document).ready(function(){//add folder dialog init
 		},
 		buttons: {
 			'Yes. I\'m sure': function() {
-				postData = "a=delU&id=" + $(this).dialog('option', 'userID');
+				postData = "a=delU&id=" + $(this).dialog('option', 'userID') + "&SID=" + SID;
 				$.post("./server/adm.php", postData, delUser, 'json');
 				$(this).dialog('close');
 			},
@@ -158,7 +155,7 @@ function addFolder(data)
 		
 		setObj = new settings(keys, values);	
 		//alert(JSON.stringify(setObj));
-		postData = "a=set&data=" + JSON.stringify(setObj);
+		postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
 }
@@ -179,7 +176,7 @@ function loadSettings()
 		keysArr.push($(this)[0].id);
 	});
 	//alert(keysArr[0]);
-	postData = "a=get&keys=" + JSON.stringify(keysArr);
+	postData = "a=get&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, fillOutSettings, 'json');
 }
 
@@ -210,7 +207,7 @@ function saveSettings()
 {
 	setObj = new settings(null, null);	
 	//alert(JSON.stringify(setObj));
-	postData = "a=set&data=" + JSON.stringify(setObj);
+	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
 }
 
@@ -221,7 +218,7 @@ function changePassw()
 	else
     if ($("#reNewPassw").val() == $("#newPassw").val())
 	{
-		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val();
+		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
 	else
@@ -285,7 +282,7 @@ function removeFolder()
 	
 	setObj = new settings(keys, values);	
 	//alert(JSON.stringify(setObj));
-	postData = "a=set&data=" + JSON.stringify(setObj);
+	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
 }
 
