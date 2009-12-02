@@ -1,15 +1,13 @@
 TODO HIGH PRIORITY: 
 - recreateDB is not calling the addtodb function ever.
 - break up addtoDB, make and add album, addArtist, addSong. and maybe something else.
-- Settings in admin page. 
 - revise this right now, it puts unknown album in every artists even if there are no loose files. It also creates an unknown artists even when there are no loose files in the music folder. - if path does not provide all info put it under artist: unknown or album: unknown - DONE
 - make the models always return the same object,
 	isError: bool
-	result_json: str (will contain the result of the query or the message of success/failure)
+	resultStr: str (will contain the result of the query or the message of success/failure)
 
 
 TODO:
-- Existing users table, with options to delete, add, rename, reset passw, etc
 - Add more settings.
 
 - add option to play music in the browser using the flash player.
