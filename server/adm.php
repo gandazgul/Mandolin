@@ -56,8 +56,9 @@ function get()
 {
 	global $settings;
 	
-	$keys = json_decode($_POST['keys'], true);
-
+	$keys = json_decode(stripslashes($_POST['keys']), true);
+	$result = array();
+	
 	for ($i = 0; $i < count($keys); $i++)
 	{	
 		$result[$keys[$i]] = $settings->get($keys[$i]);
