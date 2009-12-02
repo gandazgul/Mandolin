@@ -43,7 +43,8 @@ function set()
 	global $settings;
 	
 	//echo $_POST['data'];
-	$data = json_decode($_POST['data'], true);
+	$data = json_decode(stripslashes($_POST['data']), true);
+	//print_r($data);
 	for ($i = 0; $i < count($data['keys']); $i++)
 	{
 		$settings->set($data['keys'][$i], $data['values'][$i]);

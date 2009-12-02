@@ -7,7 +7,7 @@ if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 1))
 ini_set('max_execution_time', '6000');
 
 require_once './models/MusicDB.php';
-$musicDB = new MusicDB();
+$musicDB = new MusicDB("./models/dbfiles/music.db");
 
 $musicDB->recreateDB();
 //---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------
@@ -42,9 +42,10 @@ $musicDB->recreateDB();
 			<li>Songs: <span id='sng'></span></li>
 			<li>-------------------------------------------</li>
 			<?php 
-				for ($i = 0; $i < count($settings["musicFolders"]); $i++)
+				$folderArr = json_decode($settings->get("musicFolders"), true);
+				for ($i = 0; $i < count($folderArr); $i++)
 				{
-					$curFolder = $settings["musicFolders"][$i];
+					$curFolder = $folderArr[$i];
 					$musicDB->addToDB($curFolder, strlen($curFolder));
 					echo "<li>$curFolder - DONE</li>";		 
 				}

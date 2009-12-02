@@ -192,7 +192,7 @@ class MusicDB
 					{
 			        	$song_path = $folder.$file;
 			        	$song_name = substr($file, 0, strrpos($file, '.'));
-						$sng_path_no_root = substr($song_path, $root_length, (strlen($song_name.$song_ext) + 1) * -1);
+						$sng_path_no_root = substr($song_path, $root_length + 1, (strlen($song_name.$song_ext) + 1) * -1);
 						//echo $sng_path_no_root."\n";
 						$pathArr = explode("/", $sng_path_no_root);
 						//print_r($pathArr);
@@ -292,6 +292,8 @@ class MusicDB
 							exit($e->getMessage());
 						}
 					}//EXT not recognized
+					else
+						continue;
 			    }//this is a file
 			}//while
 			closedir($dirH);
@@ -372,9 +374,9 @@ class MusicDB
 	function recreateDB()
 	{
 		unset($this->dbh);
-		unlink($dbfilepath);
+		unlink($this->dbfilepath);
 		
-		$this->dbh = new PDO("sqlite:$dbfilepath");
+		$this->dbh = new PDO("sqlite:".$this->dbfilepath);
 		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
 		//-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------

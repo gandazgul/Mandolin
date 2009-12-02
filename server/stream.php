@@ -5,7 +5,7 @@ if ($cur_key == "") exit("The key is invalid");
 $song_id = $_GET["s"];
 if ($song_id == "")	die("You must provide a valid song ID.");
 
-$dbh = new PDO("sqlite:./db/users.db");
+$dbh = new PDO("sqlite:../models/dbfiles/users.db");
 	$query = $dbh->query("SELECT last_key_date FROM users WHERE `last_key`='$cur_key'");
 	$queryArr = $query->fetchAll();
 $dbh = null;
@@ -14,7 +14,7 @@ if (count($queryArr) == 0)
 $last_key_date = $queryArr[0][0];
 if ((time() - $last_key_date) > 64800) die("The key is old");
 
-$dbh = new PDO("sqlite:./db/music.db");
+$dbh = new PDO("sqlite:../models/dbfiles/music.db");
 	$query = $dbh->query("SELECT song_path, song_name FROM music WHERE `song_id`='$song_id'");
 	$queryArr = $query->fetchAll();
 $dbh = null;
