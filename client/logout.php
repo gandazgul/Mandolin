@@ -1,11 +1,11 @@
 <?php
-	session_name("newMusicServer");
+	session_name("Mandolin");
 	session_start();
 	
 	$_SESSION = array();
 	unset($sess_id);
 
-	if (isset($_COOKIE["newMusicServer"])) 
+	if (isset($_COOKIE["Mandolin"])) 
 	{
 	    //setcookie($sName, '', time()-42000, '/');
 		setcookie(session_name(), session_id(), 1, '/');

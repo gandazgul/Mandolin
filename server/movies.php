@@ -1,7 +1,7 @@
 <?php
 //TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
 //TODO: covert all this into the DB Class.
-session_name("newMusicServer");
+session_name("Mandolin");
 session_start();
 //print_r($_POST);
 if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))

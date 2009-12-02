@@ -36,7 +36,7 @@
 		<li>Opera, Netscape, other Browsers</li>
 	</ul> 
 	<p class="title">You can download the lastest code(branch: master) as well as the last stable release(branch: stable) of Mandolin from here(git):<br /> 
-	<a href="git://github.com/gandazgul/newmusicserver.git">Mandolin at GitHub</a><br />
+	<a href="git://github.com/gandazgul/Mandolin.git">Mandolin at GitHub</a><br />
 	Any other branch are just experimental or test branches and are usually broken.
 	</p>
 	

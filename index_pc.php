@@ -1,5 +1,5 @@
 <?php
-	session_name("newMusicServer");	
+	session_name("Mandolin");	
 	session_start();
 
 	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
@@ -61,7 +61,7 @@
 		</div>
 		<div class="page">
 			<div id="header">    	
-				<img alt="newMusicServer logo" src="./client/images/logo.jpg" />
+				<img alt="Mandolin logo" src="./client/images/logo.jpg" />
 				<div style="position: absolute; top: 10px; left: 200px">
 					<?php
 						$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";

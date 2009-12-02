@@ -24,7 +24,7 @@ $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 		}
 	</script>
 	<div style="float: top" align="center">
-		Thanks for downloading SCTree newMusicServer v<?php echo $settings["version"] ?><br />
+		Thanks for downloading SCTree Mandolin v<?php echo $settings["version"] ?><br />
 		Installation - Step <?php echo $step; ?>
 	</div><br />
 <?php

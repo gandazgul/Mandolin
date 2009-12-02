@@ -1,5 +1,5 @@
 <?php
-	session_name("newMusicServer");	
+	session_name("Mandolin");	
 	session_start();
 
 	if (!isset($_SESSION["id"]) or ($_SESSION["id"] != sha1(session_id())))
@@ -10,10 +10,10 @@
 ?>
 <html>
 	<head>
-		<title>newMusicServer <?php echo $settings['version']; ?></title>
+		<title>Mandolin <?php echo $settings['version']; ?></title>
 	</head>
 	<body>
-		<p>newMusicServer <?php echo $settings['version']; ?></p>
+		<p>Mandolin <?php echo $settings['version']; ?></p>
 		<div id="plList">
 			<?php
 				$userName = $_SESSION["username"];

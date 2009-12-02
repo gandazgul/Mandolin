@@ -23,7 +23,7 @@
 	            $key = sha1($username."@".$passw.":".time());
 	            $usersDB->updateKey($username, $key);
 			}
-			session_name("newMusicServer");
+			session_name("Mandolin");
 			session_start();
 			session_regenerate_id();
 			$_SESSION["key"] = $key;
@@ -38,7 +38,7 @@
 	}
 	else
 	if (is_dir("./install/")):?>
-		<p style="margin-top: 10px" class="title">If this is the first time you access newMusicServer, then <a href="./install">click here to install</a>. 
+		<p style="margin-top: 10px" class="title">If this is the first time you access Mandolin, then <a href="./install">click here to install</a>. 
 		If you already completed the installation then, delete the "install" directory before trying to login.</p>
 	<?php else: ?>
 		<div id="main">
