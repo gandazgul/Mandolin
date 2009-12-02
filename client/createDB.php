@@ -1,5 +1,5 @@
 <?php
-if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 0))
+if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 1))
 {
 	header("Location: ./?p=logout");
 	exit();
