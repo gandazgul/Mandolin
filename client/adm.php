@@ -65,7 +65,7 @@ tbody td {
 			<li><a href="./?p=movies">Movies</a></li>
 			<li class="active"><strong>Aministration</strong></li>
 			<li><a href="./?p=about">About</a></li>
-			<li><a href="./?p=logout">Logout</a></li>
+			<li><a href="./client/logout.php">Logout</a></li>
 		</ul>
 	</div>
 </div>
