@@ -76,7 +76,7 @@
 			
 			<!-- begin: #footer -->
 			<div id="footer">
-				<a href="http://www.gnu.org/licenses/gpl.html">(L)</a> 2009 SCTree | <a href="./src.php">Get the code</a> | Layout based on <a href="http://www.yaml.de/">YAML</a>
+				<a href="http://www.gnu.org/licenses/gpl.html">(L)</a> 2009 SCTree | <a href="http://github.com/gandazgul/Mandolin" target="_bank">Get the code @GitHub</a> | Layout based on <a href="http://www.yaml.de/">YAML</a>
 			</div>
 		</div>
 		<div id="border-bottom">
