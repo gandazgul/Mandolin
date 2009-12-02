@@ -1,4 +1,5 @@
 <?php
+//convert this to use the DB model
 $cur_key = $_GET["k"]; 
 if ($cur_key == "") exit("The key is invalid");
 $song_id = $_GET["s"];

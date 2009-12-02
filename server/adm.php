@@ -1,11 +1,13 @@
 <?php
-//TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
 session_name("Mandolin");
 session_start();
 //print_r($_POST);
-/*if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
-	header("Location: ./index.php");
-*/
+if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+{
+	header("Location: ..");
+	exit();	
+}
+
 require_once("../models/UsersDB.php");
 $usersDB = new UsersDB();
 require_once("../models/Settings.php");
