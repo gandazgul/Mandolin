@@ -21,7 +21,7 @@
 <head>
 	<title>Mandolin v<?php echo $settings->get("version"); ?></title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-	<!-- add your meta tags here -->
+	<link rel="SHORTCUT ICON" href="./client/images/logo.ico" />
 	
 	<link href="./client/css/my_layout.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]>
