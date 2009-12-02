@@ -4,7 +4,7 @@ class Settings
 	private $dbfilepath;
 	private $dbh;
 	
-	function __construct($dbfilepath = "../models/dbfiles/settings.json")
+	function __construct($dbfilepath="../models/dbfiles/settings.json")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = json_decode(file_get_contents($this->dbfilepath), true);

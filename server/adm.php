@@ -83,7 +83,7 @@ function saveu()
 {
 	global $usersDB;
 
-	echo $usersDB->alterUser($_POST['id'], $_POST['adm'], $_POST['p']);
+	echo $usersDB->alterUser($_POST['id'], $_POST['un'], $_POST['adm'], $_POST['p']);
 }
 
 function addu()

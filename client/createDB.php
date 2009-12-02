@@ -1,7 +1,7 @@
 <?php
 if (!isset($sess_id) or ($_SESSION['userAdminLevel'] != 1))
 {
-	header("Location: ./?p=logout");
+	header("Location: ../?p=logout");
 	exit();
 }
 ini_set('max_execution_time', '6000');

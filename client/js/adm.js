@@ -233,6 +233,7 @@ function saveUser(id)
 	//alert($("#passw" + id).val());
 	postData =  "a=saveu";
 	postData += "&id=" + id;
+	postData += "&un=" + $("#userName" + id).html();
 	postData += "&p=" + $("#passw" + id).val();
 	postData += "&adm=" + $("#admin" + id).attr('checked');
 	postData += "&SID=" + SID;

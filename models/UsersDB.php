@@ -83,7 +83,7 @@ class UsersDB
 			$id = $result[0][0];
 			
 			$this->resultArr["resultStr"] = "<tr id='tr$id'>";
-			$this->resultArr["resultStr"] .= "<td>$user_name</td>";
+			$this->resultArr["resultStr"] .= "<td><span id='userName$id'>$user_name</span></td>";
 			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
 			if ($user_adm_level)
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";

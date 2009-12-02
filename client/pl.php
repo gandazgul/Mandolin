@@ -1,7 +1,7 @@
 <?php
 	if (!isset($sess_id))
 	{
-		header("Location: ./?p=logout");
+		header("Location: ../?p=pl");
 		exit();
 	}
 ?>

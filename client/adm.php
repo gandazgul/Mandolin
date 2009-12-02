@@ -1,7 +1,7 @@
 <?php
 	if (!isset($sess_id))
 	{
-		header("Location: .");
+		header("Location: ../?p=adm");
 		exit();
 	}
 	
@@ -118,7 +118,7 @@ tbody td {
 								$id = $uArr[$i]["user_id"];
 								echo "<tr id='tr$id'>";
 								//echo "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
-								echo "<td>".$uArr[$i]["user_name"]."</td>";
+								echo "<td><span id='userName$id'>".$uArr[$i]["user_name"]."</span></td>";
 								echo "<td><input type='password' id='passw$id' /><span></span></td>";
 								if ($uArr[$i]["user_admin_level"] == 1)
 									echo "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";

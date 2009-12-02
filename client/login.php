@@ -2,14 +2,14 @@
 	//print_r($_POST);
 	if (isset($_POST["username"]))
 	{
-		require_once("./models/UsersDB.php");
-		require_once("./models/Settings.php");
+		require_once("../models/UsersDB.php");
+		require_once("../models/Settings.php");
 
 		$username = $_POST["username"];
 		$passw = $_POST["passw"];
 		//echo sha1($passw)."<br />\n";
 		//echo "$username<br />\n";
-	    $usersDB = new UsersDB("./models/dbfiles/users.db");
+	    $usersDB = new UsersDB();
 	    if ($usersDB->verifyPassw($username, $passw))//if the passwords match
 	    {
 			$authDataArr = json_decode($usersDB->getAuthInfo_json($username), true);
@@ -31,35 +31,44 @@
 			$_SESSION["userAdminLevel"] = $usersDB->isAdmin($username);
 			$_SESSION["id"] = sha1(session_id());
 			//print_r($_SESSION);
-			header("Location: .");
+			header("Location: ..");
 			exit();
 	    }
-		header("Location: ./?p=login&passw=false");
+		header("Location: ../?p=login&passw=false");
 	}
 	else
-	if (is_dir("./install/")):?>
-		<p style="margin-top: 10px" class="title">If this is the first time you access Mandolin, then <a href="./install">click here to install</a>. 
-		If you already completed the installation then, delete the "install" directory before trying to login.</p>
-	<?php else: ?>
-		<div id="main">
-			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="yform">
-				<fieldset>
-					<legend>Please login</legend>
-					<div class="type-text">
-						<?php if(isset($_GET["passw"])):?>
-							<strong class="message">ERROR: Incorrect Username and/or Password</strong>
-						<?php endif; ?>
-						<label for="username">Username:</label>
-						<input type="text" size="20" name="username" id="username" />
+	{
+		if (!isset($sess_id))
+		{
+			header("Location: ..");
+			exit();
+		}
+		if (is_dir("./install/")):?>
+			<p style="margin-top: 10px" class="title">If this is the first time you access Mandolin, then <a href="./install">click here to install</a>. 
+			If you already completed the installation then, delete the "install" directory before trying to login.</p>
+		<?php else: ?>
+			<div id="main">
+				<form action="./client/login.php" method="post" class="yform">
+					<fieldset>
+						<legend>Please login</legend>
+						<div class="type-text">
+							<?php if(isset($_GET["passw"])):?>
+								<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+							<?php endif; ?>
+							<label for="username">Username:</label>
+							<input type="text" size="20" name="username" id="username" />
+						</div>
+						<div class="type-text">
+							<label for="passw">Password:</label>
+							<input type="password" size="20" name="passw" id="passw" />
+						</div>
+					<div class="type-button">
+						<input type="submit" value="Login" />
 					</div>
-					<div class="type-text">
-						<label for="passw">Password:</label>
-						<input type="password" size="20" name="passw" id="passw" />
-					</div>
-				<div class="type-button">
-					<input type="submit" value="Login" />
-				</div>
-				</fieldset>
-			</form>
-		</div>
-	<?php endif; ?>
+					</fieldset>
+				</form>
+			</div>
+<?php 
+		endif;
+	}
+?>

@@ -1,6 +1,6 @@
 <?php
-	session_name("Mandolin");
-	session_start();
+	//session_name("Mandolin");
+	//session_start();
 	
 	$_SESSION = array();
 	unset($sess_id);
