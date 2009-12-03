@@ -31,6 +31,7 @@ else
 	unset($settings);
 }
 
+//get the song name, path and extension
 require_once "../models/MusicDB.php";
 $musicDB = new MusicDB();
 $resultArr = $musicDB->getColumnsFromID($song_id, array("song_path", "song_name", "song_ext"));
@@ -46,6 +47,7 @@ else
 $musicDB->__destruct();
 unset($musicDB);
 
+//echoing the file
 switch ($ext)
 {
 	case "mp3" : {

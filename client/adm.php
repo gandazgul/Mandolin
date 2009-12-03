@@ -174,6 +174,10 @@ tbody td {
 						<label for="baseURL">musicServer URL: </label>
 						<input type="text" id="baseURL" class="settings" />
 					</div>
+					<div class="type-text">
+						<label for="keyLastsFor">How long (Milisecs) should playlists last? </label>
+						<input type="text" id="keyLastsFor" class="settings" />
+					</div>
 					<!--div class="type-text">
 						<label for="version">Version: </label>
 						<input type="text" id="version" class="settings" />
