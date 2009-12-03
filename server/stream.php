@@ -1,11 +1,11 @@
 <?php
 //check parameters
-if (isset($_GET["k"]) and ($key != ""))
+if (isset($_GET["k"]) and ($_GET["k"] != ""))
 	$key = $_GET["k"];
 else 
 	exit("Malformed URL.");
 
-if (isset($_GET["s"]) and ($key != ""))
+if (isset($_GET["s"]) and ($_GET["s"] != ""))
 	$song_id = $_GET["s"];
 else 
 	exit("You must provide a valid song ID.");
