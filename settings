@@ -1,2 +1,2 @@
-baseURL=http://sctree-it.sytes.net:50324/mstserver/
-musicRoot=/media/disk/Music/
+baseURL=http://sctree-it.sytes.net:50324/musicserver/
+musicRoot=/media/disk2/Music/

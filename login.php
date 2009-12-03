@@ -41,13 +41,13 @@
 			$_SESSION["userAdminLevel"] = $queryArr[0][3];
 			$_SESSION["id"] = sha1(session_id());
 			//print_r($_SESSION);
-			header("Location: ./index.php?p=main");
+			header("Location: .");
 			exit();
 	    }
 		header("Location: ./index.php?passw=false");
 	}
 	else
-	if (!is_dir("./install")): //delete the ! before publishing?>
+	if (is_dir("./install")): //delete the ! before publishing?>
 		<p style="margin-top: 10px" class="title">If this is the first time you access newMusicServer, then <a href="./install/index.php">click here to install</a>. 
 		If you already completed the installation then, delete the "install" directory before trying to login.</p>
 	<?php else: ?>

@@ -181,7 +181,7 @@ function processArtDir($root, $art_id)//processes the second level (Artist dir) 
     {
         if (($file == ".") or ($file == ".."))
             continue;
-        if (is_dir($root.$file))
+        if (!is_file($root.$file))
         {
             $dir = $root.$file."/";
             $file = str_replace("'", "''", $file);
@@ -190,7 +190,7 @@ function processArtDir($root, $art_id)//processes the second level (Artist dir) 
             processAlbDir($dir, $art_id, $albCount);
             $albCount++;
 			echo "<script language=\"javascript\">document.getElementById('alb').innerHTML = $albCount;</script>";
-			flush(); ob_flush();			
+			flush(); //ob_flush();			
         }
     }
     closedir($dirH);
@@ -217,7 +217,7 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
                 die("FATAL ERROR: Inserting: $dir into music\n".implode(" ", $dbh->errorInfo()));
             $sngCount++;
 			echo "<script language=\"javascript\">document.getElementById('sng').innerHTML = $sngCount;</script>";
-			flush(); ob_flush();				
+			flush(); //ob_flush();				
         }
     }
     closedir($dirH);
@@ -269,7 +269,7 @@ function processAlbDir($root, $art_id, $alb_id)//processes the 3 level(album dir
 		        processArtDir($dir, $artCount);
 		        $artCount++;
 				echo "<script language=\"javascript\">document.getElementById('art').innerHTML = $artCount;</script>";
-				flush(); ob_flush();
+				flush(); //ob_flush();
 		    }
 		}
 		closedir($dirH);
