@@ -7,7 +7,8 @@ class MusicDB
 	private $sngCount;
 	private $artCount;
 	private $albCount;
-		
+	private $resultArr;
+	
 	function __construct($dbfilepath = "../models/dbfiles/music.db")
 	{
 		$this->dbfilepath = $dbfilepath;
@@ -89,6 +90,26 @@ class MusicDB
 	function getSongs_json($alb_id)
 	{
 		return json_encode($this->getSongs($alb_id));
+	}
+	
+	function getColumnsFromID($song_id, $columns)
+	{
+		$this->resultArr['isError'] = false;
+		
+		$columns = implode(',', $columns);
+		$queryArr = $this->dbh->query("SELECT $columns FROM music WHERE song_id=$song_id");
+		if (count($queryArr) == 0)
+		{
+			$this->resultArr['isError'] = true;
+			$error = $this->dbh->errorInfo();
+			$this->resultArr['resultStr'] = "ERROR: Couldn't retreive the requested information: ".$error[2];
+		}
+		else
+		{
+			$this->resultArr['resultStr'] = $queryArr;
+		}
+		
+		return $this->resultArr;
 	}
 	
 	//-------------------------------------------------------Search-------------------------------------------------------------------------
@@ -358,9 +379,9 @@ class MusicDB
 			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
 
 			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=96&amp;$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext";
 			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=128&amp;.$song_ext";
 			
 			$result .= "</location>\n\t\t</track>\n";
 		}
