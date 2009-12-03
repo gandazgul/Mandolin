@@ -199,7 +199,7 @@ class UsersDB
 		return $resultArr;
 	}
 	
-	function getPLsForUser_json($userName)
+	function getPLsForUser($userName)
 	{
 		$resultArr = array();
 			
@@ -214,7 +214,12 @@ class UsersDB
 			$resultArr[] = htmlentities($queryArr[$i]["pl_name"]);
 		}
 		
-		return json_encode($resultArr);
+		return $resultArr;
+	}
+	
+	function getPLsForUser_json($userName)
+	{
+		return json_encode($this->getPLsForUser($userName));
 	}
 	
 	function renamePL($name, $newNameP)

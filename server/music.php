@@ -4,7 +4,7 @@
 session_name("Mandolin");
 session_start();
 //print_r($_POST);
-if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
 	exit();	
@@ -53,29 +53,29 @@ function alb()
 {
 	global $musicDB;
 
-	echo $musicDB->getAlbums_json($_REQUEST["artist"]);
+	echo $musicDB->getAlbums_json($_POST["artist"]);
 }
 
 function sng()
 {
 	global $musicDB;
 	
-	echo $musicDB->getSongs_json($_REQUEST["alb"]);
+	echo $musicDB->getSongs_json($_POST["alb"]);
 }
 
 function search()
 {
 	global $musicDB;
 	
-	$queryStr = $_REQUEST["q"];
+	$queryStr = $_POST["q"];
 	
 	echo $musicDB->search_json($queryStr); 
 }
 
 function addc()//add a comment to a track
 {
-	$sng = $_REQUEST["sng"];
-	$com = $_REQUEST["com"];
+	$sng = $_POST["sng"];
+	$com = $_POST["com"];
 	$dbh = new PDO("sqlite:./db/music.db");
 	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
 	if ($query == 0)
