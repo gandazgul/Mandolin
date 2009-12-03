@@ -114,21 +114,40 @@ class UsersDB
 		return json_encode($this->resultArr);
 	}
 	
-	function getAuthInfo_json($userName)
+	function getAuthInfo_json($userName, $key = "")
 	{
-		$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE `user_name`='$userName'");
+		$this->resultArr['isError'] = false;
+		
+		if ($key != "")
+			$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE last_key='$key'");
+		else
+			$query = $this->dbh->query("SELECT last_key, last_key_date FROM users WHERE user_name='$userName'");
+		
 		$queryArr = $query->fetchAll();
-		$resultArr = array();
-		$resultArr['last_key'] = $queryArr[0][0];
-		$resultArr['last_key_date'] = $queryArr[0][1];
-
-		return json_encode($resultArr);
+		if (count($queryArr) == 0)
+		{
+			$this->resultArr['isError'] = true;
+			$error = $this->dbh->errorInfo();
+			$this->resultArr['resultStr'] = "ERROR: Retrieving user info: ".$error[2];
+		}
+		else
+		{
+			$this->resultArr['resultStr']['last_key'] = $queryArr[0][0]; 
+			$this->resultArr['resultStr']['last_key_date'] = $queryArr[0][1];
+		}
+		
+		return json_encode($this->resultArr);
 	}
 	
 	function verifyPassw($userName, $passw)
 	{
-		$query = $this->dbh->query("SELECT user_password FROM users WHERE `user_name`='$userName'");
+		if (($userName == "") or ($passw == ""))
+			return false;
+			
+		$query = $this->dbh->query("SELECT user_password FROM users WHERE user_name='$userName'");
 		$queryArr = $query->fetchAll();
+	    if (count($queryArr) == 0)
+	    	return false;
 	    
 		return (sha1($passw) == $queryArr[0]['user_password']);
 	}

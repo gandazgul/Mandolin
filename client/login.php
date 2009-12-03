@@ -13,26 +13,29 @@
 	    if ($usersDB->verifyPassw($username, $passw))//if the passwords match
 	    {
 			$authDataArr = json_decode($usersDB->getAuthInfo_json($username), true);
-			$key = $authDataArr['last_key']; //last key stored
-			$last_key_date = $authDataArr['last_key_date']; //last key date
-	    	$settings = new Settings();
-	    	//echo "<br/>last key date: $last_key_date<br/>";
-			//echo "current date: ".time()."<br/>";
-		    if (($last_key_date == "") or ((time() - $last_key_date) > $settings->get('keyLastsFor'))) //we didnt find a key or the key is old lets create one.
-			{
-	            $key = sha1($username."@".$passw.":".time());
-	            $usersDB->updateKey($username, $key);
+			if (!$authDataArr['isError'])
+			{			
+				$key = $authDataArr['resultStr']['last_key']; //last key stored
+				$last_key_date = $authDataArr['resultStr']['last_key_date']; //last key date
+		    	$settings = new Settings();
+		    	//echo "<br/>last key date: $last_key_date<br/>";
+				//echo "current date: ".time()."<br/>";
+			    if (($last_key_date == "") or ((time() - $last_key_date) > $settings->get('keyLastsFor'))) //we didnt find a key or the key is old lets create one.
+				{
+		            $key = sha1($username."@".$passw.":".time());
+		            $usersDB->updateKey($username, $key);
+				}
+				session_name("Mandolin");
+				session_start();
+				session_regenerate_id();
+				$_SESSION["key"] = $key;
+				$_SESSION["username"] = $username;
+				$_SESSION["userAdminLevel"] = $usersDB->isAdmin($username);
+				$_SESSION["id"] = sha1(session_id());
+				//print_r($_SESSION);
+				header("Location: ..");
+				exit();
 			}
-			session_name("Mandolin");
-			session_start();
-			session_regenerate_id();
-			$_SESSION["key"] = $key;
-			$_SESSION["username"] = $username;
-			$_SESSION["userAdminLevel"] = $usersDB->isAdmin($username);
-			$_SESSION["id"] = sha1(session_id());
-			//print_r($_SESSION);
-			header("Location: ..");
-			exit();
 	    }
 		header("Location: ../?p=login&passw=false");
 	}
