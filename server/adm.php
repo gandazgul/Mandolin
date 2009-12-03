@@ -12,6 +12,9 @@ require_once("../models/UsersDB.php");
 $usersDB = new UsersDB();
 require_once("../models/Settings.php");
 $settings = new Settings();
+require_once("../models/MusicDB.php");
+$musicDB = new MusicDB();
+
 $action = $_REQUEST["a"];
 
 try
@@ -23,12 +26,32 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-function checkFolder()
+$usersDB->__destruct();
+unset($usersDB);
+$settings->__destruct();
+unset($settings);
+$musicDB->__destruct();
+unset($musicDB);
+
+
+function addFolderToDB()
 {
+	global $musicDB;
+	
 	$resultArr = array();
 	$resultArr["isError"] = false;
 	if (is_dir($_POST["f"]))
-		$resultArr["resultStr"] = $_POST["f"];
+	{
+		if ($musicDB->addToDB($_POST["f"], strlen($_POST["f"])))
+		{
+			$resultArr["resultStr"] = $_POST["f"];
+		}
+		else
+		{
+			$resultArr["isError"] = true;
+			$resultArr["resultStr"] = "There was an error adding the specified folder to the DB.";
+		}
+	}
 	else
 	{
 		$resultArr["isError"] = true;

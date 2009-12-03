@@ -157,21 +157,22 @@ tbody td {
 						</select>
 					</div>
 					<div class="type-button" style="float: left; margin-top: 0; margin-left: 10px;">
-						<input type="button" id="btnNewFolder" value="Add Folder" onclick="$('#addFolderDiag').dialog('open')" /><br />
-						<input type="button" id="btnRemoveFolder" value="Remove Folder" onclick="removeFolder()" /><br />
-						<input type="button" value="Recreate Database" onclick='createDB()'>
+						<input type="button" id="btnNewFolder" value="Add Folder" onclick="$('#addFolderDiag').dialog('open')" style="width: 150px;" /><br />
+						<input type="button" id="btnRemoveFolder" value="Remove Folder" onclick="removeFolder()" style="width: 150px;" /><br /><br />
+						<input type="button" value="Recreate Database" onclick='createDB()' style="width: 150px;" />
 					</div>
-					<div style="width: 100%; float: left; height: 10px;"><!-- SEPARATOR --></div>								
+					<div style="height: 100%; float: left; width: 10px;"><!-- SEPARATOR --> &nbsp;</div>
+					<div style="height: 100%; float: left;"></div>							
 				</fieldset>
 			</form>
 		</div>
-		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;Settings</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;System Settings - Don't mess with these settings unless you absolutely know what you are doing.</a></h3>
 		<div>
 			<form class="yform">
 				<fieldset>
 					<legend> Settings </legend>
 					<div class="type-text">
-						<label for="baseURL">musicServer URL: </label>
+						<label for="baseURL">Where is Mandolin currently hosted? (URL) </label>
 						<input type="text" id="baseURL" class="settings" />
 					</div>
 					<div class="type-text">
@@ -187,6 +188,9 @@ tbody td {
 					</div>										
 				</fieldset>
 			</form>
+		</div>
+		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;User Settings</a></h3>
+		<div>
 		</div>
 		<?php endif; ?>
 	</div>

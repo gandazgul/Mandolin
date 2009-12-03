@@ -98,7 +98,7 @@ $(document).ready(function(){//add folder dialog init
 		buttons: {
 			'Add this folder': function() 
 			{
-				postData = "a=checkFolder&f=" + $("#folderName").val() + "&SID=" + SID;
+				postData = "a=addFolderToDB&f=" + $("#folderName").val() + "&SID=" + SID;
 				$.post("./server/adm.php", postData, addFolder, 'json');
 				
 				$(this).dialog('close');
