@@ -15,7 +15,7 @@ $settings = new Settings();
 require_once("../models/MusicDB.php");
 $musicDB = new MusicDB();
 
-$action = $_REQUEST["a"];
+$action = $_POST["a"];
 
 try
 {
@@ -91,16 +91,47 @@ function get()
 	echo json_encode($result);
 }
 
+function uset()
+{
+	//TODO: this has to be from the users model. finally that usersetting field is going to serve its purpouse.
+	global $settings;
+	
+	//echo $_POST['data'];
+	$data = json_decode(stripslashes($_POST['data']), true);
+	//print_r($data);
+	for ($i = 0; $i < count($data['keys']); $i++)
+	{
+		$settings->set($data['keys'][$i], $data['values'][$i]);
+	}
+	
+	echo "Settings saved successfully";
+}
+
+function uget()
+{
+	global $settings;
+	
+	$keys = json_decode(stripslashes($_POST['keys']), true);
+	$result = array();
+	
+	for ($i = 0; $i < count($keys); $i++)
+	{	
+		$result[$keys[$i]] = $settings->get($keys[$i]);
+	}
+	
+	echo json_encode($result);
+}
+
 function cpassw()
 {
 	global $usersDB;
 	
 	$user = $_SESSION["username"];
 	
-	if ($usersDB->verifyPassw($user, $_REQUEST["op"]))
+	if ($usersDB->verifyPassw($user, $_POST["op"]))
 	{
 		//echo $_SESSION["userAdminLevel"];
-		echo $usersDB->alterUser(0, $user, $_SESSION["userAdminLevel"], $_REQUEST["np"]);
+		echo $usersDB->alterUser(0, $user, $_SESSION["userAdminLevel"], $_POST["np"]);
 	}
 	else
 		echo "ERROR: The password you entered is wrong.";

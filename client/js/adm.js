@@ -180,7 +180,7 @@ function loadSettings()
 	$.post("./server/adm.php", postData, fillOutSettings, 'json');
 }
 
-var settings = function(pKeys, pValues){
+var settings = function(pKeys, pValues, className){
 	this.keys = new Array();
 	this.values = new Array();
 	var thisvar = this;
@@ -195,7 +195,7 @@ var settings = function(pKeys, pValues){
 	}
 	else
 	{
-		$(".settings").each(function()
+		$("." + className).each(function()
 		{
 			thisvar.keys.push($(this)[0].id);
 			thisvar.values.push($(this).val());
@@ -203,9 +203,17 @@ var settings = function(pKeys, pValues){
 	}
 };
 
+function saveUSettings()
+{
+	setObj = new settings(null, null, "usettings");	
+	//alert(JSON.stringify(setObj));
+	postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+	$.post("./server/adm.php", postData, displayError);
+}
+
 function saveSettings()
 {
-	setObj = new settings(null, null);	
+	setObj = new settings(null, null, "settings");	
 	//alert(JSON.stringify(setObj));
 	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);

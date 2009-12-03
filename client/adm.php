@@ -191,6 +191,22 @@ tbody td {
 		</div>
 		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;User Settings</a></h3>
 		<div>
+			<form class="yform">
+				<fieldset>
+					<legend> Settings </legend>
+					<div class="type-text">
+						<label for="plFormat">What format do you want your playlists to be? (Default: XSPF) </label>
+						<input type="text" id="plFormat" class="usettings" />
+					</div>
+					<!--div class="type-text">
+						<label for="version">Version: </label>
+						<input type="text" id="version" class="usettings" />
+					</div-->					
+					<div class="type-button">
+						<input type="button" id="btnSaveUSettings" value="Save Settings" onclick="saveUSettings()" />
+					</div>										
+				</fieldset>
+			</form>
 		</div>
 		<?php endif; ?>
 	</div>
