@@ -375,7 +375,7 @@ class MusicDB
 	
 	function getM3UPlaylist($plArr, $forBB, $musicURL)
 	{
-		$result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
+		$result = "#EXTM3U\n";
 		
 		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name, song_ext FROM music WHERE `song_id`=?");
 		for ($i = 0; $i < count($plArr); $i++)
@@ -387,21 +387,17 @@ class MusicDB
 			catch (PDOException $e) { exit($e->getMessage()); }
 			
 			$queryArr = $sngStmt->fetchAll();
-			$song_id = $queryArr[0][0];
-			$song_name = $queryArr[0][1];
-			$song_ext = $queryArr[0][2];
+			$song_id = $queryArr[0]['song_id'];
+			$song_name = $queryArr[0]['song_name'];
+			$song_ext = $queryArr[0]['song_ext'];
 		
-			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
-
+			//			#EXTINF:LENGTH,SONG_NAME";
+			$result .= "#EXTINF:0,$song_name\n";
 			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext\n";
 			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=128&amp;.$song_ext";
-			
-			$result .= "</location>\n\t\t</track>\n";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;.$song_ext\n";
 		}
-		
-		$result .= "\t</trackList>\n</playlist>";
 		
 		return $result;
 	}
@@ -438,6 +434,8 @@ class MusicDB
 		
 		return $result;
 	}
+	
+	
 	
 	//------------------------------------------------------------ Recreate DB --------------------------------------------------------
 	function recreateDB()

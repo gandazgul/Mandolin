@@ -10,7 +10,7 @@ CREATE TABLE playlists (
 CREATE TABLE users (
   user_name varchar(15) DEFAULT 'username' UNIQUE NOT NULL,
   user_password varchar(40) DEFAULT '7ef083b4f9dd719830c46ed43d0d882eae05c097' NOT NULL,
-  user_settings varchar(255)  NULL,
+  user_settings text  NULL,
   last_key varchar(40)  NULL,
   last_key_date integer  NULL,
   user_admin_level integer DEFAULT 0 NOT NULL,

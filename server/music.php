@@ -124,7 +124,7 @@ function play()//makes a list of the tracks selected in the sng list
 				header("Content-Disposition: filename=\"$name.m3u\"");
 				header("Content-Transfer-Encoding: plain");
 				//TODO: make m3u function again;
-				echo $musicDB->getXSPFPlaylist($plArr, $forBB, $musicURL);
+				echo $musicDB->getM3UPlaylist($plArr, $forBB, $musicURL);
 				
 				break;
 			}
