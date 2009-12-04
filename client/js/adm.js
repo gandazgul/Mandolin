@@ -99,6 +99,7 @@ $(document).ready(function(){//add folder dialog init
 		buttons: {
 			'Add this folder': function() 
 			{
+				$("#loading").show();
 				postData = "a=addFolderToDB&f=" + $("#folderName").val() + "&SID=" + SID;
 				$.post("./server/adm.php", postData, addFolder, 'json');
 				
@@ -143,6 +144,7 @@ function addFolder(data)
 	}
 	else
 	{
+		$("#loading").hide();
 		$("#musicFoldersList").append("<option>" + data.resultStr + "</option>");
 		folders = new Array();
 		

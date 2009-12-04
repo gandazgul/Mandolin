@@ -184,7 +184,7 @@ tbody td {
 						<input type="button" value="Recreate Database" onclick='createDB()' style="width: 150px;" />
 					</div>
 					<div style="height: 100%; float: left; width: 10px;"><!-- SEPARATOR --> &nbsp;</div>
-					<div style="height: 100%; float: left;"></div>							
+					<div style="height: 100%; float: left;"><span id="loading" style="display: none;"><img src="./client/images/ajax-loader.gif" alt="Loading..." /></span></div>							
 				</fieldset>
 			</form>
 		</div>
