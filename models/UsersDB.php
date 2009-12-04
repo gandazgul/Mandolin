@@ -166,10 +166,82 @@ class UsersDB
 	
 	function isAdmin($userName)
 	{
-		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE `user_name`='$userName'");
+		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE user_name='$userName'");
 		$queryArr = $query->fetchAll();
 	    
 		return ($queryArr[0]['user_admin_level'] == '1');
+	}
+	
+	function saveSettings($userName, $data)
+	{
+		if ($data == "")
+		{
+			$this->resultArr['isError'] = true;
+			$this->resultArr['resultStr'] = "WARNING: You provided no settings to save";
+		}
+		else
+		{
+			$this->resultArr['isError'] = false;
+			$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
+			$queryArr = $queryArr->fetchAll();
+			if (count($queryArr) == 0)
+			{
+				$this->resultArr['isError'] = true;
+				$error = $this->dbh->errorInfo();
+				$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+			}
+			else
+			{
+				$settings = json_decode($queryArr[0]['user_settings'], true);
+				$dataArr = json_decode($data, true);
+				//print_r($dataArr);
+				for ($i = 0; $i < count($dataArr['keys']); $i++)
+				{
+					$settings[$dataArr['keys'][$i]] = $dataArr['values'][$i];
+				}
+				$settings = json_encode($settings);
+				//echo $settings;
+				$result = $this->dbh->exec("UPDATE users SET user_settings='$settings' WHERE user_name='$userName'");
+				if ($result == 0)
+				{
+					$this->resultArr['isError'] = true;
+					$error = $this->dbh->errorInfo();
+					$this->resultArr['resultStr'] = "ERROR: Saving the user settings to the database: ".$error[2];
+				}
+				else
+				{
+					$this->resultArr['resultStr'] = "Settings saved successfully";
+				}
+			}
+		}
+		
+		return json_encode($this->resultArr);
+	}
+	
+	function loadSettings($userName, $keysArr)
+	{
+		$this->resultArr['isError'] = false;
+		
+		$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
+		$queryArr = $queryArr->fetchAll();
+		if (count($queryArr) == 0)
+		{
+			$this->resultArr['isError'] = true;
+			$error = $this->dbh->errorInfo();
+			$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+		}
+		else
+		{
+			$settingsArr = json_decode($queryArr[0]['user_settings'], true);
+			//print_r($settingsArr);
+			for ($i = 0; $i < count($keysArr); $i++)
+			{
+				$key = $keysArr[$i];
+				//echo $key;
+				$this->resultArr['resultStr'][$key] = $settingsArr[$key];
+			}
+		}
+		return json_encode($this->resultArr);
 	}
 	
 	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------

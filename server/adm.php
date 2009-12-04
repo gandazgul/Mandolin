@@ -93,33 +93,18 @@ function get()
 
 function uset()
 {
-	//TODO: this has to be from the users model. finally that usersetting field is going to serve its purpouse.
-	global $settings;
+	global $usersDB;
 	
 	//echo $_POST['data'];
-	$data = json_decode(stripslashes($_POST['data']), true);
-	//print_r($data);
-	for ($i = 0; $i < count($data['keys']); $i++)
-	{
-		$settings->set($data['keys'][$i], $data['values'][$i]);
-	}
-	
-	echo "Settings saved successfully";
+	$resultArr = json_decode($usersDB->saveSettings($_SESSION['username'], stripslashes($_POST['data'])), true);
+	echo $resultArr['resultStr'];
 }
 
 function uget()
 {
-	global $settings;
+	global $usersDB;
 	
-	$keys = json_decode(stripslashes($_POST['keys']), true);
-	$result = array();
-	
-	for ($i = 0; $i < count($keys); $i++)
-	{	
-		$result[$keys[$i]] = $settings->get($keys[$i]);
-	}
-	
-	echo json_encode($result);
+	echo $usersDB->loadSettings($_SESSION['username'], json_decode(stripslashes($_POST['keys']), true)); 
 }
 
 function cpassw()

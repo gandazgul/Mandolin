@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	loadSettings();
+	loadUSettings();
 	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
@@ -160,12 +161,37 @@ function addFolder(data)
 	}
 }
 
-function fillOutSettings(data)
+function _loadSettings(data)
 {
 	$(".settings").each(function()
 	{
 		$(this).val(data[$(this)[0].id]);
 	});
+}
+
+function _loadUSettings(data)
+{
+	if (data.isError)
+		displayError(data.resultStr);
+	else
+	{
+		$(".usettings").each(function()
+		{
+			$(this).val(data.resultStr[$(this).attr('id')]);
+		});
+	}
+}
+
+function loadUSettings()
+{
+	keysArr = new Array();
+	$(".usettings").each(function()
+	{
+		keysArr.push($(this)[0].id);
+	});
+	//alert(keysArr[0]);
+	postData = "a=uget&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
+	$.post("./server/adm.php", postData, _loadUSettings, 'json');
 }
 
 function loadSettings()
@@ -177,7 +203,7 @@ function loadSettings()
 	});
 	//alert(keysArr[0]);
 	postData = "a=get&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
-	$.post("./server/adm.php", postData, fillOutSettings, 'json');
+	$.post("./server/adm.php", postData, _loadSettings, 'json');
 }
 
 var settings = function(pKeys, pValues, className){
@@ -197,6 +223,7 @@ var settings = function(pKeys, pValues, className){
 	{
 		$("." + className).each(function()
 		{
+			//alert($(this)[0].id);
 			thisvar.keys.push($(this)[0].id);
 			thisvar.values.push($(this).val());
 		});
