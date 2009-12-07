@@ -46,8 +46,7 @@ function search(query, reschedule)
 	}
 	else
 	{
-		queryDB(query);
-		
+		queryDB(query);		
 	}	
 }
 

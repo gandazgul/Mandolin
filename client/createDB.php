@@ -35,22 +35,20 @@ $musicDB->recreateDB();
 	<ul>
 		<li>Database deleted and new one created</li>
 		<li>Scanning directories to add music to the new DB - <span style='color: #CC3300; '>DO NOT HIT THE BACK BUTTON ON YOUR BROWSER!!!</span></li>
-		<li>
-		<ul>
+		<li><ul>
 			<li>Artists: <span id='art'></span></li>
 			<li>Albums:  <span id='alb'></span></li>
 			<li>Songs: <span id='sng'></span></li>
-			<li>-------------------------------------------</li>
-			<?php 
-				$folderArr = json_decode($settings->get("musicFolders"), true);
-				for ($i = 0; $i < count($folderArr); $i++)
-				{
-					$curFolder = $folderArr[$i];
-					$musicDB->addToDB($curFolder, strlen($curFolder));
-					echo "<li>$curFolder - DONE</li>";		 
-				}
-			?>			
-		</ul>
-		</li>
+		</ul></li>
+		<li>-------------------------------------------</li>
+		<?php 
+			$folderArr = json_decode($settings->get("musicFolders"), true);
+			for ($i = 0; $i < count($folderArr); $i++)
+			{
+				$curFolder = $folderArr[$i];
+				$musicDB->addToDB($curFolder, strlen($curFolder));
+				echo "<li>$curFolder - DONE</li>";		 
+			}
+		?>
 	</ul>
 </div>

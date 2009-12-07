@@ -238,10 +238,10 @@ class MusicDB
 								else
 								{
 									$this->artCount++;
-									$query = $this->dbh->query("SELECT count(art_name) FROM artists");
+									$query = $this->dbh->query("SELECT max(art_id) FROM artists");
 									$art_id = $query->fetchAll();
 									//print_r($art_id);
-									$art_id = $art_id[0][0] - 1;
+									$art_id = $art_id[0][0];
 									$result = $albStmt->execute(array('unknown', $art_id));
 									if ($result == 0)
 									{
@@ -276,11 +276,10 @@ class MusicDB
 
 						if ($album != '')
 						{
-							$album = str_replace("'", "''", $album);
 							//echo $album."\n";
-							//echo "SELECT alb_id FROM albums WHERE `alb_name`='$album' AND `alb_art_id`=$art_id<br />\n";
-							$query = $this->dbh->query("SELECT alb_id FROM albums WHERE `alb_name`='$album' AND `alb_art_id`=$art_id");
-							$alb_id = $query->fetchAll();
+							$getAlbumIDStmt = $this->dbh->prepare("SELECT alb_id FROM albums WHERE alb_name=? AND alb_art_id=?");
+							$getAlbumIDStmt->execute(array($album, $art_id));
+							$alb_id = $getAlbumIDStmt->fetchAll();
 							//print_r($alb_id);
 							if (count($alb_id) == 0)
 							{
@@ -294,24 +293,42 @@ class MusicDB
 								else
 								{
 									$this->albCount++;
-									$query = $this->dbh->query("SELECT count(alb_name) FROM albums");
-									$alb_id = $query->fetchAll();
-									//print_r($alb_id);
-									$alb_id = $alb_id[0][0] - 1;
+									$getAlbumIDStmt->execute(array($album, $art_id));
+									$alb_id = $getAlbumIDStmt->fetchAll();
+									if (count($alb_id) == 0)
+									{
+										echo "ERROR: Can't retrieve the album ID for the lastest added album($album)<br />";
+										print_r($this->dbh->errorInfo());
+										return false;
+									}
+									else
+									{
+										$alb_id = $alb_id[0]['alb_id'];
+									}
 								}
 							}
 							else
 							{
-								//print_r($alb_id);
-								$alb_id = $alb_id[0][0];
+								$alb_id = $alb_id[0]['alb_id'];
 							}
+						}
+						else
+						{
+							
 						}
 						
 						$paramArr = array(':song_id' => sha1($folder.$file), ':song_path' => $song_path, 
-											':song_name' => $song_name, ':song_ext' => $song_ext, ':art_id' => $art_id, ':alb_id' => $alb_id);
+								  ':song_name' => $song_name, ':song_ext' => $song_ext, ':art_id' => $art_id, ':alb_id' => $alb_id);
 						//print_r($paramArr);
 						
-						$result = $songStmt->execute($paramArr);
+						try
+						{
+							$result = $songStmt->execute($paramArr);
+						}
+						catch(PDOException $e)
+						{
+							exit($e->getMessage());
+						}
 						if ($result == 0)
 						{
 							echo "ERROR: Adding song to DB: <br/> <br /> ";
@@ -452,8 +469,7 @@ class MusicDB
 			$this->dbh->exec("CREATE TABLE artists (
 			  art_id    integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
 			  art_name  varchar(60) NOT NULL UNIQUE
-			);
-			
+			);			
 			CREATE TRIGGER artists_au_fkr_albums
 			  AFTER UPDATE OF art_id
 			  ON artists
