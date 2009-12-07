@@ -411,9 +411,9 @@ class MusicDB
 			//			#EXTINF:LENGTH,SONG_NAME";
 			$result .= "#EXTINF:0,$song_name\n";
 			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext\n";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=80&.$song_ext\n";
 			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;.$song_ext\n";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&.$song_ext\n";
 		}
 		
 		return $result;
