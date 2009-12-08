@@ -218,29 +218,43 @@ class UsersDB
 		return json_encode($this->resultArr);
 	}
 	
-	function loadSettings($userName, $keysArr)
+	function loadSettings($userName, $keysArr, $key = "")
 	{
 		$this->resultArr['isError'] = false;
+		$this->resultArr['resultStr'] = array();
 		
-		$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
-		$queryArr = $queryArr->fetchAll();
-		if (count($queryArr) == 0)
+		if (($userName == "") and ($key == ""))
 		{
 			$this->resultArr['isError'] = true;
-			$error = $this->dbh->errorInfo();
-			$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+			$this->resultArr['resultStr'] = "ERROR: Both User name and Key cannot be blank.";
 		}
 		else
-		{
-			$settingsArr = json_decode($queryArr[0]['user_settings'], true);
-			//print_r($settingsArr);
-			for ($i = 0; $i < count($keysArr); $i++)
+		{		
+			if ($userName == "")
+				$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE last_key='$key'");
+			else
+				$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
+				
+			$queryArr = $queryArr->fetchAll();
+			if (count($queryArr) == 0)
 			{
-				$key = $keysArr[$i];
-				//echo $key;
-				$this->resultArr['resultStr'][$key] = $settingsArr[$key];
+				$this->resultArr['isError'] = true;
+				$error = $this->dbh->errorInfo();
+				$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+			}
+			else
+			{
+				$settingsArr = json_decode($queryArr[0]['user_settings'], true);
+				//print_r($settingsArr);
+				for ($i = 0; $i < count($keysArr); $i++)
+				{
+					$key = $keysArr[$i];
+					//echo $key;
+					$this->resultArr['resultStr'][$key] = $settingsArr[$key];
+				}
 			}
 		}
+		
 		return json_encode($this->resultArr);
 	}
 	

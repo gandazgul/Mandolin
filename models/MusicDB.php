@@ -8,17 +8,38 @@ class MusicDB
 	private $artCount;
 	private $albCount;
 	private $resultArr;
+	private $plFormats;
+	public $plFormatsMimeTypes;
 	
 	function __construct($dbfilepath = "../models/dbfiles/music.db")
 	{
 		$this->dbfilepath = $dbfilepath;
 		$this->dbh = new PDO("sqlite:$this->dbfilepath");
 		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$this->resultArr = array();
+		$this->resultArr['isError'] = false;
+		$this->resultArr['resultStr'] = "";
+		
+		$this->plFormats['xspf']['head'] = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
+		$this->plFormats['xspf']['track'] = "\t\t<track>\n\t\t\t<title>".'%3$d%1$s'."</title>\n\t\t\t<location>".'%2$s'."</location>\n\t\t</track>\n"; 
+		$this->plFormats['xspf']['foot'] = "\t</trackList>\n</playlist>";
+		$this->plFormats['xspf']['amp'] = "&amp;";
+		$this->plFormats['m3u']['head'] = "#EXTM3U\n";
+		$this->plFormats['m3u']['track'] = '#EXTINF:0,%3$d%1$s'."\n".'%2$s'."\n";
+		$this->plFormats['m3u']['foot'] = "";
+		$this->plFormats['m3u']['amp'] = "&";
+		
+		$this->plFormatsMimeTypes['m3u'] = "audio/x-mpegurl";
+		$this->plFormatsMimeTypes['xspf'] = "application/xspf+xml";
 	}
 	
 	function __destruct()
 	{
-		$this->dbh = null;
+		unset($this->dbh);
+		unset($this->resultArr);
+		unset($this->plFormats);
+		unset($this->plFormatsMimeTypes);
 	}
 	
 	//----------------------------------------------GET ARTIRSTS------------------------------------------------------------------
@@ -390,9 +411,10 @@ class MusicDB
 		return json_encode($this->getPLContents($plArr));
 	}
 	
-	function getM3UPlaylist($plArr, $forBB, $musicURL)
+	function getPlaylist($plFormat, $plArr, $musicURL)
 	{
-		$result = "#EXTM3U\n";
+		$result = array();
+		$result = $this->plFormats[$plFormat]['head'];
 		
 		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
 		for ($i = 0; $i < count($plArr); $i++)
@@ -406,52 +428,16 @@ class MusicDB
 			$queryArr = $sngStmt->fetchAll();
 			$song_id = $queryArr[0]['song_id'];
 			$song_name = $queryArr[0]['song_name'];
-		
+			$songURL = $musicURL."server/stream.php?k=".$_SESSION["key"].$this->plFormats[$plFormat]['amp']."s=$song_id";	
 			//			#EXTINF:LENGTH,SONG_NAME";
-			$result .= "#EXTINF:0,$song_name\n";
-			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=80&.mp3\n";
-			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=128&.mp3\n";
+			$result .= sprintf($this->plFormats[$plFormat]['track'], $song_name, $songURL, $i + 1);
 		}
 		
-		return $result;
+		$result .= $this->plFormats[$plFormat]['foot'];
+		
+		return $result;		
 	}
-	
-	function getXSPFPlaylist($plArr, $forBB, $musicURL)
-	{
-		$result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
-		
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
-		for ($i = 0; $i < count($plArr); $i++)
-		{
-			try
-			{
-				$sngStmt->execute(array($plArr[$i]));
-			}
-			catch (PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $sngStmt->fetchAll();
-			$song_id = $queryArr[0]['song_id'];
-			$song_name = $queryArr[0]['song_name'];
-		
-			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
 
-			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.mp3";
-			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=128&amp;.mp3";
-			
-			$result .= "</location>\n\t\t</track>\n";
-		}
-		
-		$result .= "\t</trackList>\n</playlist>";
-		
-		return $result;
-	}
-	
-	
-	
 	//------------------------------------------------------------ Recreate DB --------------------------------------------------------
 	function recreateDB()
 	{

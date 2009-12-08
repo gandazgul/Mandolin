@@ -15,8 +15,8 @@ require_once "../models/UsersDB.php";
 $usersDB = new UsersDB();
 require_once "../models/Settings.php";
 $settings = new Settings();
-
 $userAuthInfo = json_decode($usersDB->getAuthInfo_json("", $key), true);
+$bitrate = json_decode($usersDB->loadSettings("", array('bitrate'), $key), true);
 $usersDB->__destruct();
 unset($usersDB);
 
@@ -27,8 +27,17 @@ if ($userAuthInfo['isError'])
 }
 else
 {
-
 	if ((time() - $userAuthInfo['resultStr']['last_key_date']) > $settings->get("keyLastsFor")) die("The key provided is old. This song url is not valid anymore. Login to to Mandolin and get a new one.");
+}
+
+if ($bitrate['isError'])
+{
+	echo "ERROR: Retrieving the user settings. <br />";
+	exit($bitrate['resultStr']);
+}
+else
+{
+	$bitrate = $bitrate['resultStr']['bitrate'];
 }
 
 //get the song name, path and extension
@@ -47,9 +56,8 @@ else
 $musicDB->__destruct();
 unset($musicDB);
 
-if (isset($_GET['b'])) $bitrate = $_GET['b']; else $bitrate = 128;
-$readfile = ($lameCMD == "");
 $lameCMD = $settings->get("lameCMD");
+$readfile = ($lameCMD == "");
 
 //echoing the file
 if (!$readfile)

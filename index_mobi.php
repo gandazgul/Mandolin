@@ -28,7 +28,7 @@
 					$resultArr = $usersDB->getPLsForUser($userName);
 					for($i = 0; $i < count($resultArr); $i++)
 					{
-						echo "<a href='./server/music.php?a=play&for=bb&pl=".$resultArr[$i]."&SID=".$_SESSION["id"]."'>".$resultArr[$i]."</a><br />\n";
+						echo "<a href='./server/music.php?a=play&pl=".$resultArr[$i]."&SID=".$_SESSION["id"]."'>".$resultArr[$i]."</a><br />\n";
 					}
 					
 					$usersDB->__destruct();

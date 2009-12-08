@@ -108,6 +108,20 @@ tbody td {
 							<option value="m3u">M3U - For Windows Media Player. www.videolan.org</option>
 						</select>
 					</div>
+					<div class="type-text">
+						<label for="bitrate">Bitrate for the stream: (This will only be used if LAME has been setup) </label>
+						<select id="bitrate" class="usettings">
+							<option value="64">64 bits (Not Recommended)</option>
+							<option value="80">80 bits (Mobile Devices)</option>
+							<option value="96">96 bits</option>
+							<option value="128">128 bits (Most Popular)</option>
+							<option value="192">160 bits</option>
+							<option value="192">192 bits (Becoming Popular)</option>
+							<option value="224">224 bits</option>
+							<option value="256">256 bits</option>
+							<option value="320">320 bits (Higest MP3 quality)</option>
+						</select>
+					</div>
 					<!--div class="type-text">
 						<label for="version">Version: </label>
 						<input type="text" id="version" class="usettings" />

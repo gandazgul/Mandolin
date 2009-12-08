@@ -108,8 +108,6 @@ function play()//makes a list of the tracks selected in the sng list
 		shuffle($plArr);
 	//print_r($plArr);
 	
-	$forBB = (isset($_REQUEST['for']) and ($_REQUEST['for'] == 'bb'));
-	
 	$plFormat = json_decode($usersDB->loadSettings($_SESSION['username'], array("plFormat")), true);
 	if ($plFormat['isError'])
 	{
@@ -117,14 +115,21 @@ function play()//makes a list of the tracks selected in the sng list
 	}
 	else
 	{
-		switch ($plFormat['resultStr']['plFormat'])
+		$plFormat = $plFormat['resultStr']['plFormat'];
+		
+		header("Content-type: ".$musicDB->plFormatsMimeTypes[$plFormat]);
+		header("Content-Disposition: filename=\"$name.$plFormat\"");
+		header("Content-Transfer-Encoding: plain");
+		echo $musicDB->getPlaylist($plFormat, $plArr, $musicURL);
+		
+		/*switch ($plFormat['resultStr']['plFormat'])
 		{
 			case 'm3u': {
 				header("Content-type: audio/x-mpegurl");
 				header("Content-Disposition: filename=\"$name.m3u\"");
 				header("Content-Transfer-Encoding: plain");
 				//TODO: make m3u function again;
-				echo $musicDB->getM3UPlaylist($plArr, $forBB, $musicURL);
+				echo $musicDB->getM3UPlaylist($plArr, $musicURL);
 				
 				break;
 			}
@@ -132,14 +137,14 @@ function play()//makes a list of the tracks selected in the sng list
 				header("Content-type: application/xspf+xml");
 				header("Content-Disposition: filename=\"$name.xspf\"");
 				header("Content-Transfer-Encoding: plain");
-				echo $musicDB->getXSPFPlaylist($plArr, $forBB, $musicURL);
+				echo $musicDB->getXSPFPlaylist($plArr, $musicURL);
 				
 				break;
 			}
 			default: {
 				echo "ERROR: Playlist format not recognized: $plFormat";
 			}
-		}
+		}*/
 	}
 }
 
