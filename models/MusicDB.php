@@ -394,7 +394,7 @@ class MusicDB
 	{
 		$result = "#EXTM3U\n";
 		
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name, song_ext FROM music WHERE `song_id`=?");
+		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
 		for ($i = 0; $i < count($plArr); $i++)
 		{
 			try
@@ -406,14 +406,13 @@ class MusicDB
 			$queryArr = $sngStmt->fetchAll();
 			$song_id = $queryArr[0]['song_id'];
 			$song_name = $queryArr[0]['song_name'];
-			$song_ext = $queryArr[0]['song_ext'];
 		
 			//			#EXTINF:LENGTH,SONG_NAME";
 			$result .= "#EXTINF:0,$song_name\n";
 			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=80&.$song_ext\n";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=80&.mp3\n";
 			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&.$song_ext\n";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&s=$song_id&b=128&.mp3\n";
 		}
 		
 		return $result;
@@ -423,7 +422,7 @@ class MusicDB
 	{
 		$result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
 		
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name, song_ext FROM music WHERE `song_id`=?");
+		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
 		for ($i = 0; $i < count($plArr); $i++)
 		{
 			try
@@ -433,16 +432,15 @@ class MusicDB
 			catch (PDOException $e) { exit($e->getMessage()); }
 			
 			$queryArr = $sngStmt->fetchAll();
-			$song_id = $queryArr[0][0];
-			$song_name = $queryArr[0][1];
-			$song_ext = $queryArr[0][2];
+			$song_id = $queryArr[0]['song_id'];
+			$song_name = $queryArr[0]['song_name'];
 		
 			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
 
 			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.mp3";
 			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;.$song_ext";
+				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=128&amp;.mp3";
 			
 			$result .= "</location>\n\t\t</track>\n";
 		}

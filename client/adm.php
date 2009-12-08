@@ -201,6 +201,18 @@ tbody td {
 						<label for="keyLastsFor">How long (Milisecs) should playlists last? </label>
 						<input type="text" id="keyLastsFor" class="settings" />
 					</div>
+					<div class="type-text">
+						<label for="lameCMD">Where is LAME located? (Leave blank if you dont want to use it. If you dont install LAME then OGGDEC and FLAC are not needed; also you will have problems streaming, high bitrate mp3/ogg and flac files.) </label>
+						<input type="text" id="lameCMD" class="settings" />
+					</div>
+					<div class="type-text">
+						<label for="oggdecCMD">Where is OGGDEC located? </label>
+						<input type="text" id="oggdecCMD" class="settings" />
+					</div>
+					<div class="type-text">
+						<label for="flacCMD">Where is FLAC located? </label>
+						<input type="text" id="flacCMD" class="settings" />
+					</div>
 					<!--div class="type-text">
 						<label for="version">Version: </label>
 						<input type="text" id="version" class="settings" />

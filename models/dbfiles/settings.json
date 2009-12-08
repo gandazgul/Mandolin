@@ -1,1 +1,1 @@
-{"baseURL":"http:\/\/localhost\/Mandolin\/","musicFolders":"[]","version":"0.6.5","keyLastsFor":"86400","mainPage":"music"}
+{"baseURL":"http:\/\/localhost\/mandolin","musicFolders":"[]","version":"0.6.5","keyLastsFor":"86400","mainPage":"music","lameCMD":"\/usr\/bin\/lame","oggdecCMD":"\/usr\/bin\/oggdec","flacCMD":"\/usr\/bin\/flac"}
