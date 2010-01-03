@@ -1,6 +1,4 @@
 <?php
-//TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
-//TODO: covert all this into the DB Class.
 session_name("Mandolin");
 session_start();
 //print_r($_POST);
@@ -42,18 +40,34 @@ function gett()//returns total artists, albums and songs
 	echo $musicDB->getTotals_json();
 }
 
-function art()
+function artists()
 {
 	global $musicDB;
 	
-	echo $musicDB->getArtists_json();
+	if (isset($_POST["id"]))
+	{
+		//output infor about the artist wich id is: $_POST["id"]
+	}
+	else
+		echo $musicDB->getArtists_json();
 }
 
-function alb()
+function albums()
 {
 	global $musicDB;
 
-	echo $musicDB->getAlbums_json($_POST["artist"]);
+	if (isset($_POST["id"]))
+	{
+		//output infor about the artist wich id is: $_POST["id"]
+	}
+	else if (isset($_POST["artist_id"]))
+	{
+		echo $musicDB->getAlbums_json($_POST["artist_id"]);
+	}
+	else
+	{
+		//list all albums	
+	}	
 }
 
 function sng()
@@ -121,30 +135,6 @@ function play()//makes a list of the tracks selected in the sng list
 		header("Content-Disposition: filename=\"$name.$plFormat\"");
 		header("Content-Transfer-Encoding: plain");
 		echo $musicDB->getPlaylist($plFormat, $plArr, $musicURL);
-		
-		/*switch ($plFormat['resultStr']['plFormat'])
-		{
-			case 'm3u': {
-				header("Content-type: audio/x-mpegurl");
-				header("Content-Disposition: filename=\"$name.m3u\"");
-				header("Content-Transfer-Encoding: plain");
-				//TODO: make m3u function again;
-				echo $musicDB->getM3UPlaylist($plArr, $musicURL);
-				
-				break;
-			}
-			case 'xspf': {
-				header("Content-type: application/xspf+xml");
-				header("Content-Disposition: filename=\"$name.xspf\"");
-				header("Content-Transfer-Encoding: plain");
-				echo $musicDB->getXSPFPlaylist($plArr, $musicURL);
-				
-				break;
-			}
-			default: {
-				echo "ERROR: Playlist format not recognized: $plFormat";
-			}
-		}*/
 	}
 }
 

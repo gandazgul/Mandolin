@@ -163,7 +163,7 @@ function displayAlbums(albArr)
 
 function getAlbums(artIDs)
 {
-	postData = "a=alb&artist=" + artIDs + "&SID=" + SID;
+	postData = "a=albums&artist_id=" + artIDs + "&SID=" + SID;
 	//alert(postData);
 	$.post("./server/music.php", postData, displayAlbums, "json");
 }
@@ -196,7 +196,7 @@ function displayArtists(artArr)
 
 function getArtists()
 {
-	postData = "a=art&SID=" + SID;
+	postData = "a=artists&SID=" + SID;
 	$.post("./server/music.php", postData, displayArtists, "json");
 }
 
