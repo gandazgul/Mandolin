@@ -1,0 +1,5 @@
+#feedback { font-size: 1.4em; }
+#moviesList .ui-selecting { background: #EDF2F8; }
+#moviesList .ui-selected { background: #C8DDF3; }
+#moviesList { list-style-type: none; margin: 0; padding: 0; }
+#moviesList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
