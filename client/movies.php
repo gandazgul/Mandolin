@@ -6,16 +6,7 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
-<style type="text/css">
-	#feedback { font-size: 1.4em; }
-	#moviesList .ui-selecting { background: #EDF2F8; }
-	#moviesList .ui-selected { background: #C8DDF3; }
-	#moviesList { list-style-type: none; margin: 0; padding: 0; }
-	#moviesList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
-</style>
-
 <script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
-<script type="text/javascript" src="./client/js/movies.js"></script>
 
 <ul id="moviesMenu" class="contextMenu">
 	<li class="ccat"><a href="#changecat">Change Category</a></li>
@@ -40,7 +31,7 @@
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv" class="important" style="">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
+	<div id="errorDiv" class="important" style="display: inherit">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
 	<p>
 		<label for="sQuery" class="title">Type in a movie title: </label>
 		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />

@@ -10,28 +10,7 @@
 ?>
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
-<script type="text/javascript" src="./client/js/adm.js"></script>
-<style type="text/css">
-table {
-	border-bottom: none;
-	border-top: none;
-	margin-bottom: none;
-	
-	width: auto;
-	border-collapse: collapse;
-}
 
-tbody td {
-	border-bottom: none;
-}
-
-.ui-form label.block, .ui-form input.text { display:block; }
-.ui-form input.text { margin-bottom:12px; width:95%; padding: .4em; }
-.ui-form fieldset { padding:0; border:0; }
-.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
-.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
-
-</style>
 <div id="addFolderDiag" title="Add a folder to music library">
 	<br />
 	<label for="folderName">Folder Full Path:</label>
@@ -39,8 +18,7 @@ tbody td {
 </div>
 <div id="addUserDiag" title="Create new user">
 	<p id="validateTips">All form fields are required.</p>
-
-	<form class="ui-form">
+	<form class="ui-form" action="">
 	<fieldset>
 		<label for="userName" class="block">Name</label>
 		<input type="text" name="userName" id="userName" class="text ui-widget-content ui-corner-all" />
@@ -70,7 +48,7 @@ tbody td {
 	</div>
 </div>
 <div id="teaser">
-	<div id="errorDiv" class="important" style="display: none"></div>
+	<div id="errorDiv" class="important"></div>
 </div>
 <div id="main" style="padding: 0 20px;">
 	<div id="accordion">

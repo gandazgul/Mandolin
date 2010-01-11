@@ -21,37 +21,22 @@
 <head>
 	<title>Mandolin v<?php echo $settings->get("version"); ?></title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-	<link rel="SHORTCUT ICON" href="./client/images/logo.ico" />
-	
-	<link href="./client/css/my_layout.css" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="./client/images/logo.ico" />
+	<link href="./client/css/main.css" rel="stylesheet" type="text/css" />
+	<link href="./client/css/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]>
-	<link href="./client/css/ie.css" rel="stylesheet" type="text/css" />
+	<link href="./client/css/mod.ie.css" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<link type="text/css" rel="stylesheet" href="./client/css/jquery-ui-1.7.1.custom.css" />
-	
 	<script type="text/javascript" src="./client/js/lib/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="./client/js/lib/jquery-ui-1.7.2.custom.min.js"></script>	
-	<script type="text/javascript">
-		<?php echo "SID = '".sha1(session_id())."';\n"; ?>
-		
-		function trim(str) 
-		{
-			return str.replace(/^\s+|\s+$/g,"");
-		}
-		
-		//callback function to bring a hidden box back
-		function hideError()
-		{
-			setTimeout(function(){
-				$("#errorDiv").css("height", "0px").css("padding", "0px").hide().text("");
-			}, 10000);
-		}
-		
-		function displayError(data)
-		{
-			$("#errorDiv").text(data).show().animate({height: "15px", padding: "10px"}, 500, "linear", hideError);
-		}	
-	</script>
+	<script type="text/javascript" src="./client/js/lib/jquery-ui-1.7.2.custom.min.js"></script>
+	<script type="text/javascript"><?php echo "SID = '".sha1(session_id())."';"; ?></script>
+	<script type="text/javascript" src="./client/js/lib/main.js"></script>
+
+	<?php
+	echo "<link type='text/css' rel='stylesheet' href='./client/css/$p.css' />\n";
+	echo "\t<script type='text/javascript' language='javascript' src='./client/js/$p.js'></script>\n";
+	?>
+
 </head>
 <body>
 	<div class="page_margins">
@@ -70,6 +55,24 @@
 					?>
 					<h2><em>"Because music is important"</em></h2>
 				</div>	
+			</div>
+			<div id="nav">
+				<!-- skiplink anchor: navigation -->
+				<a id="navigation" name="navigation"></a>
+				<div class="hlist">
+					<!-- main navigation: horizontal list -->
+					<ul>
+						<li><a href=".">Music</a></li>
+						<li class="active"><strong>Music Playlists</strong></li>
+						<li><a href="./?p=movies">Movies</a></li>
+						<li><a href="./?p=adm">Aministration</a></li>
+						<li><a href="./?p=about">About</a></li>
+						<li><a href="./client/logout.php">Logout</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="teaser">
+				<div id="errorDiv" class="important"></div>
 			</div>
 			
 			<?php include($page); ?>
