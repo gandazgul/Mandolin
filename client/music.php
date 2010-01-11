@@ -41,22 +41,6 @@
 	<li class="delete"><a href="#delete">Delete</a></li-->
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
-
-<div id="nav">
-	<!-- skiplink anchor: navigation -->
-	<a id="navigation" name="navigation"></a>
-	<div class="hlist">
-		<!-- main navigation: horizontal list -->
-		<ul>
-			<li class="active"><strong>Music</strong></li>
-			<li><a href="./?p=pl">Music Playlists</a></li>
-			<li><a href="./?p=movies">Movies</a></li>
-			<li><a href="./?p=adm">Aministration</a></li>
-			<li><a href="./?p=about">About</a></li>
-			<li><a href="./client/logout.php">Logout</a></li>
-		</ul>
-	</div>
-</div>
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
 	<p>

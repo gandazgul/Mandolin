@@ -32,21 +32,6 @@
 <div id="delUserConfDialog" title="Delete user">
 	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
 </div>
-<div id="nav">
-	<!-- skiplink anchor: navigation -->
-	<a id="navigation" name="navigation"></a>
-	<div class="hlist">
-		<!-- main navigation: horizontal list -->
-		<ul>
-			<li><a href=".">Music</a></li>
-			<li><a href="./?p=pl">Music Playlists</a></li>
-			<li><a href="./?p=movies">Movies</a></li>
-			<li class="active"><strong>Aministration</strong></li>
-			<li><a href="./?p=about">About</a></li>
-			<li><a href="./client/logout.php">Logout</a></li>
-		</ul>
-	</div>
-</div>
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
 </div>

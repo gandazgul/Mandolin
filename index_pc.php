@@ -1,20 +1,11 @@
 <?php
 	session_name("Mandolin");	
 	session_start();
-
-	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
-	if (isset($_SESSION["id"]))
-		$p = ($_SESSION["id"] != sha1(session_id())) ? "login" : $p;
-	else
-		$p = "login";
-	
-	$page = "./client/$p.php";
-	if (!file_exists($page))
-		$page = $page = "./client/".$settings->get("mainPage").".php";
-		
 	$sess_id = session_id();
 
-	//print_r($_SESSION);
+	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
+	if ((!isset($_SESSION["id"]) or !($_SESSION["id"] == sha1($sess_id))) and ($p != "checkAuth"))
+		$p = "login";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -56,26 +47,53 @@
 					<h2><em>"Because music is important"</em></h2>
 				</div>	
 			</div>
+			
 			<div id="nav">
 				<!-- skiplink anchor: navigation -->
 				<a id="navigation" name="navigation"></a>
 				<div class="hlist">
-					<!-- main navigation: horizontal list -->
 					<ul>
-						<li><a href=".">Music</a></li>
-						<li class="active"><strong>Music Playlists</strong></li>
-						<li><a href="./?p=movies">Movies</a></li>
-						<li><a href="./?p=adm">Aministration</a></li>
-						<li><a href="./?p=about">About</a></li>
-						<li><a href="./client/logout.php">Logout</a></li>
+						<?php
+							$dir = "./client/";
+							if ($handle = opendir($dir))
+							{
+								while (false !== ($file = readdir($handle)))
+								{
+									if (is_file($dir.$file) and ($file != "_default.php") and ($file != "index.php"))
+									{
+										echo "<li><a href=''>$file</a></li>\n";
+										//<li class="active"><strong>Music Playlists</strong></li>
+									}
+								}
+								closedir($handle);
+							}
+							?>
 					</ul>
 				</div>
 			</div>
-			<div id="teaser">
-				<div id="errorDiv" class="important"></div>
-			</div>
-			
-			<?php include($page); ?>
+
+			<?php
+			$page = "./client/$p.php";
+			if (!file_exists($page))
+			{
+				include "./client/_default.php";
+				$default = new CDefault();
+				if (method_exists($default, $p))
+				{
+					$default->$p();
+				}
+				else
+				{
+					$page = "./client/nav.".$settings->get("mainPage").".php";
+					include($page);
+				}
+				unset($default);
+			}
+			else
+			{
+				include($page);
+			}
+			?>
 			
 			<!-- begin: #footer -->
 			<div id="footer">
