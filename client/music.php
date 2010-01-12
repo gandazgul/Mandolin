@@ -33,26 +33,28 @@
 
 <ul id="songsMenu" class="contextMenu">
 	<li class="play"><a href="#play">Play</a></li>
-	<li class="playrand"><a href="#playrand">Play Random</a></li>	
+	<li class="playrand"><a href="#playrand">Play Random</a></li>
 	<li class="selectall separator"><a href="#selectall">Select All</a></li>
 	<li class="createpl separator"><a href="#createpl">Create Playlist</a></li>
 	<li class="addtopl"><a href="#addtopl">Add to Existing Playlist</a></li>
 	<!--li class="rename separator"><a href="#rename">Rename</a></li>
 	<li class="delete"><a href="#delete">Delete</a></li-->
-	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
+	<li class="cancel"><a href="#cancel">Cancel</a></li>
 </ul>
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
 	<p>
 		<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
-		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />
+		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="ui-widget" />
 	</p>
 </div>
 <div id="main">
 	<div class="subcolumns">
 		<div class="c25l">
 			<div class="subcl musicList p20" id="artistsListDiv">
-				<ol id="artistsList"></ol>
+				<ol id="artistsList">
+					<li><img alt="Loading..." src="./client/images/ajax-loader.gif" /></li>
+				</ol>
 			</div>
 		</div>
 		<div class="c50l">

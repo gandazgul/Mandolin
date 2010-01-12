@@ -15,21 +15,6 @@
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
-<div id="nav">
-	<!-- skiplink anchor: navigation -->
-	<a id="navigation" name="navigation"></a>
-	<div class="hlist">
-		<!-- main navigation: horizontal list -->
-		<ul>
-			<li><a href=".">Music</a></li>
-			<li><a href="./?p=pl">Music Playlists</a></li>
-			<li class="active"><strong>Movies</strong></li>
-			<li><a href="./?p=adm">Aministration</a></li>
-			<li><a href="./?p=about">About</a></li>
-			<li><a href="./client/logout.php">Logout</a></li>
-		</ul>
-	</div>
-</div>
 <div id="teaser">
 	<div id="errorDiv" class="important" style="display: inherit">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
 	<p>

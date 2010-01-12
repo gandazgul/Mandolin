@@ -16,13 +16,16 @@
 	  <div class="c33l">
 	    <div class="subcl" style="padding-left: 20px; ">
 			<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
-			<select id="plList" size="20" style="width: 100%; " onchange="plOnChange()"></select>		
+			<ol id="plList">
+				<li><img alt="Loading..." src="./client/images/ajax-loader.gif" /></li>
+			</ol>
 	    </div>
 	  </div>
 	  <div class="c33l">
 	    <div class="subcl">
 			<p class="title">List content:&nbsp;<span id="listName"></span></p>
-			<select id="plContents" size="20" style="width: 100%; " multiple="multiple"></select>			 
+			<!--select id="plContents" size="20" style="width: 100%; " multiple="multiple"></select-->
+			<ol id="plContents"></ol>
 	    </div>
 	  </div>
 	  <div class="c33l">

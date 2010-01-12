@@ -19,14 +19,12 @@
 <div id="addUserDiag" title="Create new user">
 	<p id="validateTips">All form fields are required.</p>
 	<form class="ui-form" action="">
-	<fieldset>
-		<label for="userName" class="block">Name</label>
+		<label for="userName">Username</label>
 		<input type="text" name="userName" id="userName" class="text ui-widget-content ui-corner-all" />
-		<label for="userPassword" class="block">Password</label>
+		<label for="userPassword">Password</label>
 		<input type="password" name="userPassword" id="userPassword" class="text ui-widget-content ui-corner-all" />
 		<label for="userAdmin">Admin?</label>
 		<input type="checkbox" name="userAdmin" id="userAdmin" class="ui-widget-content ui-corner-all" />
-	</fieldset>
 	</form>
 </div>
 <div id="delUserConfDialog" title="Delete user">

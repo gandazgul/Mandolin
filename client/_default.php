@@ -48,7 +48,7 @@ class CDefault //extends CController
 				exit();
 			}
 		}
-		header("Location: ../?p=login&passw=false");
+		header("Location: ./?p=login&passw=false");
 	}
 
 	function login()
@@ -58,23 +58,17 @@ class CDefault //extends CController
 			If you already completed the installation then, delete the "install" directory before trying to login.</p>
 		<?php else: ?>
 			<div id="main">
-				<form action="./?p=checkAuth" method="post" class="yform">
-					<fieldset>
-						<legend>Please login</legend>
-						<div class="type-text">
-							<?php if(isset($_GET["passw"])):?>
-								<strong class="message">ERROR: Incorrect Username and/or Password</strong>
-							<?php endif; ?>
-							<label for="username">Username:</label>
-							<input type="text" size="20" name="username" id="username" />
-						</div>
-						<div class="type-text">
-							<label for="passw">Password:</label>
-							<input type="password" size="20" name="passw" id="passw" />
-						</div>
-					<div class="type-button">
-						<input type="submit" value="Login" />
-					</div>
+				<form action="./?p=checkAuth" method="post" class="ui-form ui-widget">
+					<fieldset class="ui-widget-content ui-corner-all">
+						<legend class="ui-widget-header">Please login</legend>
+						<?php if(isset($_GET["passw"])): ?>
+							<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+						<?php endif; ?>
+						<label for="username">Username:</label>
+						<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
+						<label for="passw">Password:</label>
+						<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
+						<button type="submit" class="ui-state-default ui-corner-all">Login</button>
 					</fieldset>
 				</form>
 			</div>
@@ -95,7 +89,7 @@ class CDefault //extends CController
 			//setcookie($sName, '', time()-42000, '/');
 			setcookie(session_name(), session_id(), 1, '/');
 			session_destroy();
-			header("Location: ..");
+			header("Location: .");
 		}
 		else
 			echo "There was a problem with the session handling. Reload the page.";

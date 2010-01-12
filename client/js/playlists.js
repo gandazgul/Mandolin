@@ -1,35 +1,54 @@
 $(document).ready(function(){
-	postData = "a=saved&SID=" + SID;
-	$.post("./server/pl.php", postData, displaySavedPL, "json");
+	getSavedPL();
+	
+	$("#plList").selectable({
+		stop: function(){
+			var strResult = "";
+			//alert(this.id);
+			$(".ui-selected", this).each(function(){
+				//var index = $("#artistsList li").index(this);
+				var pl_name = this.id;
+				strResult += pl_name + "|";
+			});
+			//alert(strResult);
+			getPLContents(strResult);
+		}
+	});
+
+	$("#plContents").selectable();
 });
 
 function displaySavedPL(savedPLArr)
 {
-	$("#plList")[0].options.length = 0;
-	$("#plContents")[0].options.length = 0;
+	$("#plList").html('');
+	$("#plContents").html('');
 	for (i = 0; i < savedPLArr.length; i++)
-	{
-		$("#plList").append("<option value=\"" + savedPLArr[i] + "\">" + savedPLArr[i] + "</option>");	
+	{		
+		$("#plList").append("<li class='ui-widget-content' id='"+ savedPLArr[i] +"'>"+ savedPLArr[i] +"</li>");
 	}
 }
 
-function _plOnChange(plContArr)
+function getSavedPL()
 {
-	$("#plContents")[0].options.length = 0;
+	postData = "a=saved&SID=" + SID;
+	$.post("./server/pl.php", postData, displaySavedPL, "json");
+}
+
+function displayPLContents(plContArr)
+{
+	$("#plContents").html('');
 	for (i = 0; i < plContArr.length; i++)
 	{
-		$("#plContents").append("<option value='"+ plContArr[i].id +"'>"+ plContArr[i].name +"</option>");	
+		$("#plContents").append("<li class='ui-widget-content' id='"+ plContArr[i].id +"'>"+ plContArr[i].name +"</li>");
 	}
 }
 
-function plOnChange()
+function getPLContents(plList)
 {
-	plSelect = $("#plList")[0];
-	pl_name = getSelectedOptions(plSelect);
-	//alert(pl_name);
-	postData = "a=retrPL&pl=" + pl_name + "&SID=" + SID;
+	$("#plContents").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
+	postData = "a=retrPL&pl=" + plList + "&SID=" + SID;
 	//alert(postData);
-	$.post("./server/pl.php", postData, _plOnChange, "json");
+	$.post("./server/pl.php", postData, displayPLContents, "json");
 }
 
 function ranPlayPL()
