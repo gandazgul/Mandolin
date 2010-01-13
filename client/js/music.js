@@ -169,14 +169,20 @@ function displaySongs(sngArr)
 				case "play": {
 					sngIDs = getSelected("#songList");
 					//alert(sngIDs);
-					if (sngIDs == "") displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
-					if (action == "playrand")
-						$("#rnd").val("true");
+					if (sngIDs == "")
+					{
+						displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+					}
 					else
-						$("#rnd").val("false");
-					$("#sng").val(sngIDs);
-					$("#SID").val(SID);
-					$("#playForm").get(0).submit();
+					{
+						if (action == "playrand")
+							$("#rnd").val("true");
+						else
+							$("#rnd").val("false");
+						$("#sng").val(sngIDs);
+						$("#SID").val(SID);
+						$("#playForm").get(0).submit();
+					}
 					break;
 				}
 				case "selectall": {

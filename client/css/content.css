@@ -45,8 +45,10 @@
   /* (en) base layout gets standard font size 12px */
   /* (de) Basis-Layout erhält Standardschriftgröße von 12 Pixeln */
   body {
-    font-family:  Arial, Helvetica, sans-serif;
+    /*font-family:  Arial, Helvetica, sans-serif;*/
+	font-family: fantasy;
     font-size: 75.00%;
+	/*font-size: 10pt;*/
     color: #444;
   }
 

@@ -4,5 +4,5 @@
 #artistsList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
 #albumList .ui-selected { border: 1px solid orange; }
 #artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
-#artistsList li, #songList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 11px; font-weight: bold; }
-#albumList li { list-style-type: none; margin: 1px 2px 3px; padding: 1px; float: left; width: 110px; height: 90px; font-size: 11px; font-weight: bold; text-align: center; }
+#artistsList li, #songList li { list-style-type: none; margin: 0 0 1px 0; padding: 0.3em; font-weight: bold; }
+#albumList li { list-style-type: none; margin: 0 .3em .3em 0; padding: 0.3em; float: left; width: 110px; height: 90px; font-weight: bold; text-align: center; }

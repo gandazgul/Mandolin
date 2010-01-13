@@ -43,27 +43,44 @@
 </ul>
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
-	<p>
+	<form action="" class="ui-form">
 		<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
-		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="ui-widget" />
-	</p>
+		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="side ui-widget-content ui-corner-all" />
+	</form>
 </div>
 <div id="main">
 	<div class="subcolumns">
 		<div class="c25l">
-			<div class="subcl musicList p20" id="artistsListDiv">
+			<div class="subcl2">
+				<p class="title">Artists:&nbsp;<span id="plTotal"></span></p>
+			</div>
+		</div>
+		<div class="c50l">
+			<div class="subcl1">
+				<p class="title">Albums for selected Artists:</p>
+			</div>
+		</div>
+		<div class="c25l">
+			<div class="subcl1">
+				<p class="title">Songs for selected Albums:</p>
+			</div>
+		</div>
+	</div>
+	<div class="subcolumns">
+		<div class="c25l">
+			<div class="subcl2 musicList" id="artistsListDiv">
 				<ol id="artistsList">
 					<li><img alt="Loading..." src="./client/images/ajax-loader.gif" /></li>
 				</ol>
 			</div>
 		</div>
 		<div class="c50l">
-			<div class="subcl musicList" id="albumListDiv">
+			<div class="subcl1 musicList" id="albumListDiv">
 				<ol id="albumList"></ol>
 			</div>
 		</div>
 		<div class="c25l">
-			<div class="subcl musicList" id="songListDiv">
+			<div class="subcl1 musicList" id="songListDiv">
 				<ol id="songList"></ol>
 			</div>
 		</div>

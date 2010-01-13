@@ -26,7 +26,6 @@
 
 /*Application-wide CSS*/
 .title {
-	font-family: "Courier New", Courier, monospace;
 	font-weight: bold;
 	font-size: 10pt;
 	margin-bottom: 0px;
@@ -59,5 +58,4 @@ table.tablesorter thead tr .headerSortDown {
 	background-image: url(../images/desc.gif);
 }
 
-.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; padding: 0 0 0 10px; }
-.musicList.p20 { padding-left: 20px; }
+.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; }
