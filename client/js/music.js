@@ -302,7 +302,7 @@ function createPlaylist()
 		if (plName != null)
 		{
 			postData = "a=cpl&content=" + sng + "&pl=" + escape(plName) + "&SID=" + SID;
-			$.post("./server/pl.php", postData, displayError);
+			$.post("./server/playlists.php", postData, displayError);
 		}
 	}
 }

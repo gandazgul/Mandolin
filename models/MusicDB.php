@@ -1,8 +1,6 @@
 <?php
-
 class MusicDB 
 {
-	private $dbfilepath;
 	private $dbh;
 	private $sngCount;
 	private $artCount;
@@ -11,11 +9,19 @@ class MusicDB
 	private $plFormats;
 	public $plFormatsMimeTypes;
 	
-	function __construct($dbfilepath = "../models/dbfiles/music.db")
+	function __construct()
 	{
-		$this->dbfilepath = $dbfilepath;
-		$this->dbh = new PDO("sqlite:$this->dbfilepath");
-		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		include "../config.php";
+
+		try
+		{
+			$this->dbh = new PDO($settings["dbDSN"], $settings["dbUser"], $settings["dbPassword"], array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		catch (PDOException $e)
+		{
+			die($e->getMessage());
+		}
 		
 		$this->resultArr = array();
 		$this->resultArr['isError'] = false;

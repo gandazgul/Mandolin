@@ -14,8 +14,6 @@ require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
 require_once '../models/UsersDB.php';
 $usersDB = new UsersDB();
-require_once '../models/Settings.php';
-$settings = new Settings();
 
 $action = $_REQUEST["a"];
 
@@ -31,7 +29,6 @@ catch(Exception $e)
 unset($musicDB);
 unset($usersDB);
 unset($moviesDB);
-unset($settings);
 
 function gett()//returns total artists, albums and songs
 {
@@ -101,10 +98,12 @@ function addc()//add a comment to a track
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $settings, $musicDB, $usersDB;
-	
+	global $musicDB, $usersDB;
+
+	require_once '../config.php';
+
 	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
-	$musicURL = $settings->get('baseURL');
+	$musicURL = $settings['baseURL'];
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
 

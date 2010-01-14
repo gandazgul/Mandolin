@@ -50,19 +50,22 @@
 	    $mobile_browser = 0;
 	} 
 
-	require_once './models/Settings.php';
-	$settings = new Settings("./models/dbfiles/settings.json");
-	$mainPage = $settings->get("mainPage");
+	require_once 'config.php';
+	$mainPage = $settings["mainPage"];
 	if (!file_exists("./client/$mainPage.php"))
 	{
 		exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
 	}
-	
-	if($mobile_browser > 0) 
+
+	try
 	{
-	   include('index_mobi.php');
+		$dbh = new PDO($settings["dbDSN"], $settings["dbUser"], $settings["dbPassword"], array(PDO::ATTR_PERSISTENT => true));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
+		unset($dbh);
 	}
-	else {
-	   include('index_pc.php');
+	catch (PDOException $e)
+	{
+		die($e->getMessage());
 	}
 ?>

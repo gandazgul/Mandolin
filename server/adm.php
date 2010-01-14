@@ -10,8 +10,6 @@ if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
 
 require_once("../models/UsersDB.php");
 $usersDB = new UsersDB();
-require_once("../models/Settings.php");
-$settings = new Settings();
 require_once("../models/MusicDB.php");
 $musicDB = new MusicDB();
 

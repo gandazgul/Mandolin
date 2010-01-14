@@ -3,7 +3,7 @@
 	session_start();
 	$sess_id = session_id();
 
-	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
+	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings["mainPage"];
 	if ((!isset($_SESSION["id"]) or !($_SESSION["id"] == sha1($sess_id))) and ($p != "checkAuth"))
 		$p = "login";
 
@@ -12,7 +12,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>Mandolin v<?php echo $settings->get("version"); ?></title>
+	<title>Mandolin v<?php echo $settings["version"]; ?></title>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="./client/images/logo.ico" />
 	<link href="./client/css/main.css" rel="stylesheet" type="text/css" />
@@ -36,8 +36,8 @@
 		<div class="page">
 			<div id="header">    	
 				<img alt="Mandolin logo" src="./client/images/logo.jpg" />
-				<div style="position: absolute; top: 10px; left: 200px">
-					<h1>Welcome <strong><?php echo $username ?></strong> to Mandolin v<?php echo $settings->get('version'); ?></h1>
+				<div class="title">
+					<h1>Welcome <strong><?php echo $username; ?></strong> to Mandolin v<?php echo $settings['version']; ?></h1>
 					<h2><em>"Because music is important"</em></h2>
 				</div>	
 			</div>
@@ -56,7 +56,7 @@
 				}
 				else
 				{
-					$page = "./client/nav.".$settings->get("mainPage").".php";
+					$page = "./client/nav.".$mainPage.".php";
 					include($page);
 				}
 				unset($default);

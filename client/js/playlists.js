@@ -84,7 +84,7 @@ function displaySavedPL(savedPLArr)
 						var plNewName = prompt("Enter a new name for \"" + plName + "\"", plName);
 						if ((plNewName == null) || (plNewName == "")) return;
 						postData = "a=ren&pl=" + escape(plName) + "&npl=" + escape(trim(plNewName)) + "&SID=" + SID;
-						$.post("./server/pl.php", postData, displaySavedPL, 'json');
+						$.post("./server/playlists.php", postData, displaySavedPL, 'json');
 					}
 					break;
 				}
@@ -101,7 +101,7 @@ function displaySavedPL(savedPLArr)
 						if (r)
 						{
 							postData = "a=del&pl=" + escape(plName) + "&SID=" + SID;
-							$.post("./server/pl.php", postData, displaySavedPL, 'json');
+							$.post("./server/playlists.php", postData, displaySavedPL, 'json');
 						}
 					}
 					break;
@@ -119,7 +119,7 @@ function displaySavedPL(savedPLArr)
 						if (r)
 						{
 							postData = "a=shuf&pl=" + plName + "&SID=" + SID;
-							$.post("./server/pl.php", postData, displayPLContents, 'json');
+							$.post("./server/playlists.php", postData, displayPLContents, 'json');
 						}
 					}
 					break;
@@ -133,7 +133,7 @@ function displaySavedPL(savedPLArr)
 function getSavedPL()
 {
 	var postData = "a=saved&SID=" + SID;
-	$.post("./server/pl.php", postData, displaySavedPL, "json");
+	$.post("./server/playlists.php", postData, displaySavedPL, "json");
 }
 
 function displayPLContents(plContArr)
@@ -196,7 +196,7 @@ function displayPLContents(plContArr)
 							songID = $("#plContents").getAllItems();
 							postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
 							//alert(postData);
-							$.post("./server/pl.php", postData);
+							$.post("./server/playlists.php", postData);
 						}
 					}
 					break;
@@ -216,7 +216,7 @@ function displayPLContents(plContArr)
 					songID = $("#plContents").getAllItems();
 					postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
 					//alert(postData);
-					$.post("./server/pl.php", postData);
+					$.post("./server/playlists.php", postData);
 					break;
 				}
 			}//switch
@@ -230,7 +230,7 @@ function getPLContents(plList)
 	$("#plContents").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 	var postData = "a=retrPL&pl=" + plList + "&SID=" + SID;
 	//alert(postData);
-	$.post("./server/pl.php", postData, displayPLContents, "json");
+	$.post("./server/playlists.php", postData, displayPLContents, "json");
 }
 
 function move(up)
@@ -268,5 +268,5 @@ function move(up)
 	var plSelect = $("#plList")[0];
 	var pl_name = plSelect.options[plSelect.selectedIndex].value
 	var postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
-	$.post("./server/pl.php", postData);
+	$.post("./server/playlists.php", postData);
 }

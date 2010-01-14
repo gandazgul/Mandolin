@@ -25,6 +25,7 @@
 	.page_margins { width: auto;  min-width: 740px; max-width: 90em; background: #fff; }
 	.page { padding: 10px 15px 10px 10px; }
 	#header { padding: 10px 2em 1em 10px; color: #000; background:#edf2f8 url("../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; }
+	#header div.title { position: absolute; top: 10px; left: 200px }
 	#nav { overflow:hidden; }
 	div.hlist { background-color: #c8ddf3 }
 	#main { margin: 10px 0; background: #fff; }

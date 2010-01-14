@@ -21,7 +21,7 @@ class CDefault //extends CController
 		$passw = $_POST["passw"];
 		//echo sha1($passw)."<br />\n";
 		//echo "$username<br />\n";
-		$usersDB = new UsersDB("./models/dbfiles/users.db");
+		$usersDB = new UsersDB();
 		if ($usersDB->verifyPassw($username, $passw))//if the passwords match
 		{
 			$authDataArr = json_decode($usersDB->getAuthInfo_json($username), true);
@@ -105,7 +105,7 @@ class CDefault //extends CController
 		ini_set('max_execution_time', '6000');
 
 		require_once './models/MusicDB.php';
-		$musicDB = new MusicDB("./models/dbfiles/music.db");
+		$musicDB = new MusicDB();
 
 		$musicDB->recreateDB();
 		//---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------
