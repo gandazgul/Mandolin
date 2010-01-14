@@ -204,6 +204,7 @@ function displaySongs(sngArr)
 
 function getSongs(albIDs)
 {
+	$("#songList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 	postData = "a=sng&alb=" + albIDs + "&SID=" + SID;
 	$.post("./server/music.php", postData, displaySongs, "json");
 }
@@ -236,6 +237,7 @@ function displayAlbums(albArr)
 
 function getAlbums(artIDs)
 {
+	$("#albumList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 	postData = "a=albums&artist_id=" + artIDs + "&SID=" + SID;
 	//alert(postData);
 	$.post("./server/music.php", postData, displayAlbums, "json");

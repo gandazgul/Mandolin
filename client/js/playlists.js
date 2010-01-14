@@ -35,11 +35,6 @@ $(document).ready(function(){
 	};
 });
 
-function getAllSelected(list)
-{
-	
-}
-
 function displaySavedPL(savedPLArr)
 {
 	$("#plList").html('');
@@ -162,6 +157,7 @@ function displayPLContents(plContArr)
 		{
 			var postData = "";
 			var songID = "";
+			var plName = "";
 			switch (action)
 			{
 				case "playrand":
@@ -192,21 +188,35 @@ function displayPLContents(plContArr)
 					}
 					else
 					{
-						selected.remove();
 						plName = $("#plList").getSelectedItemID();
-						songID = $("#plContents").getAllItems();
-						postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
-						alert(postData);
-						$.post("./server/pl.php", postData);						
+						var r = confirm("Are you sure you want to delete this songs from: " + plName);
+						if (r)
+						{
+							selected.remove();
+							songID = $("#plContents").getAllItems();
+							postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
+							//alert(postData);
+							$.post("./server/pl.php", postData);
+						}
 					}
 					break;
 				}
-				case "moveup": {
-					
+				case "selectall": {
+					$("#plContents").children().addClass("ui-selected");
 					break;
 				}
-				case "moveup": {
+				case "moveup":
+				case "movedown": {
+					if (action == "moveup")
+						$("#plContents .ui-selected").insertBefore($("#plContents .ui-selected:first").prev());
+					else
+						$("#plContents .ui-selected").insertAfter($("#plContents .ui-selected:last").next());
 
+					plName = $("#plList").getSelectedItemID();
+					songID = $("#plContents").getAllItems();
+					postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
+					//alert(postData);
+					$.post("./server/pl.php", postData);
 					break;
 				}
 			}//switch
@@ -221,11 +231,6 @@ function getPLContents(plList)
 	var postData = "a=retrPL&pl=" + plList + "&SID=" + SID;
 	//alert(postData);
 	$.post("./server/pl.php", postData, displayPLContents, "json");
-}
-
-function delFromPl()
-{
-
 }
 
 function move(up)

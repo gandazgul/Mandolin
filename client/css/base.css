@@ -55,10 +55,12 @@
 	.c25l, .c25r { width: 25%; }
 	.c33l, .c33r { width: 33.333%; }
 	.c50l, .c50r { width: 50%; }
+	.c62l, .c62r { width: 62%; }
 
 	.c50l, .c25l, .c33l, .c38l, .c66l, .c75l, .c62l { float: left; }
 	.c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r { float: right; }
 
+	.subcl0 { padding: 0; }
 	.subcl1 { padding: 0 0 0 1em; }
 	.subcl2 { padding: 0 0 0 2em; }
 
@@ -140,8 +142,12 @@
 	}
 
 	/*JQUERY UI*/
-	.ui-form input.text { display: block; margin-bottom: 12px; width: 95%; padding: .3em; }
+	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 12px; width: 95%; padding: .3em; }
+	.ui-form input.textNoMargin, .ui-form select.textNoMargin { display: block; width: 95%; padding: .3em; }
 	.ui-form input.side { margin-bottom: 12px; padding: .3em; }
 	.ui-form button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration: none; !important; cursor:pointer; position: relative; text-align: center; }
+	.ui-form fieldset { padding: 0.8em; }
+	.ui-form fieldset.top, .ui-form.top { margin-top: 4px; }
 	.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+
 }

@@ -84,13 +84,13 @@ class UsersDB
 			
 			$this->resultArr["resultStr"] = "<tr id='tr$id'>";
 			$this->resultArr["resultStr"] .= "<td><span id='userName$id'>$user_name</span></td>";
-			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' class='ui-widget-content ui-corner-all textNoMargin' /><span></span></td>";
 			if ($user_adm_level)
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
 			else
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-			$this->resultArr["resultStr"] .= "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" />&nbsp;";
-			$this->resultArr["resultStr"] .= "<input type='button' onclick=\"_delUser('$id')\" value='Delete' /></div><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><button type='button' onclick=\"saveUser('$id')\" class='ui-state-default ui-corner-all'>Save</button>&nbsp;";
+			$this->resultArr["resultStr"] .= "<button type='button' onclick=\"_delUser('$id')\" class='ui-state-default ui-corner-all'>Delete</button><span></span></td>";
 			$this->resultArr["resultStr"] .=  "</tr>";
 		}
 		

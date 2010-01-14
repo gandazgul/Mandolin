@@ -21,9 +21,10 @@
 <ul id="songsMenu" class="contextMenu">
 	<li class="play"><a href="#play">Play Selected</a></li>
 	<li class="playrand"><a href="#playrand">Play Random</a></li>
-	<li class="delete separator"><a href="#delete">Delete from Playlist</a></li>
+	<li class="selectall separator"><a href="#selectall">Select All</a></li>
 	<li class="up separator"><a href="#moveup">Move up</a></li>
 	<li class="down"><a href="#movedown">Move down</a></li>
+	<li class="delete"><a href="#delete">Delete from Playlist</a></li>
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
@@ -66,14 +67,7 @@
 			</div>
 		</div>
 		<div class="c33l">
-			<div class="subcl1" style="border-left: 1px dotted #DDDDDD; padding-left: 10px; padding-right: 20px; ">
-				<h6 class="vlist">Current Song Selection</h6>
-				<ul class="vlist">
-					<li><a href="javascript:shuffle()">Shuffle Playlist</a></li>
-					<li><a href="javascript:delFromPl()">Delete from playlist</a></li>
-					<li><a href="javascript:move(true)">Move up</a></li>
-					<li><a href="javascript:move(false)">Move down</a></li>
-				</ul>
+			<div class="subcl1">
 			</div>
 		</div>
 	</div>

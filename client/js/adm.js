@@ -52,7 +52,8 @@ $(document).ready(function(){//intialize add user dialog
 	$("#addUserDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 280,
+		resizable: false,
+		height: 310,
 		modal: true,
 		buttons: {
 			'Create an account': function() 
@@ -93,8 +94,9 @@ $(document).ready(function(){//intialize add user dialog
 $(document).ready(function(){//add folder dialog init
 	$("#addFolderDiag").dialog({
 		bgiframe: true,
+		resizable: false,
 		autoOpen: false,
-		height: 150,
+		height: 168,
 		modal: true,
 		buttons: {
 			'Add this folder': function() 

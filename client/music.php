@@ -39,7 +39,7 @@
 	<li class="addtopl"><a href="#addtopl">Add to Existing Playlist</a></li>
 	<!--li class="rename separator"><a href="#rename">Rename</a></li>
 	<li class="delete"><a href="#delete">Delete</a></li-->
-	<li class="cancel"><a href="#cancel">Cancel</a></li>
+	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>

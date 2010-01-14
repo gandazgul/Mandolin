@@ -2,9 +2,8 @@ table {
 	border-bottom: none;
 	border-top: none;
 	margin-bottom: 0;
-
-	width: auto;
 	border-collapse: collapse;
+	text-align: left;
 }
 
 tbody td {
