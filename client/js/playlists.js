@@ -1,21 +1,6 @@
 $(document).ready(function(){
-	getSavedPL();
-	
-	$("#plList").selectable({
-		stop: function(){
-			var strResult = "";
-			//alert(this.id);
-			$(".ui-selected", this).each(function(){
-				//var index = $("#artistsList li").index(this);
-				var pl_name = this.id;
-				strResult += pl_name + "|";
-			});
-			//alert(strResult);
-			getPLContents(strResult);
-		}
-	});
-
-	$("#plContents").selectable();
+	var postData = "a=playlists&SID=" + SID;
+	$.post("./server/playlists.php", postData, displaySavedPL, "json");
 
 	jQuery.fn.getSelectedItemID = function(){
 		var selected = $(this).find(".ui-selected");
@@ -33,6 +18,28 @@ $(document).ready(function(){
 		});
 		return result;
 	};
+
+	$("#plList").selectable({
+		stop: function(){
+			var plList = $(this).getAllSelectedItems();
+
+			$("#plContents").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
+			postData = "a=playlists&id=" + plList + "&SID=" + SID;
+			//alert(postData);
+			$.post("./server/playlists.php", postData, displayPLContents, "json");
+
+			//alert(this.id);
+			/*$(".ui-selected", this).each(function(){
+				//var index = $("#artistsList li").index(this);
+				var pl_name = this.id;
+				strResult += pl_name + "|";
+			});*/
+			//alert(strResult);
+			getPLContents(strResult);
+		}
+	});
+
+	$("#plContents").selectable();
 });
 
 function displaySavedPL(savedPLArr)
@@ -41,7 +48,7 @@ function displaySavedPL(savedPLArr)
 	$("#plContents").html('');
 	for (var i = 0; i < savedPLArr.length; i++)
 	{		
-		$("#plList").append("<li class='ui-widget-content' id='"+ savedPLArr[i] +"'>"+ savedPLArr[i] +"</li>");
+		$("#plList").append("<li class='ui-widget-content' id='"+ savedPLArr[i].id +"'>"+ savedPLArr[i].name +"</li>");
 	}
 
 	$("#plList li").contextMenu({menu: 'plMenu'},
@@ -130,143 +137,96 @@ function displaySavedPL(savedPLArr)
 	);
 }
 
-function getSavedPL()
-{
-	var postData = "a=saved&SID=" + SID;
-	$.post("./server/playlists.php", postData, displaySavedPL, "json");
-}
-
 function displayPLContents(plContArr)
 {
 	$("#plContents").html('');
-	for (var i = 0; i < plContArr.length; i++)
-	{
-		$("#plContents").append("<li class='ui-widget-content' id='"+ plContArr[i].id +"'>"+ plContArr[i].name +"</li>");
-	}
-
-	jQuery.fn.getAllItems = function(){
-		var result = "";
-		$(this).find("li").each(function(i, objOption){
-			result += objOption.id + "|";
-		});
-		return result;
-	}
-
-	$("#plContents li").contextMenu({menu: 'songsMenu'},
-		function(action, el, pos)
-		{
-			var postData = "";
-			var songID = "";
-			var plName = "";
-			switch (action)
-			{
-				case "playrand":
-				case "play": {
-					songID = $("#plContents").getAllSelectedItems();
-					//alert(songID);
-					if (songID == "")
-					{
-						displayError("You must select a playlist before clicking Play.");
-					}
-					else
-					{
-						if (action == "playrand")
-							$("#rnd").val("true");
-						else
-							$("#rnd").val("false");
-						$("#pl_or_sng").attr('name', 'sng').val(songID);
-						$("#SID").val(SID);
-						$("#downForm").get(0).submit();
-					}
-					break;
-				}
-				case "delete": {
-					var selected = $("#plContents .ui-selected");
-					if (selected.length == 0)
-					{
-						displayError("There is nothing selected.");
-					}
-					else
-					{
-						plName = $("#plList").getSelectedItemID();
-						var r = confirm("Are you sure you want to delete this songs from: " + plName);
-						if (r)
-						{
-							selected.remove();
-							songID = $("#plContents").getAllItems();
-							postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
-							//alert(postData);
-							$.post("./server/playlists.php", postData);
-						}
-					}
-					break;
-				}
-				case "selectall": {
-					$("#plContents").children().addClass("ui-selected");
-					break;
-				}
-				case "moveup":
-				case "movedown": {
-					if (action == "moveup")
-						$("#plContents .ui-selected").insertBefore($("#plContents .ui-selected:first").prev());
-					else
-						$("#plContents .ui-selected").insertAfter($("#plContents .ui-selected:last").next());
-
-					plName = $("#plList").getSelectedItemID();
-					songID = $("#plContents").getAllItems();
-					postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
-					//alert(postData);
-					$.post("./server/playlists.php", postData);
-					break;
-				}
-			}//switch
-
-		}//function
-	);
-}
-
-function getPLContents(plList)
-{
-	$("#plContents").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-	var postData = "a=retrPL&pl=" + plList + "&SID=" + SID;
-	//alert(postData);
-	$.post("./server/playlists.php", postData, displayPLContents, "json");
-}
-
-function move(up)
-{
-	var objSelect = $("#plContents")[0];
-	var x = objSelect.selectedIndex;
-	var tmpTxt = "";
-	var tmpVal = "";
-	if (objSelect.options.selectedIndex == -1) return;
-	if (up)
-	{
-		tmpTxt = objSelect.options[x-1].text;
-		tmpVal = objSelect.options[x-1].value;
-		objSelect.options[x-1].text = objSelect.options[x].text;
-		objSelect.options[x-1].value = objSelect.options[x].value;
-		objSelect.options[x].text = tmpTxt;
-		objSelect.options[x].value = tmpVal;	
-		objSelect.options[x-1].selected = true;
-		objSelect.options[x].selected = false;
-	}
+	if (plContArr['isError'])
+		displayError(plContArr['resultStr'])
 	else
 	{
-		tmpTxt = objSelect.options[x+1].text;
-		tmpVal = objSelect.options[x+1].value;
-		objSelect.options[x+1].text = objSelect.options[x].text;
-		objSelect.options[x+1].value = objSelect.options[x].value;
-		objSelect.options[x].text = tmpTxt;
-		objSelect.options[x].value = tmpVal;	
-		objSelect.options[x+1].selected = true;
-		objSelect.options[x].selected = false;
+		for (var i = 0; i < plContArr['resultStr'].length; i++)
+		{
+			$("#plContents").append("<li class='ui-widget-content' id='"+ plContArr['resultStr'][i][0]['song_id'] +"'>"+ plContArr['resultStr'][i][0]['song_name'] +"</li>");
+		}
+
+		jQuery.fn.getAllItems = function(){
+			var result = "";
+			$(this).find("li").each(function(i, objOption){
+				result += objOption.id + "|";
+			});
+			return result;
+		}
+
+		$("#plContents li").contextMenu({menu: 'songsMenu'},
+			function(action, el, pos)
+			{
+				var postData = "";
+				var songID = "";
+				var plName = "";
+				switch (action)
+				{
+					case "playrand":
+					case "play": {
+						songID = $("#plContents").getAllSelectedItems();
+						//alert(songID);
+						if (songID == "")
+						{
+							displayError("You must select a playlist before clicking Play.");
+						}
+						else
+						{
+							if (action == "playrand")
+								$("#rnd").val("true");
+							else
+								$("#rnd").val("false");
+							$("#pl_or_sng").attr('name', 'sng').val(songID);
+							$("#SID").val(SID);
+							$("#downForm").get(0).submit();
+						}
+						break;
+					}
+					case "delete": {
+						var selected = $("#plContents .ui-selected");
+						if (selected.length == 0)
+						{
+							displayError("There is nothing selected.");
+						}
+						else
+						{
+							plName = $("#plList").getSelectedItemID();
+							var r = confirm("Are you sure you want to delete this songs from: " + plName);
+							if (r)
+							{
+								selected.remove();
+								songID = $("#plContents").getAllItems();
+								postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
+								//alert(postData);
+								$.post("./server/playlists.php", postData);
+							}
+						}
+						break;
+					}
+					case "selectall": {
+						$("#plContents").children().addClass("ui-selected");
+						break;
+					}
+					case "moveup":
+					case "movedown": {
+						if (action == "moveup")
+							$("#plContents .ui-selected").insertBefore($("#plContents .ui-selected:first").prev());
+						else
+							$("#plContents .ui-selected").insertAfter($("#plContents .ui-selected:last").next());
+
+						plName = $("#plList").getSelectedItemID();
+						songID = $("#plContents").getAllItems();
+						postData = "a=updPL&name=" + plName + "&newC=" + songID + "&concat=false&SID=" + SID;
+						//alert(postData);
+						$.post("./server/playlists.php", postData);
+						break;
+					}
+				}//switch
+
+			}//function
+		);
 	}
-	
-	var sng_id = getAllOptions(objSelect);
-	//alert(sng_id);
-	var plSelect = $("#plList")[0];
-	var pl_name = plSelect.options[plSelect.selectedIndex].value
-	var postData = "a=updPL&name=" + pl_name + "&newC=" + sng_id + "&concat=false&SID=" + SID;
-	$.post("./server/playlists.php", postData);
 }

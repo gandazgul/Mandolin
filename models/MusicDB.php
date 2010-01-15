@@ -1,145 +1,36 @@
 <?php
-class MusicDB 
+require_once __DIR__.'/Settings.php';
+
+class MusicDB
 {
 	private $dbh;
-	private $sngCount;
-	private $artCount;
-	private $albCount;
 	private $resultArr;
-	private $plFormats;
-	public $plFormatsMimeTypes;
-	
+
 	function __construct()
 	{
-		include "../config.php";
+		global $settings;
 
 		try
 		{
-			$this->dbh = new PDO($settings["dbDSN"], $settings["dbUser"], $settings["dbPassword"], array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
 			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		catch (PDOException $e)
 		{
 			die($e->getMessage());
 		}
-		
+
 		$this->resultArr = array();
 		$this->resultArr['isError'] = false;
 		$this->resultArr['resultStr'] = "";
-		
-		$this->plFormats['xspf']['head'] = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
-		$this->plFormats['xspf']['track'] = "\t\t<track>\n\t\t\t<title>".'%3$d%1$s'."</title>\n\t\t\t<location>".'%2$s'."</location>\n\t\t</track>\n"; 
-		$this->plFormats['xspf']['foot'] = "\t</trackList>\n</playlist>";
-		$this->plFormats['xspf']['amp'] = "&amp;";
-		$this->plFormats['m3u']['head'] = "#EXTM3U\n";
-		$this->plFormats['m3u']['track'] = '#EXTINF:0,%3$d%1$s'."\n".'%2$s'."\n";
-		$this->plFormats['m3u']['foot'] = "";
-		$this->plFormats['m3u']['amp'] = "&";
-		
-		$this->plFormatsMimeTypes['m3u'] = "audio/x-mpegurl";
-		$this->plFormatsMimeTypes['xspf'] = "application/xspf+xml";
 	}
-	
+
 	function __destruct()
 	{
 		unset($this->dbh);
 		unset($this->resultArr);
-		unset($this->plFormats);
-		unset($this->plFormatsMimeTypes);
 	}
-	
-	//----------------------------------------------GET ARTIRSTS------------------------------------------------------------------
-	function getArtists()
-	{
-		$query = $this->dbh->query("SELECT * FROM artists ORDER BY `art_name`");			
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);		
-		$artArr = array();
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-		}
-		//print_r($artArr);
-		return $artArr;
-	}
-	
-	function getArtists_json()
-	{
-		
-		return json_encode($this->getArtists());
-	}
-	
-	//----------------------------------------------GET ALBUMS------------------------------------------------------------------	
-	function getAlbums($art_id)
-	{
-		$albArr = array();	
-		$tok = strtok($art_id, "|");
-		while($tok !== false)
-		{
-			$query = $this->dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
-			{
-				$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
-			}
-			$tok = strtok("|");
-		}//from the while
-		
-		return $albArr;
-	}
-	
-	function getAlbums_json($art_id)
-	{
-		return json_encode($this->getAlbums($art_id));
-	}
-	
-	//----------------------------------------------GET SONGS------------------------------------------------------------------
-	function getSongs($alb_id)
-	{
-		$sngArr = array();	
-		$tok = strtok($alb_id, "|");
-		while($tok !== false)
-		{
-			$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
-			{
-				$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
-			}
-			$tok = strtok("|");
-		}//from the while
-		
-		return $sngArr;
-	}
-	
-	function getSongs_json($alb_id)
-	{
-		return json_encode($this->getSongs($alb_id));
-	}
-	
-	function getColumnsFromID($song_id, $columns)
-	{
-		$this->resultArr['isError'] = false;
-		
-		$columns = implode(',', $columns);
-		$queryArr = $this->dbh->query("SELECT $columns FROM music WHERE song_id='$song_id'");
-		$queryArr = $queryArr->fetchAll();
-		if (count($queryArr) == 0)
-		{
-			$this->resultArr['isError'] = true;
-			$error = $this->dbh->errorInfo();
-			$this->resultArr['resultStr'] = "ERROR: Couldn't retreive the requested information: ".$error[2];
-		}
-		else
-		{
-			$this->resultArr['resultStr'] = $queryArr;
-		}
-		
-		return $this->resultArr;
-	}
-	
+
 	//-------------------------------------------------------Search-------------------------------------------------------------------------
 	function search_json($queryStr)
 	{
@@ -391,57 +282,6 @@ class MusicDB
 		$this->albCount = 0;
 		
 		return $this->_addToDB($folder, $root_length);
-	}
-	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------
-	function getPLContents($plArr)
-	{
-		$resultArr = array();
-		
-		$sngStmt = $this->dbh->prepare("SELECT song_name FROM music WHERE `song_id`=?");
-		for ($i = 0; $i < count($plArr); $i++)
-		{
-			$sng_id = $plArr[$i];
-			//echo $sng_id;
-			try	{ $sngStmt->execute(array($sng_id)); } catch(PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $sngStmt->fetchAll();
-			if (count($queryArr) != 0)
-				$resultArr[] = array("id" => $sng_id, "name" => $queryArr[0]["song_name"]);
-		}
-		
-		return $resultArr;
-	}
-	
-	function getPLContents_json($plArr)
-	{
-		return json_encode($this->getPLContents($plArr));
-	}
-	
-	function getPlaylist($plFormat, $plArr, $musicURL)
-	{
-		$result = array();
-		$result = $this->plFormats[$plFormat]['head'];
-		
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
-		for ($i = 0; $i < count($plArr); $i++)
-		{
-			try
-			{
-				$sngStmt->execute(array($plArr[$i]));
-			}
-			catch (PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $sngStmt->fetchAll();
-			$song_id = $queryArr[0]['song_id'];
-			$song_name = $queryArr[0]['song_name'];
-			$songURL = $musicURL."server/stream.php?k=".$_SESSION["key"].$this->plFormats[$plFormat]['amp']."s=$song_id";	
-			//			#EXTINF:LENGTH,SONG_NAME";
-			$result .= sprintf($this->plFormats[$plFormat]['track'], $song_name, $songURL, $i + 1);
-		}
-		
-		$result .= $this->plFormats[$plFormat]['foot'];
-		
-		return $result;		
 	}
 
 	//------------------------------------------------------------ Recreate DB --------------------------------------------------------

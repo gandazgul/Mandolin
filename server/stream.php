@@ -41,9 +41,8 @@ else
 }
 
 //get the song name, path and extension
-require_once "../models/MusicDB.php";
-$musicDB = new MusicDB();
-$resultArr = $musicDB->getColumnsFromID($song_id, array("song_path", "song_name", "song_ext"));
+require_once "../models/songs.php";
+$resultArr = $songs->getInfo(array($song_id), array("song_path", "song_name", "song_ext"));
 if ($resultArr['isError'])
 	exit($resultArr['resultStr']);
 else
@@ -53,8 +52,8 @@ else
 	$song_name = $resultArr['resultStr'][0]['song_name'];
 	$ext = $resultArr['resultStr'][0]['song_ext'];
 }
-$musicDB->__destruct();
-unset($musicDB);
+$songs->__destruct();
+unset($songs);
 
 $lameCMD = $settings->get("lameCMD");
 $readfile = ($lameCMD == "");

@@ -205,7 +205,7 @@ function displaySongs(sngArr)
 function getSongs(albIDs)
 {
 	$("#songList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-	postData = "a=sng&alb=" + albIDs + "&SID=" + SID;
+	postData = "a=songs&album_id=" + albIDs + "&SID=" + SID;
 	$.post("./server/music.php", postData, displaySongs, "json");
 }
 

@@ -1,12 +1,16 @@
 <?php
 session_name("Mandolin");
 session_start();
-//print_r($_POST);
+//print_r($_REQUEST);
 if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
 	exit();	
 }
+
+require_once '../models/artists.php';
+require_once '../models/albums.php';
+require_once '../models/songs.php';
 
 require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();
@@ -26,6 +30,11 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
+$artists->__destruct();
+unset($artists);
+$albums->__destruct();
+unset($albums);
+
 unset($musicDB);
 unset($usersDB);
 unset($moviesDB);
@@ -39,27 +48,27 @@ function gett()//returns total artists, albums and songs
 
 function artists()
 {
-	global $musicDB;
+	global $artists;
 	
-	if (isset($_POST["id"]))
+	if (isset($_REQUEST["id"]))
 	{
-		//output infor about the artist wich id is: $_POST["id"]
+		//output infor about the artist wich id is: $_REQUEST["id"]
 	}
 	else
-		echo $musicDB->getArtists_json();
+		echo $artists->get_json();
 }
 
 function albums()
 {
-	global $musicDB;
+	global $albums;
 
-	if (isset($_POST["id"]))
+	if (isset($_REQUEST["id"]))
 	{
-		//output infor about the artist wich id is: $_POST["id"]
+		//output infor about the artist wich id is: $_REQUEST["id"]
 	}
-	else if (isset($_POST["artist_id"]))
+	else if (isset($_REQUEST["artist_id"]))
 	{
-		echo $musicDB->getAlbums_json($_POST["artist_id"]);
+		echo $albums->get_json($_REQUEST["artist_id"]);
 	}
 	else
 	{
@@ -67,26 +76,37 @@ function albums()
 	}	
 }
 
-function sng()
+function songs()
 {
-	global $musicDB;
-	
-	echo $musicDB->getSongs_json($_POST["alb"]);
+	global $songs;
+
+	if (isset($_REQUEST['id']))
+	{
+		//echo information about the song and link for lyrics
+	}
+	else if (isset($_REQUEST['album_id']))
+	{
+		echo $songs->get_json($_REQUEST["album_id"]);
+	}
+	else
+	{
+		//list all songs in the db
+	}
 }
 
 function search()
 {
 	global $musicDB;
 	
-	$queryStr = $_POST["q"];
+	$queryStr = $_REQUEST["q"];
 	
 	echo $musicDB->search_json($queryStr); 
 }
 
 function addc()//add a comment to a track
 {
-	$sng = $_POST["sng"];
-	$com = $_POST["com"];
+	$sng = $_REQUEST["sng"];
+	$com = $_REQUEST["com"];
 	$dbh = new PDO("sqlite:./db/music.db");
 	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
 	if ($query == 0)
@@ -98,12 +118,10 @@ function addc()//add a comment to a track
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $musicDB, $usersDB;
-
-	require_once '../config.php';
+	global $musicDB, $usersDB, $settings;
 
 	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
-	$musicURL = $settings['baseURL'];
+	$musicURL = $settings->get('baseURL');
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
 
@@ -117,7 +135,7 @@ function play()//makes a list of the tracks selected in the sng list
 		$plArr = $usersDB->getPLContents($_SESSION["username"], $name);
 	}
 	//print_r($plArr);
-	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true")) 
+	/*if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
 		shuffle($plArr);
 	//print_r($plArr);
 	
@@ -134,7 +152,7 @@ function play()//makes a list of the tracks selected in the sng list
 		header("Content-Disposition: filename=\"$name.$plFormat\"");
 		header("Content-Transfer-Encoding: plain");
 		echo $musicDB->getPlaylist($plFormat, $plArr, $musicURL);
-	}
+	}*/
 }
 
 ?>

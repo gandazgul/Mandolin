@@ -1,15 +1,17 @@
 <?php
+require_once __DIR__.'/Settings.php';
+
 Class MoviesDB
 {
 	private $dbh;
 	
 	function __construct()
 	{
-		include "../config.php";
+		global $settings;
 
 		try
 		{
-			$this->dbh = new PDO($settings["dbDSN"], $settings["dbUser"], $settings["dbPassword"], array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
 			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		catch (PDOException $e)

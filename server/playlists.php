@@ -8,6 +8,9 @@ if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 	exit();	
 }
 
+require_once '../models/playlists.php';
+require_once '../models/songs.php';
+
 require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();
 require_once '../models/MoviesDB.php';
@@ -26,26 +29,27 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
+$playlists->__destruct();
+unset($playlists);
+$songs->__destruct();
+unset($songs);
+
 unset($musicDB);
 unset($usersDB);
 unset($moviesDB);
 
-function saved()//returns the list of playlists
+function playlists()//returns the list of playlists
 {
-	global $usersDB;
-	
-	echo $usersDB->getPLsForUser_json($_SESSION["username"]);
-}
+	global $playlists, $songs;
 
-function retrPL() //this function retreives the contents of the specified playlist(s)
-{
-	global $musicDB, $usersDB;
-	
-	$pl = $_REQUEST["pl"];
-	
-	$plContents = $usersDB->getPLContents($_SESSION["username"], $pl);
-	//print_r($plContents);	
-	echo $musicDB->getPLContents_json($plContents);
+	if (isset($_REQUEST['id']))
+	{
+		$plContents = $playlists->get($_REQUEST['id']);
+		//print_r($plContents);
+		echo $songs->getInfo_json($plContents, array('song_id', 'song_name'));
+	}
+	else
+		echo $playlists->get_json(null);
 }
 
 function cpl()//creates a playlist
