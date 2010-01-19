@@ -7,7 +7,8 @@
 ?>
 
 <link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
-<script type="text/javascript" language="javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
 
 <ul id="plMenu" class="contextMenu">
 	<li class="play"><a href="#play">Play Selected</a></li>

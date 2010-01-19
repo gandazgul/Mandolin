@@ -6,6 +6,8 @@ class PlaylistsModel
 	private $dbh;
 	private $resultArr;
 	private $username;
+	private $plFormats;
+	public $plFormatsMimeTypes;
 
 	function __construct($username)
 	{
@@ -13,7 +15,8 @@ class PlaylistsModel
 
 		try
 		{
-			$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+			//$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh = new PDO($settings->get("dbDSN"));
 			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		catch (PDOException $e)
@@ -24,6 +27,18 @@ class PlaylistsModel
 		$this->resultArr = array();
 		$this->resultArr['isError'] = false;
 		$this->resultArr['resultStr'] = "";
+
+		$this->plFormats['xspf']['head'] = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
+		$this->plFormats['xspf']['track'] = "\t\t<track>\n\t\t\t<title>".'%3$d%1$s'."</title>\n\t\t\t<location>".'%2$s'."</location>\n\t\t</track>\n";
+		$this->plFormats['xspf']['foot'] = "\t</trackList>\n</playlist>";
+		$this->plFormats['xspf']['amp'] = "&amp;";
+		$this->plFormats['m3u']['head'] = "#EXTM3U\n";
+		$this->plFormats['m3u']['track'] = '#EXTINF:0,%3$d%1$s'."\n".'%2$s'."\n";
+		$this->plFormats['m3u']['foot'] = "";
+		$this->plFormats['m3u']['amp'] = "&";
+
+		$this->plFormatsMimeTypes['m3u'] = "audio/x-mpegurl";
+		$this->plFormatsMimeTypes['xspf'] = "application/xspf+xml";
 
 		$this->username = $username;
 	}
@@ -63,7 +78,7 @@ class PlaylistsModel
 		}
 		else//if no ID is provided we list all playlists for that user.
 		{
-			$query = $this->dbh->query("SELECT id, pl_name FROM playlists WHERE `pl_user_name`='$this->username'");
+			$query = $this->dbh->query("SELECT id, pl_name FROM playlists WHERE pl_user_name='$this->username'");
 			$queryArr = $query->fetchAll();
 			//print_r($queryArr);
 
@@ -83,87 +98,12 @@ class PlaylistsModel
 		return json_encode($this->get($id));
 	}
 
-	/*function renamePL($name, $newNameP)
-	{
-		$newName = str_replace('|', '', $newNameP);
-		try
-		{
-			$this->dbh->exec("UPDATE playlists SET `pl_name`='$newName' WHERE `pl_name`='$name'");
-		}
-		catch(PDOException $e)
-		{
-			echo "ERROR: Renaming playlist \"$name\" to \"$newName\"\n";
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function deletePL($userName, $plName)
-	{
-		try
-		{
-			$this->dbh->exec("DELETE FROM playlists WHERE `pl_name`='$plName' AND `pl_user_name`='$userName'");
-		}
-		catch(PDOException $e)
-		{
-			echo "ERROR: Deleting playlist \"$plName\"\n";
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function updatePL($plName, $newContent, $concat)
-	{
-		try
-		{
-			if ($concat == "true")
-				$this->dbh->exec("UPDATE playlists SET pl_contents=pl_contents || '$newContent' WHERE `pl_name`='$plName'");
-			else
-				$this->dbh->exec("UPDATE playlists SET pl_contents='$newContent' WHERE `pl_name`='$plName'");
-		}
-		catch(PDOException $e)
-		{ 
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function createPlaylist($userName, $plName, $plContent)
-	{
-		try
-		{
-			$this->dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$plName', '$plContent', '$userName')");
-		}
-		catch(PDOException $e)
-		{
-			if ($e->getCode() == 23000)
-				echo "Playlist \"$plName\" already exists. Please enter a different name.\n";
-			else
-			{
-				echo "ERROR: Creating the playlist \"$plName\": \n";
-				echo $e->getMessage();
-			}
-			return false;
-		}
-		return true;
-	}
-
-
-
-	function getPLContents_json($plArr)
-	{
-		return json_encode($this->getPLContents($plArr));
-	}
-
-	function getPlaylist($plFormat, $plArr, $musicURL)
+	function get_file($plFormat, $plArr, $musicURL)
 	{
 		$result = array();
 		$result = $this->plFormats[$plFormat]['head'];
 
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE `song_id`=?");
+		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE song_id=?");
 		for ($i = 0; $i < count($plArr); $i++)
 		{
 			try
@@ -183,7 +123,65 @@ class PlaylistsModel
 		$result .= $this->plFormats[$plFormat]['foot'];
 
 		return $result;
-	}*/
+	}
+
+	function post($plName, $plContent)
+	{
+		try
+		{
+			$this->dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$plName', '$plContent', '$this->username')");
+		}
+		catch(PDOException $e)
+		{
+			if ($e->getCode() == 23000)
+				echo "Playlist \"$plName\" already exists. Please enter a different name.\n";
+			else
+			{
+				echo "ERROR: Creating the playlist \"$plName\": \n";
+				echo $e->getMessage();
+			}
+			return false;
+		}
+		return true;
+	}
+
+	function delete($id)
+	{
+		try
+		{
+			$this->dbh->exec("DELETE FROM playlists WHERE id='$id' AND pl_user_name='$this->username'");
+		}
+		catch(PDOException $e)
+		{
+			echo "ERROR: Deleting playlist \"$id\"\n";
+			echo $e->getMessage();
+			return false;
+		}
+		return true;
+	}
+
+	function put($id, $data)
+	{
+		$columns = array_keys($data);
+		$values = array_values($data);
+		for ($i = 0; $i < count($data); $i++)
+		{
+			$setStr[] = $columns[$i]."=".$values[$i];
+		}
+
+		try
+		{
+			$this->dbh->exec("UPDATE playlists SET ".implode(", ", $setStr)." WHERE id=$id");
+		}
+		catch(PDOException $e)
+		{
+			echo "ERROR: Updating playlist \"$id\"\n";
+			echo $e->getMessage();
+			return false;
+		}
+
+		return true;
+	}
 }
 
 $playlists = new PlaylistsModel($_SESSION['username']);

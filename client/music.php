@@ -14,12 +14,10 @@
 	<input type="hidden" name="SID" id="SID" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
-<div id="dialog" title="Add selected songs to a playlist">
-	<form action="">
-	<fieldset>
+<div id="addToPLDiag" title="Add selected songs to a playlist">
+	<form action="" class="ui-form ui-widget">
 		<label for="tmpPlList">Select a playlist:</label>
-		<select id="tmpPlList"></select>
-	</fieldset>
+		<select id="tmpPlList" class="ui-widget-content ui-corner-all text"></select>
 	</form>
 </div>
 

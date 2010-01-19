@@ -59,7 +59,8 @@
 
 	try
 	{
-		$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+		//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+		$dbh = new PDO($settings->get("dbDSN"));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
 		unset($dbh);

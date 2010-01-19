@@ -5,28 +5,29 @@ $(document).ready(function(){
 
 	$("#artistsList").selectable({
 		stop: function(){
-			var strResult = "";
-			//alert(this.id);
+			var artIDList = "";
 			$(".ui-selected", this).each(function(){
 				//var index = $("#artistsList li").index(this);
-				var art_id = this.id;
-				strResult += art_id + "|";
+				artIDList += this.id + "|";
 			});
 			//alert(strResult);
-			getAlbums(strResult);
+			$("#albumList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
+			postData = "a=albums&artist_id=" + artIDList + "&SID=" + SID;
+			$.get("./server/music.php", postData, displayAlbums, "json");
 		}
 	});
 
 	$("#albumList").selectable({
 		stop: function(){
-			var strResult = "";
-			//alert(this.id);
+			var albIDList = "";
 			$(".ui-selected", this).each(function(){
 				//var index = $("#artistsList li").index(this);
-				strResult += this.id + "|";
+				albIDList += this.id + "|";
 			});
 			//alert(strResult);
-			getSongs(strResult);
+			$("#songList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
+			postData = "a=songs&album_id=" + albIDList + "&SID=" + SID;
+			$.get("./server/music.php", postData, displaySongs, "json");
 		}
 	});
 
@@ -44,17 +45,20 @@ $(document).ready(function(){
 		}*/
 	});
 
-	$("#dialog").dialog({
+	$("#addToPLDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 150,
+		height: 165,
 		modal: true,
 		buttons: {
 			'Add to playlist': function()
 			{
-				pl_name = $("#tmpPlList").val();
-				postData = "a=updPL&name=" + pl_name + "&newC=" + getSelected("#songList") + "&concat=true&SID=" + SID;
-				$.post("./server/pl.php", postData, displayError);
+				var plID = $("#tmpPlList").val();
+				var data = new function(){
+					this.pl_contents = "'" + $("#songList").getAllSelectedItems() + "'";
+				};
+				var postData = "a=put&id=" + plID + "&data=" + escape(JSON.stringify(data)) + "&concat=true&SID=" + SID;
+				$.get("./server/playlists.php", postData, addToPLResponse, 'json');
 				$(this).dialog('close');
 			},
 			'Cancel': function()
@@ -64,6 +68,24 @@ $(document).ready(function(){
 		}
 	});
 });
+
+function getArtists()
+{
+	postData = "a=artists&SID=" + SID;
+	$.get("./server/music.php", postData, displayArtists, "json");
+}
+
+function addToPLResponse(data)
+{
+	if (data.length == 0)
+	{
+		displayError('There was an error adding the selected songs to the playlist.');
+	}
+	else
+	{
+		displayError('The songs were added successfully.');
+	}
+}
 
 /*function setComm()
 {
@@ -146,9 +168,9 @@ function displayAddToPLDiag(savedPLArr)
 	$("#tmpPlList")[0].options.length = 0;
 	for (i = 0; i < savedPLArr.length; i++)
 	{
-		$("#tmpPlList").append("<option value='" + savedPLArr[i] + "'>" + savedPLArr[i] + "</option>");	
+		$("#tmpPlList").append("<option value='" + savedPLArr[i].id + "'>" + savedPLArr[i].name + "</option>");
 	}
-	$("#dialog").dialog('open');
+	$("#addToPLDiag").dialog('open');
 }
 
 function displaySongs(sngArr)
@@ -189,10 +211,27 @@ function displaySongs(sngArr)
 					$("#songList").children().addClass("ui-selected");
 					break;
 				}
-				case "createpl": { createPlaylist(); break;	}
+				case "createpl": {
+					sng = getSelected("#songList");
+					if (sng == "") 
+					{
+						alert("Select some songs first.");
+					}
+					else
+					{
+						plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+						//alert(plName);
+						if (plName != null)
+						{
+							postData = "a=playlists&pl_contents=" + sng + "&pl_name=" + escape(plName) + "&SID=" + SID;
+							$.post("./server/playlists.php", postData, displayError);
+						}
+					}		
+					break;
+				}
 				case "addtopl": {
-					postData = "a=saved&SID=" + SID;
-					$.post("./server/pl.php", postData, displayAddToPLDiag, "json");
+					postData = "a=playlists&SID=" + SID;
+					$.get("./server/playlists.php", postData, displayAddToPLDiag, "json");
 					break;
 				}
 			}//switch
@@ -200,13 +239,6 @@ function displaySongs(sngArr)
 		}//function
 	);
 	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
-}
-
-function getSongs(albIDs)
-{
-	$("#songList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-	postData = "a=songs&album_id=" + albIDs + "&SID=" + SID;
-	$.post("./server/music.php", postData, displaySongs, "json");
 }
 
 function displayAlbums(albArr)
@@ -225,7 +257,7 @@ function displayAlbums(albArr)
 		switch (action)
 		{
 			case "play":
-			case "playrand": 
+			case "playrand":
 			{ 
 				alert("TODO: Implement this. Album: " + $(el).attr('id')); 
 				break; 
@@ -233,14 +265,6 @@ function displayAlbums(albArr)
 		}
 	});
 	//$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
-}
-
-function getAlbums(artIDs)
-{
-	$("#albumList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-	postData = "a=albums&artist_id=" + artIDs + "&SID=" + SID;
-	//alert(postData);
-	$.post("./server/music.php", postData, displayAlbums, "json");
 }
 
 function displayArtists(artArr)
@@ -258,7 +282,7 @@ function displayArtists(artArr)
 		switch (action)
 		{
 			case "play":
-			case "playrand": 
+			case "playrand":
 			{ 
 				alert("TODO: Implement this. Artist: " + $(el).attr('id')); 
 				
@@ -267,12 +291,6 @@ function displayArtists(artArr)
 		}
 	});
 	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
-}
-
-function getArtists()
-{
-	postData = "a=artists&SID=" + SID;
-	$.post("./server/music.php", postData, displayArtists, "json");
 }
 
 function putTotals(data)
@@ -286,23 +304,4 @@ function selRandPlay()
 {
 	$("#rnd").val("true");
 	selPlay();
-}
-
-function createPlaylist()
-{
-	sng = getSelected("#songList");
-	if (sng == "") 
-	{
-		alert("Select some songs first.");
-	}
-	else
-	{
-		plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
-		//alert(plName);
-		if (plName != null)
-		{
-			postData = "a=cpl&content=" + sng + "&pl=" + escape(plName) + "&SID=" + SID;
-			$.post("./server/playlists.php", postData, displayError);
-		}
-	}
 }

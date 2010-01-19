@@ -11,6 +11,7 @@ if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 require_once '../models/artists.php';
 require_once '../models/albums.php';
 require_once '../models/songs.php';
+require_once '../models/playlists.php';
 
 require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();
@@ -34,6 +35,10 @@ $artists->__destruct();
 unset($artists);
 $albums->__destruct();
 unset($albums);
+$songs->__destruct();
+unset($songs);
+$playlists->__destruct();
+unset($playlists);
 
 unset($musicDB);
 unset($usersDB);
@@ -50,7 +55,7 @@ function artists()
 {
 	global $artists;
 	
-	if (isset($_REQUEST["id"]))
+	if (isset($_GET["id"]))
 	{
 		//output infor about the artist wich id is: $_REQUEST["id"]
 	}
@@ -62,7 +67,7 @@ function albums()
 {
 	global $albums;
 
-	if (isset($_REQUEST["id"]))
+	if (isset($_GET["id"]))
 	{
 		//output infor about the artist wich id is: $_REQUEST["id"]
 	}
@@ -80,7 +85,7 @@ function songs()
 {
 	global $songs;
 
-	if (isset($_REQUEST['id']))
+	if (isset($_GET['id']))
 	{
 		//echo information about the song and link for lyrics
 	}
@@ -103,22 +108,9 @@ function search()
 	echo $musicDB->search_json($queryStr); 
 }
 
-function addc()//add a comment to a track
-{
-	$sng = $_REQUEST["sng"];
-	$com = $_REQUEST["com"];
-	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
-	if ($query == 0)
-	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-	
-	sng();
-}
-
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $musicDB, $usersDB, $settings;
+	global $usersDB, $settings, $playlists;
 
 	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
 	$musicURL = $settings->get('baseURL');
@@ -135,10 +127,10 @@ function play()//makes a list of the tracks selected in the sng list
 		$plArr = $usersDB->getPLContents($_SESSION["username"], $name);
 	}
 	//print_r($plArr);
-	/*if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
+	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
 		shuffle($plArr);
 	//print_r($plArr);
-	
+
 	$plFormat = json_decode($usersDB->loadSettings($_SESSION['username'], array("plFormat")), true);
 	if ($plFormat['isError'])
 	{
@@ -147,12 +139,25 @@ function play()//makes a list of the tracks selected in the sng list
 	else
 	{
 		$plFormat = $plFormat['resultStr']['plFormat'];
-		
-		header("Content-type: ".$musicDB->plFormatsMimeTypes[$plFormat]);
+
+		header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
 		header("Content-Disposition: filename=\"$name.$plFormat\"");
 		header("Content-Transfer-Encoding: plain");
-		echo $musicDB->getPlaylist($plFormat, $plArr, $musicURL);
-	}*/
+		echo $playlists->get_file($plFormat, $plArr, $musicURL);
+	}
+}
+
+function addc()//add a comment to a track
+{
+	$sng = $_REQUEST["sng"];
+	$com = $_REQUEST["com"];
+	$dbh = new PDO("sqlite:./db/music.db");
+	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
+	if ($query == 0)
+	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
+	$dbh = null;
+	
+	sng();
 }
 
 ?>

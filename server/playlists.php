@@ -5,19 +5,11 @@ session_start();
 if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
-	exit();	
+	exit();
 }
 
 require_once '../models/playlists.php';
 require_once '../models/songs.php';
-
-require_once '../models/MusicDB.php';
-$musicDB = new MusicDB();
-require_once '../models/MoviesDB.php';
-$moviesDB = new MoviesDB();
-require_once '../models/UsersDB.php';
-$usersDB = new UsersDB();
-
 $action = $_REQUEST["a"];
 
 try
@@ -34,17 +26,19 @@ unset($playlists);
 $songs->__destruct();
 unset($songs);
 
-unset($musicDB);
-unset($usersDB);
-unset($moviesDB);
-
-function playlists()//returns the list of playlists
+function playlists()//returns the list of playlists/the contents of playlist->ID/Create a new playlist
 {
 	global $playlists, $songs;
 
-	if (isset($_REQUEST['id']))
+	if (isset($_POST['pl_name']))
 	{
-		$plContents = $playlists->get($_REQUEST['id']);
+		$pl_name = $_POST["pl_name"];
+		if ($playlists->post($pl_name, $_POST["pl_contents"]))
+			echo "Playlist: \"$pl_name\" was created successfuly, switch to the \"Music Playlists\" tab to play or edit it.";
+	}
+	else if (isset($_GET['id']))
+	{
+		$plContents = $playlists->get($_GET['id']);
 		//print_r($plContents);
 		echo $songs->getInfo_json($plContents, array('song_id', 'song_name'));
 	}
@@ -52,67 +46,50 @@ function playlists()//returns the list of playlists
 		echo $playlists->get_json(null);
 }
 
-function cpl()//creates a playlist
+function delete()//deletes a playlist
 {
-	global $usersDB;
+	global $playlists;
 	
-	$userName = $_SESSION["username"];
-	$plName = $_REQUEST["pl"];
-	$plContent = $_REQUEST["content"];
-	
-	if ($usersDB->createPlaylist($userName, $plName, $plContent))
-		echo "Playlist: \"$plName\" was created successfuly, switch to the \"Music Playlists\" tab to play or edit it."; 
+	if ($playlists->delete($_GET["id"]))
+		echo $playlists->get_json(null);
 }
 
-function updPL()//update pl
+function put()//update playlist
 {
-	global $usersDB;
-	
-	$plName = $_REQUEST["name"];
-	$newContent = $_REQUEST["newC"];
-	$concat = $_REQUEST["concat"];
-	
-	if($usersDB->updatePL($plName, $newContent, $concat))
-		echo "List content updated successfully";
+	global $playlists;
+
+	$id = $_GET['id'];
+	$data = json_decode($_GET["data"], true);
+
+	if (isset($_GET['concat']))
+	{
+		$data['pl_contents'] = "pl_contents || ".$data['pl_contents'];
+	}
+
+	if($playlists->put($id, $data))
+	{
+		if (isset($data['pl_contents']))
+			echo $playlists->get_json($id);
+		else
+			echo $playlists->get_json(null);
+	}
 }
 
-function del()//deletes a playlist
-{
-	global $usersDB;
-	
-	$userName = $_SESSION["username"];
-	$plName = str_replace("'", "''", $_REQUEST["pl"]);
-	//echo $plName;
-	
-	if ($usersDB->deletePL($userName, $plName))
-		echo $usersDB->getPLsForUser_json($_SESSION["username"]);
-}
-
+//TODO: do the shuffle with javascript and use PUT
 function shuf()//shuffles a playlist
 {
-	global $usersDB, $musicDB;
+	global $playlists;
 	
-	$plName = $_REQUEST['pl'];
+	$plID = $_GET["id"];
 	
-	$plContents = $usersDB->getPLContents($_SESSION["username"], $plName);
-	//print_r($plContents);
+	$plContents = $playlists->get($plID);
 	shuffle($plContents);
-	$newContent = implode("|", $plContents)."|";
-	//echo $newContent;
-	
-	if($usersDB->updatePL($plName, $newContent, "false"))
-		echo $musicDB->getPLContents_json($plContents);
-}
+	$data["pl_contents"] = "'".implode("|", $plContents)."|'";
 
-function ren()//rename a saved playlist
-{
-	global $usersDB;
-	
-	$newName = str_replace("'", "''", $_REQUEST["npl"]);
-	$name = str_replace("'", "''", $_REQUEST["pl"]);
-	
-	if ($usersDB->renamePL($name, $newName))
-		echo $usersDB->getPLsForUser_json($_SESSION["username"]);
+	if($playlists->put($plID, $data))
+	{
+		playlists();
+	}
 }
 
 ?>
