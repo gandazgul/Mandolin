@@ -1,6 +1,6 @@
 $(document).ready(function(){
-	//postData = 'a=gett&SID=' + SID;
-	//$.post('./server/music.php', postData, putTotals, 'json');
+	postData = 'a=gett&SID=' + SID;
+	$.get('./server/music.php', postData, putTotals, 'json');
 	getArtists();
 
 	$("#artistsList").selectable({
@@ -87,20 +87,6 @@ function addToPLResponse(data)
 	}
 }
 
-/*function setComm()
-{
-	comm = $("#sngComm").val();
-	alb_id = getSelectedOptions($("#albList")[0]);
-	
-	postData =  "a=addc";
-	postData += "&com=" + comm;
-	postData += "&sng=" + $("#sngID").val();
-	postData += "&alb=" + alb_id;
-	postData += "&SID=" + SID;
-	//alert(postData);
-	$.post("./server/music.php", postData, albOnChange, "json");
-}*/
-
 function procSearchResults(results)
 {
 	displayArtists(results["art"]);
@@ -139,30 +125,6 @@ function search(query, reschedule)
 	}	
 }
 
-function sngOnChange(sng_value)
-{
-	$("#sngComm").val("");
-	$("#sngID").html("");
-	data = eval('('+ sng_value +')');
-	//alert(data[1]);
-	if (data[1] != null) 
-	{
-		$("#sngComm").val(data[1]);
-	}
-	$("#sngID").val(data[0]);
-}
-
-function getSelected(list)
-{
-	selected = $(list + " .ui-selected");
-	result = "";
-	for (i = 0; i < selected.length; i++)
-	{
-		result += selected[i].id + "|";
-	}
-	return result;
-}
-
 function displayAddToPLDiag(savedPLArr)
 {
 	$("#tmpPlList")[0].options.length = 0;
@@ -185,13 +147,14 @@ function displaySongs(sngArr)
 		{menu: 'songsMenu'}, 
 		function(action, el, pos)
 		{
+			sngIDList = $("#songList").getAllSelectedItems();
+			
 			switch (action)
 			{
 				case "playrand":
 				case "play": {
-					sngIDs = getSelected("#songList");
 					//alert(sngIDs);
-					if (sngIDs == "")
+					if (sngIDList == "")
 					{
 						displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
 					}
@@ -201,7 +164,7 @@ function displaySongs(sngArr)
 							$("#rnd").val("true");
 						else
 							$("#rnd").val("false");
-						$("#sng").val(sngIDs);
+						$("#sng").val(sngIDList);
 						$("#SID").val(SID);
 						$("#playForm").get(0).submit();
 					}
@@ -212,18 +175,17 @@ function displaySongs(sngArr)
 					break;
 				}
 				case "createpl": {
-					sng = getSelected("#songList");
-					if (sng == "") 
+					if (sngIDList == "")
 					{
-						alert("Select some songs first.");
+						alert("You must select some tracks to add to the new playlist");
 					}
 					else
 					{
-						plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+						var plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
 						//alert(plName);
 						if (plName != null)
 						{
-							postData = "a=playlists&pl_contents=" + sng + "&pl_name=" + escape(plName) + "&SID=" + SID;
+							postData = "a=playlists&pl_contents=" + sngIDList + "&pl_name=" + escape(plName) + "&SID=" + SID;
 							$.post("./server/playlists.php", postData, displayError);
 						}
 					}		
@@ -296,12 +258,33 @@ function displayArtists(artArr)
 function putTotals(data)
 {
 	$("#artTotal").html(data[0]);
-	$("#albTotal").html(data[1]);
-	$("#sngTotal").html(data[2]);
+	/*$("#albTotal").html(data[1]);
+	$("#sngTotal").html(data[2]);*/
 }
 
-function selRandPlay()
+/*function sngOnChange(sng_value)
 {
-	$("#rnd").val("true");
-	selPlay();
+	$("#sngComm").val("");
+	$("#sngID").html("");
+	data = eval('('+ sng_value +')');
+	//alert(data[1]);
+	if (data[1] != null)
+	{
+		$("#sngComm").val(data[1]);
+	}
+	$("#sngID").val(data[0]);
 }
+
+function setComm()
+{
+	comm = $("#sngComm").val();
+	alb_id = getSelectedOptions($("#albList")[0]);
+
+	postData =  "a=addc";
+	postData += "&com=" + comm;
+	postData += "&sng=" + $("#sngID").val();
+	postData += "&alb=" + alb_id;
+	postData += "&SID=" + SID;
+	//alert(postData);
+	$.post("./server/music.php", postData, albOnChange, "json");
+}*/

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/Settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
 
 class UsersDB 
 {

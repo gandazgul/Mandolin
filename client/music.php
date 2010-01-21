@@ -14,6 +14,7 @@
 	<input type="hidden" name="SID" id="SID" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
+
 <div id="addToPLDiag" title="Add selected songs to a playlist">
 	<form action="" class="ui-form ui-widget">
 		<label for="tmpPlList">Select a playlist:</label>
@@ -39,6 +40,7 @@
 	<li class="delete"><a href="#delete">Delete</a></li-->
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
+
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
 	<form action="" class="ui-form">
@@ -50,7 +52,7 @@
 	<div class="subcolumns">
 		<div class="c25l">
 			<div class="subcl2">
-				<p class="title">Artists:&nbsp;<span id="plTotal"></span></p>
+				<p class="title">Artists:&nbsp;<span id="artTotal"></span></p>
 			</div>
 		</div>
 		<div class="c50l">
