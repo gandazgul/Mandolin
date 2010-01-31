@@ -4,32 +4,37 @@
 
 	if (!isset($_SESSION["id"]) or ($_SESSION["id"] != sha1(session_id())))
 	{
-		include("login.php");
+		$sess_id = "Mandolin";//to fool the security in login.php
+		include("./client/login.php");
 		exit();
 	}
+	
+	$v = $settings->get('version');
 ?>
 <html>
 	<head>
-		<title>Mandolin <?php echo $settings['version']; ?></title>
+		<title>Mandolin <?php echo $v; ?></title>
 	</head>
 	<body>
-		<p>Mandolin <?php echo $settings['version']; ?></p>
-		<div id="plList">
-			<?php
-				$userName = $_SESSION["username"];
-				$resultArr = array();
-				$dbh = new PDO("sqlite:./db/users.db");
-			
-				$query = $dbh->query("SELECT pl_name FROM playlists WHERE `pl_user_name`='$userName'");
-				$queryArr = $query->fetchAll();
-				
-				for($i = 0; $i < count($queryArr); $i++)
-				{
-					echo "<a href='./ls.php?a=play&for=bb&pl=".$queryArr[$i]["pl_name"]."'>".$queryArr[$i]["pl_name"]."</a><br />\n";
-				}
-				
-				$dbh = null;
-			?>
-		</div>
+		<center>
+			<p>Mandolin <?php echo $v; ?></p>
+			<p><img src="./client/images/logo.jpg" alt="Mandolin" /></p>
+			<div id="plList">
+				<?php
+					$userName = $_SESSION["username"];
+					include_once './models/UsersDB.php';
+					$usersDB = new UsersDB("./models/dbfiles/users.db");
+					
+					$resultArr = $usersDB->getPLsForUser($userName);
+					for($i = 0; $i < count($resultArr); $i++)
+					{
+						echo "<a href='./server/music.php?a=play&pl=".$resultArr[$i]."&SID=".$_SESSION["id"]."'>".$resultArr[$i]."</a><br />\n";
+					}
+					
+					$usersDB->__destruct();
+					unset($usersDB);
+				?>
+			</div>
+		</center>
 	</body>
 </html>

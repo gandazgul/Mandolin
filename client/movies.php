@@ -6,16 +6,7 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
-<style type="text/css">
-	#feedback { font-size: 1.4em; }
-	#moviesList .ui-selecting { background: #EDF2F8; }
-	#moviesList .ui-selected { background: #C8DDF3; }
-	#moviesList { list-style-type: none; margin: 0; padding: 0; }
-	#moviesList li { list-style-type: none; margin: 1px 0; padding: 0.3em; font-size: 1.4em; }
-</style>
-
 <script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
-<script type="text/javascript" src="./client/js/movies.js"></script>
 
 <ul id="moviesMenu" class="contextMenu">
 	<li class="ccat"><a href="#changecat">Change Category</a></li>
@@ -24,23 +15,8 @@
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
-<div id="nav">
-	<!-- skiplink anchor: navigation -->
-	<a id="navigation" name="navigation"></a>
-	<div class="hlist">
-		<!-- main navigation: horizontal list -->
-		<ul>
-			<li><a href=".">Music</a></li>
-			<li><a href="./?p=pl">Music Playlists</a></li>
-			<li class="active"><strong>Movies</strong></li>
-			<li><a href="./?p=adm">Aministration</a></li>
-			<li><a href="./?p=about">About</a></li>
-			<li><a href="./client/logout.php">Logout</a></li>
-		</ul>
-	</div>
-</div>
 <div id="teaser">
-	<div id="errorDiv" class="important" style="">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
+	<div id="errorDiv" class="important" style="display: inherit">This is shell to showcase the future movies section, there are no movies in the DB yet.</div>
 	<p>
 		<label for="sQuery" class="title">Type in a movie title: </label>
 		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" />

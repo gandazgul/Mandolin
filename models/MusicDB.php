@@ -1,121 +1,41 @@
 <?php
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
 
-class MusicDB 
+class MusicDB
 {
-	private $dbfilepath;
 	private $dbh;
-	private $sngCount;
-	private $artCount;
-	private $albCount;
 	private $resultArr;
-	
-	function __construct($dbfilepath = "../models/dbfiles/music.db")
+
+	function __construct()
 	{
-		$this->dbfilepath = $dbfilepath;
-		$this->dbh = new PDO("sqlite:$this->dbfilepath");
-		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		global $settings;
+
+		try
+		{
+			//$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh = new PDO($settings->get("dbDSN"));
+			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		catch (PDOException $e)
+		{
+			die($e->getMessage());
+		}
+
+		$this->resultArr = array();
+		$this->resultArr['isError'] = true;
+		$this->resultArr['resultStr'] = "";
 	}
-	
+
 	function __destruct()
 	{
-		$this->dbh = null;
+		unset($this->dbh);
+		unset($this->resultArr);
 	}
-	
-	//----------------------------------------------GET ARTIRSTS------------------------------------------------------------------
-	function getArtists()
-	{
-		$query = $this->dbh->query("SELECT * FROM artists ORDER BY `art_name`");			
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);		
-		$artArr = array();
-		for ($i = 0; $i < count($queryArr); $i++)
-		{
-			$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-		}
-		//print_r($artArr);
-		return $artArr;
-	}
-	
-	function getArtists_json()
-	{
-		
-		return json_encode($this->getArtists());
-	}
-	
-	//----------------------------------------------GET ALBUMS------------------------------------------------------------------	
-	function getAlbums($art_id)
-	{
-		$albArr = array();	
-		$tok = strtok($art_id, "|");
-		while($tok !== false)
-		{
-			$query = $this->dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
-			{
-				$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
-			}
-			$tok = strtok("|");
-		}//from the while
-		
-		return $albArr;
-	}
-	
-	function getAlbums_json($art_id)
-	{
-		return json_encode($this->getAlbums($art_id));
-	}
-	
-	//----------------------------------------------GET SONGS------------------------------------------------------------------
-	function getSongs($alb_id)
-	{
-		$sngArr = array();	
-		$tok = strtok($alb_id, "|");
-		while($tok !== false)
-		{
-			$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
-			{
-				$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
-			}
-			$tok = strtok("|");
-		}//from the while
-		
-		return $sngArr;
-	}
-	
-	function getSongs_json($alb_id)
-	{
-		return json_encode($this->getSongs($alb_id));
-	}
-	
-	function getColumnsFromID($song_id, $columns)
-	{
-		$this->resultArr['isError'] = false;
-		
-		$columns = implode(',', $columns);
-		$queryArr = $this->dbh->query("SELECT $columns FROM music WHERE song_id=$song_id");
-		if (count($queryArr) == 0)
-		{
-			$this->resultArr['isError'] = true;
-			$error = $this->dbh->errorInfo();
-			$this->resultArr['resultStr'] = "ERROR: Couldn't retreive the requested information: ".$error[2];
-		}
-		else
-		{
-			$this->resultArr['resultStr'] = $queryArr;
-		}
-		
-		return $this->resultArr;
-	}
-	
+
 	//-------------------------------------------------------Search-------------------------------------------------------------------------
 	function search_json($queryStr)
 	{
-		$resultArr = array();
+		$this->resultArr['isError'] = false;
 		$queryArr = array();
 		
 		$queries = array();
@@ -142,56 +62,54 @@ class MusicDB
 				{
 					for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
 					{
-						$resultArr[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
+						$this->resultArr['resultStr'][$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
 					}
 				}
 			}
 			else
-				$resultArr[$curSection] = array();
+				$this->resultArr['resultStr'][$curSection] = array();
 		}
 	
 		//print_r($resultArr);
-		return json_encode($resultArr);
+		return json_encode($this->resultArr);
 	}	
 	
 	//-----------------------------------------------------GET TOTALS----------------------------------------------------------------------
 	function getTotals_json()
 	{
+		$this->resultArr['isError'] = false;
 		$queries = array();
 		$queries[] = "SELECT COUNT(art_id) FROM artists";
 		$queries[] = "SELECT COUNT(alb_id) FROM albums";
 		$queries[] = "SELECT COUNT(song_id) FROM music";
 		
-		$resultArr = array();
-		
 		for ($i = 0; $i < 3; $i++)
 		{
 			$query = $this->dbh->query($queries[$i]);
 			$queryArr = $query->fetchAll();
-			$resultArr[] = $queryArr[0][0];		
+			$this->resultArr['resultStr'][] = $queryArr[0][0];
 		}
 		
-		return json_encode($resultArr);
+		return json_encode($this->resultArr);
 	}
 	
 	//------------------------------------------------------------ ADD Folder to DB --------------------------------------------------------
 	function _addToDB($folder, $root_length) 
 	{
-		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "php", "sys", "inf", "dll"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
-		if (substr($folder, -1) != '/')
-		{
-			$folder .= '/';
-		}
-		
+		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "ape"); //m4a and m4b is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
+		if (substr($folder, -1) != '/')	{ $folder .= '/'; }
 		$songStmt = $this->dbh->prepare("INSERT INTO music(song_id, song_path, song_name, song_ext, song_album, song_art) VALUES (:song_id, :song_path, :song_name, :song_ext, :alb_id, :art_id)");
-		$artStmt = $this->dbh->prepare("INSERT INTO artists(art_name) VALUES (?)");
-		$albStmt = $this->dbh->prepare("INSERT INTO albums(alb_name, alb_art_id) VALUES (?, ?)");
+		$artStmt  = $this->dbh->prepare("INSERT INTO artists(art_name) VALUES (?)");
+		$albStmt  = $this->dbh->prepare("INSERT INTO albums(alb_name, alb_art_id) VALUES (?, ?)");
 		
 		//echo $folder;
 		
 		$dirH = opendir($folder);
 		if(!$dirH)
+		{
 			echo ("FATAL ERROR: Can't read the root directory($folder)\n");
+			return false;
+		}
 		else
 		{
 			while (($file = readdir($dirH)) !== false)
@@ -228,20 +146,27 @@ class MusicDB
             				//echo $artist."\n";
 							try
 							{
-								$artStmt->execute(array($artist));
-								$this->artCount++;
-								$query = $this->dbh->query("SELECT count(art_name) FROM artists");
-								$art_id = $query->fetchAll();
-								//print_r($art_id);
-								$art_id = $art_id[0][0] - 1;
-								try
+								$result = $artStmt->execute(array($artist));
+								if ($result == 0)
 								{
-									$albStmt->execute(array('unknown', $art_id));
-									
+									echo "ERROR: Adding artist to DB: $artist<br/> <br /> ";
+									print_r($this->dbh->errorInfo());
+									return false;
 								}
-								catch (PDOException $e)
+								else
 								{
-									exit($e->getMessage());
+									$this->artCount++;
+									$query = $this->dbh->query("SELECT max(art_id) FROM artists");
+									$art_id = $query->fetchAll();
+									//print_r($art_id);
+									$art_id = $art_id[0][0];
+									$result = $albStmt->execute(array('unknown', $art_id));
+									if ($result == 0)
+									{
+										echo "ERROR: Adding unknown album to new artist: $art_id<br/> <br /> ";
+										print_r($this->dbh->errorInfo());
+										return false;
+									}
 								}
 							}
 							catch (PDOException $e)
@@ -256,7 +181,10 @@ class MusicDB
 									$art_id = $art_id[0][0];
 								}
 								else
-									exit($e->getMessage());
+								{
+									echo $e->getMessage();
+									return false;
+								}
 							}
 							$query = $this->dbh->query("SELECT count(alb_name) FROM albums");
 							$alb_id = $query->fetchAll();
@@ -266,52 +194,69 @@ class MusicDB
 
 						if ($album != '')
 						{
-							$album = str_replace("'", "''", $album);
 							//echo $album."\n";
-							//echo "SELECT alb_id FROM albums WHERE `alb_name`='$album' AND `alb_art_id`=$art_id<br />\n";
-							$query = $this->dbh->query("SELECT alb_id FROM albums WHERE `alb_name`='$album' AND `alb_art_id`=$art_id");
-							$alb_id = $query->fetchAll();
+							$getAlbumIDStmt = $this->dbh->prepare("SELECT alb_id FROM albums WHERE alb_name=? AND alb_art_id=?");
+							$getAlbumIDStmt->execute(array($album, $art_id));
+							$alb_id = $getAlbumIDStmt->fetchAll();
 							//print_r($alb_id);
 							if (count($alb_id) == 0)
 							{
-								try
+								$result = $albStmt->execute(array($album, $art_id));
+								if ($result == 0)
 								{
-									$albStmt->execute(array($album, $art_id));
-									$this->albCount++;
-									$query = $this->dbh->query("SELECT count(alb_name) FROM albums");
-									$alb_id = $query->fetchAll();
-									//print_r($alb_id);
-									$alb_id = $alb_id[0][0] - 1;
+									echo "ERROR: Adding album to DB: $album, $art_id<br/> <br /> ";
+									print_r($this->dbh->errorInfo());
+									return false;
 								}
-								catch (PDOException $e)
+								else
 								{
-									exit($e->getMessage());
+									$this->albCount++;
+									$getAlbumIDStmt->execute(array($album, $art_id));
+									$alb_id = $getAlbumIDStmt->fetchAll();
+									if (count($alb_id) == 0)
+									{
+										echo "ERROR: Can't retrieve the album ID for the lastest added album($album)<br />";
+										print_r($this->dbh->errorInfo());
+										return false;
+									}
+									else
+									{
+										$alb_id = $alb_id[0]['alb_id'];
+									}
 								}
 							}
 							else
 							{
-								//print_r($alb_id);
-								$alb_id = $alb_id[0][0];
+								$alb_id = $alb_id[0]['alb_id'];
 							}
+						}
+						else
+						{
+							
 						}
 						
 						$paramArr = array(':song_id' => sha1($folder.$file), ':song_path' => $song_path, 
-											':song_name' => $song_name, ':song_ext' => $song_ext, ':art_id' => $art_id, ':alb_id' => $alb_id);
+								  ':song_name' => $song_name, ':song_ext' => $song_ext, ':art_id' => $art_id, ':alb_id' => $alb_id);
 						//print_r($paramArr);
+						
 						try
 						{
-							$songStmt->execute($paramArr);
-							$this->sngCount++;
-							echo "	<script language=\"javascript\">
-										document.getElementById('sng').innerHTML = $this->sngCount;
-										document.getElementById('art').innerHTML = $this->artCount;
-										document.getElementById('alb').innerHTML = $this->albCount;
-									</script>\n";
+							$result = $songStmt->execute($paramArr);
 						}
-						catch (PDOException $e)
+						catch(PDOException $e)
 						{
 							exit($e->getMessage());
 						}
+						if ($result == 0)
+						{
+							echo "ERROR: Adding song to DB: <br/> <br /> ";
+							print_r($paramArr);
+							echo "<br/><br/>";
+							print_r($this->dbh->errorInfo());
+							return false;
+						}
+						else
+							$this->sngCount++;
 					}//EXT not recognized
 					else
 						continue;
@@ -319,95 +264,40 @@ class MusicDB
 			}//while
 			closedir($dirH);
 		}//opendir
+		
+		/*echo "	<script language=\"javascript\">
+					document.getElementById('sng').innerHTML = $this->sngCount;
+					document.getElementById('art').innerHTML = $this->artCount;
+					document.getElementById('alb').innerHTML = $this->albCount;
+				</script>\n";*/
+		return true;
 	}//function
 
 	function addToDB($folder, $root_length)
 	{
-		if ($folder == "") return;
+		if ($folder == "") return false;
 		
 		$this->sngCount = 0;
 		$this->artCount = 0;
 		$this->albCount = 0;
 		
-		$this->_addToDB($folder, $root_length);
-		
-		echo "<p style='font-size: 16px; color: red; '>DONE</p>";
+		return $this->_addToDB($folder, $root_length);
 	}
-	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------
-	function getPLContents($plArr)
-	{
-		$resultArr = array();
-		
-		$sngStmt = $this->dbh->prepare("SELECT song_name FROM music WHERE `song_id`=?");
-		for ($i = 0; $i < count($plArr); $i++)
-		{
-			$sng_id = $plArr[$i];
-			//echo $sng_id;
-			try	{ $sngStmt->execute(array($sng_id)); } catch(PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $sngStmt->fetchAll();
-			if (count($queryArr) != 0)
-				$resultArr[] = array("id" => $sng_id, "name" => $queryArr[0]["song_name"]);
-		}
-		
-		return $resultArr;
-	}
-	
-	function getPLContents_json($plArr)
-	{
-		return json_encode($this->getPLContents($plArr));
-	}
-	
-	function getXSPFPlaylist($plArr, $forBB, $musicURL)
-	{
-		$result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
-		
-		$sngStmt = $this->dbh->prepare("SELECT song_id, song_name, song_ext FROM music WHERE `song_id`=?");
-		for ($i = 0; $i < count($plArr); $i++)
-		{
-			try
-			{
-				$sngStmt->execute(array($plArr[$i]));
-			}
-			catch (PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $sngStmt->fetchAll();
-			$song_id = $queryArr[0][0];
-			$song_name = $queryArr[0][1];
-			$song_ext = $queryArr[0][2];
-		
-			$result .= "\t\t<track>\n\t\t\t<title>$song_name</title>\n\t\t\t<location>";
 
-			if ($forBB)
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=80&amp;.$song_ext";
-			else
-				$result .= $musicURL."server/stream.php?k=".$_SESSION["key"]."&amp;s=$song_id&amp;b=128&amp;.$song_ext";
-			
-			$result .= "</location>\n\t\t</track>\n";
-		}
-		
-		$result .= "\t</trackList>\n</playlist>";
-		
-		return $result;
-	}
-	
 	//------------------------------------------------------------ Recreate DB --------------------------------------------------------
 	function recreateDB()
-	{
-		unset($this->dbh);
-		unlink($this->dbfilepath);
-		
-		$this->dbh = new PDO("sqlite:".$this->dbfilepath);
-		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		
+	{		
+		$this->dbh->exec("DROP TABLE artists");
+		$this->dbh->exec("DROP TABLE albums");
+		$this->dbh->exec("DROP TABLE music");
+
 		//-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------
 		try
 		{
 			$this->dbh->exec("CREATE TABLE artists (
 			  art_id    integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
 			  art_name  varchar(60) NOT NULL UNIQUE
-			);
-			
+			);			
 			CREATE TRIGGER artists_au_fkr_albums
 			  AFTER UPDATE OF art_id
 			  ON artists

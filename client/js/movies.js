@@ -72,7 +72,8 @@ function displayMovies(movArr)
 		$(this).click(function(){
 			$(this).parent().children().removeClass("ui-selected");
 			$(this).addClass("ui-selected");
-
+			
+			$("#movieContainer").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 			postData = "a=playmov&id=" + $(this).get(0).id + "&SID=" + SID;
 			$.post("./server/movies.php", postData, embedTheMovie);			
 		});
@@ -81,6 +82,7 @@ function displayMovies(movArr)
 
 function getMovies()
 {
+	$("#moviesList").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 	postData = "a=mov&SID=" + SID;
 	$.post("./server/movies.php", postData, displayMovies, "json");
 }

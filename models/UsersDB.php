@@ -1,15 +1,25 @@
 <?php
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
+
 class UsersDB 
 {
-	private $dbfilepath;
 	private $dbh;
 	private $resultArr;
 	
-	function __construct($dbfilepath = "../models/dbfiles/users.db")
+	function __construct()
 	{
-		$this->dbfilepath = $dbfilepath;
-		$this->dbh = new PDO("sqlite:$this->dbfilepath");
-		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		global $settings;
+		
+		try
+		{
+			//$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+			$this->dbh = new PDO($settings->get("dbDSN"));
+			$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		catch (PDOException $e)
+		{
+			die($e->getMessage());
+		}
 		
 		$this->resultArr = array();
 		$this->resultArr["isError"] = false;
@@ -84,13 +94,13 @@ class UsersDB
 			
 			$this->resultArr["resultStr"] = "<tr id='tr$id'>";
 			$this->resultArr["resultStr"] .= "<td><span id='userName$id'>$user_name</span></td>";
-			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' /><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><input type='password' id='passw$id' class='ui-widget-content ui-corner-all textNoMargin' /><span></span></td>";
 			if ($user_adm_level)
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
 			else
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-			$this->resultArr["resultStr"] .= "<td><div class='type-button' style='margin: 0; '><input type='button' value='Save' onclick=\"saveUser('$id')\" />&nbsp;";
-			$this->resultArr["resultStr"] .= "<input type='button' onclick=\"_delUser('$id')\" value='Delete' /></div><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><button type='button' onclick=\"saveUser('$id')\" class='ui-state-default ui-corner-all'>Save</button>&nbsp;";
+			$this->resultArr["resultStr"] .= "<button type='button' onclick=\"_delUser('$id')\" class='ui-state-default ui-corner-all'>Delete</button><span></span></td>";
 			$this->resultArr["resultStr"] .=  "</tr>";
 		}
 		
@@ -166,123 +176,96 @@ class UsersDB
 	
 	function isAdmin($userName)
 	{
-		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE `user_name`='$userName'");
+		$query = $this->dbh->query("SELECT user_admin_level FROM users WHERE user_name='$userName'");
 		$queryArr = $query->fetchAll();
-	    
+	    //echo "Admin level: ".$queryArr[0]['user_admin_level'];
 		return ($queryArr[0]['user_admin_level'] == '1');
 	}
 	
-	//------------------------------------------------------------ Retrieve Playlists --------------------------------------------------------
-	function getPLContents($userName, $plNames)
+	function saveSettings($userName, $data)
 	{
-		$resultArr = array();
-		$plStmt = $this->dbh->prepare("SELECT pl_contents FROM playlists WHERE pl_user_name='$userName' AND pl_name=?");
-		
-		$pl = strtok($plNames, "|");
-		while($pl !== false)
+		if ($data == "")
 		{
-			//print_r(array($userName, $pl));
-			try
+			$this->resultArr['isError'] = true;
+			$this->resultArr['resultStr'] = "WARNING: You provided no settings to save";
+		}
+		else
+		{
+			$this->resultArr['isError'] = false;
+			$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
+			$queryArr = $queryArr->fetchAll();
+			if (count($queryArr) == 0)
 			{
-				$plStmt->execute(array($pl));
+				$this->resultArr['isError'] = true;
+				$error = $this->dbh->errorInfo();
+				$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
 			}
-			catch(PDOException $e) { exit($e->getMessage()); }
-			
-			$queryArr = $plStmt->fetchAll();
-			if (count($queryArr) != 0)
-			{
-				$resultArr = array_merge($resultArr, explode("|", $queryArr[0]["pl_contents"], -1));
-			}		
-			$pl = strtok("|");
-		}
-		//print_r($resultArr);
-		return $resultArr;
-	}
-	
-	function getPLsForUser_json($userName)
-	{
-		$resultArr = array();
-			
-		$query = $this->dbh->query("SELECT pl_name FROM playlists WHERE `pl_user_name`='$userName'");
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);
-		
-		for($i = 0; $i < count($queryArr); $i++)
-		{
-			//echo $queryArr[$i]["pl_name"]."\n\n";
-			//echo htmlentities($queryArr[$i]["pl_name"])."\n\n";
-			$resultArr[] = htmlentities($queryArr[$i]["pl_name"]);
-		}
-		
-		return json_encode($resultArr);
-	}
-	
-	function renamePL($name, $newNameP)
-	{
-		$newName = str_replace('|', '', $newNameP);
-		try
-		{
-			$this->dbh->exec("UPDATE playlists SET `pl_name`='$newName' WHERE `pl_name`='$name'");
-		}
-		catch(PDOException $e)
-		{
-			echo "ERROR: Renaming playlist \"$name\" to \"$newName\"\n";
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function deletePL($userName, $plName)
-	{
-		try
-		{
-			$this->dbh->exec("DELETE FROM playlists WHERE `pl_name`='$plName' AND `pl_user_name`='$userName'");
-		}
-		catch(PDOException $e)
-		{
-			echo "ERROR: Deleting playlist \"$plName\"\n";
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function updatePL($plName, $newContent, $concat)
-	{
-		try
-		{
-			if ($concat == "true")
-				$this->dbh->exec("UPDATE playlists SET pl_contents=pl_contents || '$newContent' WHERE `pl_name`='$plName'");
-			else
-				$this->dbh->exec("UPDATE playlists SET pl_contents='$newContent' WHERE `pl_name`='$plName'");
-		}
-		catch(PDOException $e)
-		{ 
-			echo $e->getMessage();
-			return false;
-		}
-		return true;
-	}
-	
-	function createPlaylist($userName, $plName, $plContent)
-	{
-		try
-		{
-			$this->dbh->exec("INSERT INTO playlists(pl_name, pl_contents, pl_user_name) VALUES ('$plName', '$plContent', '$userName')");
-		}
-		catch(PDOException $e)
-		{
-			if ($e->getCode() == 23000)
-				echo "Playlist \"$plName\" already exists. Please enter a different name.\n";
 			else
 			{
-				echo "ERROR: Creating the playlist \"$plName\": \n";
-				echo $e->getMessage();
+				$settings = json_decode($queryArr[0]['user_settings'], true);
+				$dataArr = json_decode($data, true);
+				//print_r($dataArr);
+				for ($i = 0; $i < count($dataArr['keys']); $i++)
+				{
+					$settings[$dataArr['keys'][$i]] = $dataArr['values'][$i];
+				}
+				$settings = json_encode($settings);
+				//echo $settings;
+				$result = $this->dbh->exec("UPDATE users SET user_settings='$settings' WHERE user_name='$userName'");
+				if ($result == 0)
+				{
+					$this->resultArr['isError'] = true;
+					$error = $this->dbh->errorInfo();
+					$this->resultArr['resultStr'] = "ERROR: Saving the user settings to the database: ".$error[2];
+				}
+				else
+				{
+					$this->resultArr['resultStr'] = "Settings saved successfully";
+				}
 			}
-			return false;
 		}
-		return true;
+		
+		return json_encode($this->resultArr);
+	}
+	
+	function loadSettings($userName, $keysArr, $key = "")
+	{
+		$this->resultArr['isError'] = false;
+		$this->resultArr['resultStr'] = array();
+		
+		if (($userName == "") and ($key == ""))
+		{
+			$this->resultArr['isError'] = true;
+			$this->resultArr['resultStr'] = "ERROR: Both User name and Key cannot be blank.";
+		}
+		else
+		{		
+			if ($userName == "")
+				$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE last_key='$key'");
+			else
+				$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
+				
+			$queryArr = $queryArr->fetchAll();
+			if (count($queryArr) == 0)
+			{
+				$this->resultArr['isError'] = true;
+				$error = $this->dbh->errorInfo();
+				$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+			}
+			else
+			{
+				$settingsArr = json_decode($queryArr[0]['user_settings'], true);
+				//print_r($settingsArr);
+				for ($i = 0; $i < count($keysArr); $i++)
+				{
+					$key = $keysArr[$i];
+					//echo $key;
+					$this->resultArr['resultStr'][$key] = $settingsArr[$key];
+				}
+			}
+		}
+		
+		return json_encode($this->resultArr);
 	}
 }
 ?>

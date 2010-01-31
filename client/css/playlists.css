@@ -1,0 +1,15 @@
+#plList, #plContents {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+
+#plList li, #plContents li {
+	font-weight: bold;
+	list-style-type: none;
+	margin: 0 0 1px 0;
+	padding: 0.3em;
+}
+
+#plList .ui-selected, #plContents .ui-selected { background: #C8DDF3 none repeat scroll 0 0; }
+#plList .ui-selecting, #plContents .ui-selecting { background: #EDF2F8; }

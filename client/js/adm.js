@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	loadSettings();
+	loadUSettings();
 	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
@@ -51,7 +52,8 @@ $(document).ready(function(){//intialize add user dialog
 	$("#addUserDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
-		height: 280,
+		resizable: false,
+		height: 310,
 		modal: true,
 		buttons: {
 			'Create an account': function() 
@@ -92,13 +94,15 @@ $(document).ready(function(){//intialize add user dialog
 $(document).ready(function(){//add folder dialog init
 	$("#addFolderDiag").dialog({
 		bgiframe: true,
+		resizable: false,
 		autoOpen: false,
-		height: 150,
+		height: 168,
 		modal: true,
 		buttons: {
 			'Add this folder': function() 
 			{
-				postData = "a=checkFolder&f=" + $("#folderName").val() + "&SID=" + SID;
+				$("#loading").show();
+				postData = "a=addFolderToDB&f=" + $("#folderName").val() + "&SID=" + SID;
 				$.post("./server/adm.php", postData, addFolder, 'json');
 				
 				$(this).dialog('close');
@@ -142,6 +146,7 @@ function addFolder(data)
 	}
 	else
 	{
+		$("#loading").hide();
 		$("#musicFoldersList").append("<option>" + data.resultStr + "</option>");
 		folders = new Array();
 		
@@ -153,19 +158,44 @@ function addFolder(data)
 		keys = new Array("musicFolders");
 		values = new Array(JSON.stringify(folders));
 		
-		setObj = new settings(keys, values);	
-		//alert(JSON.stringify(setObj));
+		setObj = new settings(keys, values);
+		alert(JSON.stringify(setObj));
 		postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
 }
 
-function fillOutSettings(data)
+function _loadSettings(data)
 {
 	$(".settings").each(function()
 	{
 		$(this).val(data[$(this)[0].id]);
 	});
+}
+
+function _loadUSettings(data)
+{
+	if (data.isError)
+		displayError(data.resultStr);
+	else
+	{
+		$(".usettings").each(function()
+		{
+			$(this).val(data.resultStr[$(this).attr('id')]);
+		});
+	}
+}
+
+function loadUSettings()
+{
+	keysArr = new Array();
+	$(".usettings").each(function()
+	{
+		keysArr.push($(this)[0].id);
+	});
+	//alert(keysArr[0]);
+	postData = "a=uget&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
+	$.post("./server/adm.php", postData, _loadUSettings, 'json');
 }
 
 function loadSettings()
@@ -177,10 +207,10 @@ function loadSettings()
 	});
 	//alert(keysArr[0]);
 	postData = "a=get&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
-	$.post("./server/adm.php", postData, fillOutSettings, 'json');
+	$.post("./server/adm.php", postData, _loadSettings, 'json');
 }
 
-var settings = function(pKeys, pValues){
+var settings = function(pKeys, pValues, className){
 	this.keys = new Array();
 	this.values = new Array();
 	var thisvar = this;
@@ -195,17 +225,26 @@ var settings = function(pKeys, pValues){
 	}
 	else
 	{
-		$(".settings").each(function()
+		$("." + className).each(function()
 		{
+			//alert($(this)[0].id);
 			thisvar.keys.push($(this)[0].id);
 			thisvar.values.push($(this).val());
 		});
 	}
 };
 
+function saveUSettings()
+{
+	setObj = new settings(null, null, "usettings");	
+	//alert(JSON.stringify(setObj));
+	postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+	$.post("./server/adm.php", postData, displayError);
+}
+
 function saveSettings()
 {
-	setObj = new settings(null, null);	
+	setObj = new settings(null, null, "settings");	
 	//alert(JSON.stringify(setObj));
 	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);

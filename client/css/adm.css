@@ -1,0 +1,11 @@
+table {
+	border-bottom: none;
+	border-top: none;
+	margin-bottom: 0;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+tbody td {
+	border-bottom: none;
+}

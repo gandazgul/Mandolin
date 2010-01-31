@@ -1,14 +1,17 @@
 <?php
-//TODO: add try..catch statements on every $query->fetchAll() to output errorInfo().
-//TODO: covert all this into the DB Class.
 session_name("Mandolin");
 session_start();
-//print_r($_POST);
-if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+//print_r($_REQUEST);
+if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
 	exit();	
 }
+
+require_once '../models/artists.php';
+require_once '../models/albums.php';
+require_once '../models/songs.php';
+require_once '../models/playlists.php';
 
 require_once '../models/MusicDB.php';
 $musicDB = new MusicDB();
@@ -16,8 +19,6 @@ require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
 require_once '../models/UsersDB.php';
 $usersDB = new UsersDB();
-require_once '../models/Settings.php';
-$settings = new Settings();
 
 $action = $_REQUEST["a"];
 
@@ -30,10 +31,18 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
+$artists->__destruct();
+unset($artists);
+$albums->__destruct();
+unset($albums);
+$songs->__destruct();
+unset($songs);
+$playlists->__destruct();
+unset($playlists);
+
 unset($musicDB);
 unset($usersDB);
 unset($moviesDB);
-unset($settings);
 
 function gett()//returns total artists, albums and songs
 {
@@ -42,53 +51,65 @@ function gett()//returns total artists, albums and songs
 	echo $musicDB->getTotals_json();
 }
 
-function art()
+function artists()
 {
-	global $musicDB;
+	global $artists;
 	
-	echo $musicDB->getArtists_json();
+	if (isset($_GET["id"]))
+	{
+		//output infor about the artist wich id is: $_REQUEST["id"]
+	}
+	else
+		echo $artists->get_json();
 }
 
-function alb()
+function albums()
 {
-	global $musicDB;
+	global $albums;
 
-	echo $musicDB->getAlbums_json($_REQUEST["artist"]);
+	if (isset($_GET["id"]))
+	{
+		//output infor about the artist wich id is: $_REQUEST["id"]
+	}
+	else if (isset($_REQUEST["artist_id"]))
+	{
+		echo $albums->get_json($_REQUEST["artist_id"]);
+	}
+	else
+	{
+		//list all albums	
+	}	
 }
 
-function sng()
+function songs()
 {
-	global $musicDB;
-	
-	echo $musicDB->getSongs_json($_REQUEST["alb"]);
+	global $songs;
+
+	if (isset($_GET['id']))
+	{
+		//echo information about the song and link for lyrics
+	}
+	else if (isset($_REQUEST['album_id']))
+	{
+		echo $songs->get_json($_REQUEST["album_id"]);
+	}
+	else
+	{
+		//list all songs in the db
+	}
 }
 
 function search()
 {
 	global $musicDB;
 	
-	$queryStr = $_REQUEST["q"];
-	
-	echo $musicDB->search_json($queryStr); 
-}
-
-function addc()//add a comment to a track
-{
-	$sng = $_REQUEST["sng"];
-	$com = $_REQUEST["com"];
-	$dbh = new PDO("sqlite:./db/music.db");
-	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
-	if ($query == 0)
-	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
-	$dbh = null;
-	
-	sng();
+	echo $musicDB->search_json($_GET["q"]);
 }
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $settings, $musicDB, $usersDB;
-	
+	global $usersDB, $settings, $playlists;
+
 	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
 	$musicURL = $settings->get('baseURL');
 	if (substr($musicURL, -1) != "/")
@@ -104,16 +125,37 @@ function play()//makes a list of the tracks selected in the sng list
 		$plArr = $usersDB->getPLContents($_SESSION["username"], $name);
 	}
 	//print_r($plArr);
-	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true")) 
+	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
 		shuffle($plArr);
 	//print_r($plArr);
+
+	$plFormat = json_decode($usersDB->loadSettings($_SESSION['username'], array("plFormat")), true);
+	if ($plFormat['isError'])
+	{
+		echo $plFormat['resultStr'];
+	}
+	else
+	{
+		$plFormat = $plFormat['resultStr']['plFormat'];
+
+		header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
+		header("Content-Disposition: filename=\"$name.$plFormat\"");
+		header("Content-Transfer-Encoding: plain");
+		echo $playlists->get_file($plFormat, $plArr, $musicURL);
+	}
+}
+
+function addc()//add a comment to a track
+{
+	$sng = $_REQUEST["sng"];
+	$com = $_REQUEST["com"];
+	$dbh = new PDO("sqlite:./db/music.db");
+	$query = $dbh->exec("UPDATE music SET `song_comments`='$com' WHERE `song_id`='$sng'");
+	if ($query == 0)
+	  echo "ERROR: Updating song entry: $sng to add comments: $com".implode(" ", $dbh->errorInfo());
+	$dbh = null;
 	
-	$forBB = (isset($_REQUEST['for']) and ($_REQUEST['for'] == 'bb'));
-	
-	header("Content-type: application/xspf+xml");
-	header("Content-Disposition: filename=\"$name.xspf\"");
-	header("Content-Transfer-Encoding: plain");
-	echo $musicDB->getXSPFPlaylist($plArr, $forBB, $musicURL);
+	sng();
 }
 
 ?>

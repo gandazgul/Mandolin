@@ -51,19 +51,22 @@
 	} 
 
 	require_once './models/Settings.php';
-	$settings = new Settings("./models/dbfiles/settings.json");
-	$p = $settings->get("mainPage");
-	$page = "./client/$p.php";
-	if (!file_exists($page))
+	$mainPage = $settings->get("mainPage");
+	if (!file_exists("./client/$mainPage.php"))
 	{
-		exit("FATAL ERROR: The page configured in the settings as main ($p) doesnt exist, plase correct this before using the application. Default Value: music");
+		exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
 	}
-	
-	if($mobile_browser > 0) 
+
+	try
 	{
-	   include('index_mobi.php');
+		//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+		$dbh = new PDO($settings->get("dbDSN"));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
+		unset($dbh);
 	}
-	else {
-	   include('index_pc.php');
+	catch (PDOException $e)
+	{
+		die($e->getMessage());
 	}
 ?>
