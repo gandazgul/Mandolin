@@ -1,6 +1,5 @@
 $(document).ready(function(){
-	postData = 'a=gett&SID=' + SID;
-	$.get('./server/music.php', postData, putTotals, 'json');
+	$.getJSON('./server/music.php', 'a=gett&SID=' + SID, putTotals);
 	getArtists();
 
 	$("#artistsList").selectable({
@@ -69,6 +68,18 @@ $(document).ready(function(){
 	});
 });
 
+function putTotals(data)
+{
+	if (data.isError)
+	{}
+	else
+	{
+		$("#artTotal").html(data.resultStr[0]);
+		/*$("#albTotal").html(data[1]);
+		$("#sngTotal").html(data[2]);*/
+	}
+}
+
 function getArtists()
 {
 	postData = "a=artists&SID=" + SID;
@@ -89,9 +100,14 @@ function addToPLResponse(data)
 
 function procSearchResults(results)
 {
-	displayArtists(results["art"]);
-	displayAlbums(results["alb"]);
-	displaySongs(results["sng"]);
+	if (results.isError)
+	{}
+	else
+	{
+		displayArtists(results['resultStr']["art"]);
+		displayAlbums(results['resultStr']["alb"]);
+		displaySongs(results['resultStr']["sng"]);
+	}
 }
 
 function queryDB(query)
@@ -105,7 +121,7 @@ function queryDB(query)
 		return;
 	}
 	postData = "a=search&q=" + query + "&SID=" + SID;
-	$.post("./server/music.php", postData, procSearchResults, "json");
+	$.getJSON("./server/music.php", postData, procSearchResults);
 }
 
 var srchTimerID;
@@ -253,13 +269,6 @@ function displayArtists(artArr)
 		}
 	});
 	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
-}
-
-function putTotals(data)
-{
-	$("#artTotal").html(data[0]);
-	/*$("#albTotal").html(data[1]);
-	$("#sngTotal").html(data[2]);*/
 }
 
 /*function sngOnChange(sng_value)

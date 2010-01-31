@@ -103,9 +103,7 @@ function search()
 {
 	global $musicDB;
 	
-	$queryStr = $_REQUEST["q"];
-	
-	echo $musicDB->search_json($queryStr); 
+	echo $musicDB->search_json($_GET["q"]);
 }
 
 function play()//makes a list of the tracks selected in the sng list

@@ -6,7 +6,7 @@ class Settings
 
 	function __construct()
 	{
-		$this->dbfilepath = str_replace("models", "data/", dirname(__FILE__) . DIRECTORY_SEPARATOR);
+		$this->dbfilepath = str_replace("models", "data", dirname(__FILE__) . DIRECTORY_SEPARATOR);
 		$this->dbfilepath .= "settings.json";
 		//echo $settingsFile;
 		$this->dbh = json_decode(file_get_contents($this->dbfilepath), true);
