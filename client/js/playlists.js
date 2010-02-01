@@ -35,7 +35,7 @@ function displaySavedPL(savedPLArr)
 			{
 				case "playrand":
 				case "play": {
-					var plIDList = $("#plList").getAllSelectedItems();
+					/*var plIDList = $("#plList").getAllSelectedItems();
 					//alert(plName);
 					if (plIDList == "")
 					{
@@ -50,7 +50,8 @@ function displaySavedPL(savedPLArr)
 						$("#pl_or_sng").attr('name', 'pl').val(plIDList);
 						$("#SID").val(SID);
 						$("#downForm").get(0).submit();
-					}
+					}*/
+					alert("TODO: Implement this");
 					break;
 				}
 				case "rename": {
