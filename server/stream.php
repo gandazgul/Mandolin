@@ -48,9 +48,9 @@ if ($resultArr['isError'])
 else
 {
 	//print_r($resultArr['resultStr']);
-	$song_path = $resultArr['resultStr'][0]['song_path'];
-	$song_name = $resultArr['resultStr'][0]['song_name'];
-	$ext = $resultArr['resultStr'][0]['song_ext'];
+	$song_path = $resultArr['resultStr'][0][0]['song_path'];
+	$song_name = $resultArr['resultStr'][0][0]['song_name'];
+	$ext = $resultArr['resultStr'][0][0]['song_ext'];
 }
 $songs->__destruct();
 unset($songs);

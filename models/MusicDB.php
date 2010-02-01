@@ -22,7 +22,7 @@ class MusicDB
 		}
 
 		$this->resultArr = array();
-		$this->resultArr['isError'] = false;
+		$this->resultArr['isError'] = true;
 		$this->resultArr['resultStr'] = "";
 	}
 
@@ -35,7 +35,7 @@ class MusicDB
 	//-------------------------------------------------------Search-------------------------------------------------------------------------
 	function search_json($queryStr)
 	{
-		$resultArr = array();
+		$this->resultArr['isError'] = false;
 		$queryArr = array();
 		
 		$queries = array();
@@ -62,46 +62,45 @@ class MusicDB
 				{
 					for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
 					{
-						$resultArr[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
+						$this->resultArr['resultStr'][$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
 					}
 				}
 			}
 			else
-				$resultArr[$curSection] = array();
+				$this->resultArr['resultStr'][$curSection] = array();
 		}
 	
 		//print_r($resultArr);
-		return json_encode($resultArr);
+		return json_encode($this->resultArr);
 	}	
 	
 	//-----------------------------------------------------GET TOTALS----------------------------------------------------------------------
 	function getTotals_json()
 	{
+		$this->resultArr['isError'] = false;
 		$queries = array();
 		$queries[] = "SELECT COUNT(art_id) FROM artists";
 		$queries[] = "SELECT COUNT(alb_id) FROM albums";
 		$queries[] = "SELECT COUNT(song_id) FROM music";
 		
-		$resultArr = array();
-		
 		for ($i = 0; $i < 3; $i++)
 		{
 			$query = $this->dbh->query($queries[$i]);
 			$queryArr = $query->fetchAll();
-			$resultArr[] = $queryArr[0][0];		
+			$this->resultArr['resultStr'][] = $queryArr[0][0];
 		}
 		
-		return json_encode($resultArr);
+		return json_encode($this->resultArr);
 	}
 	
 	//------------------------------------------------------------ ADD Folder to DB --------------------------------------------------------
 	function _addToDB($folder, $root_length) 
 	{
-		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "ape", "php", "sys", "inf", "dll"); //m4a is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
+		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "ape"); //m4a and m4b is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
 		if (substr($folder, -1) != '/')	{ $folder .= '/'; }
 		$songStmt = $this->dbh->prepare("INSERT INTO music(song_id, song_path, song_name, song_ext, song_album, song_art) VALUES (:song_id, :song_path, :song_name, :song_ext, :alb_id, :art_id)");
-		$artStmt = $this->dbh->prepare("INSERT INTO artists(art_name) VALUES (?)");
-		$albStmt = $this->dbh->prepare("INSERT INTO albums(alb_name, alb_art_id) VALUES (?, ?)");
+		$artStmt  = $this->dbh->prepare("INSERT INTO artists(art_name) VALUES (?)");
+		$albStmt  = $this->dbh->prepare("INSERT INTO albums(alb_name, alb_art_id) VALUES (?, ?)");
 		
 		//echo $folder;
 		
@@ -266,11 +265,11 @@ class MusicDB
 			closedir($dirH);
 		}//opendir
 		
-		echo "	<script language=\"javascript\">
+		/*echo "	<script language=\"javascript\">
 					document.getElementById('sng').innerHTML = $this->sngCount;
 					document.getElementById('art').innerHTML = $this->artCount;
 					document.getElementById('alb').innerHTML = $this->albCount;
-				</script>\n";
+				</script>\n";*/
 		return true;
 	}//function
 
@@ -287,13 +286,11 @@ class MusicDB
 
 	//------------------------------------------------------------ Recreate DB --------------------------------------------------------
 	function recreateDB()
-	{
-		unset($this->dbh);
-		unlink($this->dbfilepath);
-		
-		$this->dbh = new PDO("sqlite:".$this->dbfilepath);
-		$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		
+	{		
+		$this->dbh->exec("DROP TABLE artists");
+		$this->dbh->exec("DROP TABLE albums");
+		$this->dbh->exec("DROP TABLE music");
+
 		//-------------------------------------------------TABLE ARTISTS DEFINITION------------------------------
 		try
 		{

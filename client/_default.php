@@ -97,6 +97,8 @@ class CDefault //extends CController
 
 	function createDB()
 	{
+		global $settings;
+		
 		if ($_SESSION['userAdminLevel'] != 1)
 		{
 			logout();
@@ -125,7 +127,9 @@ class CDefault //extends CController
 				</ul></li>
 				<li>-------------------------------------------</li>
 				<?php
+					//echo $settings->get("musicFolders");
 					$folderArr = json_decode($settings->get("musicFolders"), true);
+					//print_r($folderArr);
 					for ($i = 0; $i < count($folderArr); $i++)
 					{
 						$curFolder = $folderArr[$i];

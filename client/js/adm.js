@@ -158,8 +158,8 @@ function addFolder(data)
 		keys = new Array("musicFolders");
 		values = new Array(JSON.stringify(folders));
 		
-		setObj = new settings(keys, values);	
-		//alert(JSON.stringify(setObj));
+		setObj = new settings(keys, values);
+		alert(JSON.stringify(setObj));
 		postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
