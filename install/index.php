@@ -1,10 +1,7 @@
 <?php
-$usersDB = "../db/users.db";//sqlite
-$setFile = "../settings";
-
-$settings = json_decode(file_get_contents($setFile), true); 
-
 $sess_id = "to fool createDB";
+require_once '../models/Settings.php';
+
 
 $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 ?>
@@ -23,8 +20,8 @@ $step = ($_GET["step"] == "") ? 1 : $_GET["step"];
 			return false;
 		}
 	</script>
-	<div style="float: top" align="center">
-		Thanks for downloading SCTree Mandolin v<?php echo $settings["version"] ?><br />
+	<div align="center">
+		Thanks for downloading SCTree Mandolin v<?php echo $settings->get("version") ?><br />
 		Installation - Step <?php echo $step; ?>
 	</div><br />
 <?php

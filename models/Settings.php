@@ -8,7 +8,20 @@ class Settings
 	{
 		$this->dbfilepath = str_replace("models", "data", dirname(__FILE__) . DIRECTORY_SEPARATOR);
 		$this->dbfilepath .= "settings.json";
-		//echo $settingsFile;
+
+		if (file_exists($this->dbfilepath) and is_file($this->dbfilepath))
+		{
+			for ($i = 0; $i < 2; $i++){	if (!is_writable($this->dbfilepath)){ @chmod($file, 660); }else{ $error = false; break; } }
+			if ($error)
+				die("<font color='red'>Settings file not writable! Please make sure the file \"settings\" can be written
+				 by the webserver but, only during the installation. When the installation ends it should be back to normal permissions.</font><br>");
+		}
+		else
+		{
+			if(fclose(fopen($this->dbfilepath)) === false)
+				die("<font color='red'>Settings file does not exist and I cant create it. Please create an empty file called \"settings\".</font><br>");
+		}
+
 		$this->dbh = json_decode(file_get_contents($this->dbfilepath), true);
 	}
 	

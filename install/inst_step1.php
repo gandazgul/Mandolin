@@ -8,16 +8,13 @@
 		<?php
 			$fatal = false;
 			// Let's check the PHP Version
-			if (phpversion() < 4.2)
+			if (phpversion() < 4.3)
 			{
-				echo '<font color="red">4.2+ required, '. phpversion(). ' found - fatal error!</font>';
-				?>
-				&nbsp; <a class="helpbox2" href="javascript:void(0);" onmouseover="return overlib('<?php echo $php_version_error; ?>');" onmouseout="return nd();">?</a>
-				<?php
+				echo '<font color="red">4.3+ required, '. phpversion(). ' found - fatal error!</font>';
 				$fatal = true;
-			} else {
-				echo ' <font color="green">'. phpversion(). ' found (4.2 or higher required)</font>';
 			}
+			else
+				echo ' <font color="green">'. phpversion(). ' found (4.3 or higher required)</font>';
 		?>
 	</td>
   </tr>
@@ -25,15 +22,11 @@
     <td>PHP Session Support</td>
     <td>
 		<?php
-			$fatal = false;
 			$jz_sess_test_var = 2;
 			$jz_sess_test_var = $_SESSION['jz_sess_test'] + 1;
 			if (!function_exists('session_name') or $jz_sess_test_var <> 1)
 			{
 				echo '<font color="red">PHP Session Support not found/functioning - fatal!</font>';
-				?>
-				&nbsp; <a class="helpbox2" href="javascript:void(0);" onmouseover="return overlib('<?php echo $php_session_error; ?>');" onmouseout="return nd();">?</a>
-				<?php
 				$fatal = true;
 			} 
 			else 
@@ -48,112 +41,38 @@
     <td>			
 		<?php
 			// Now let's check for GD support
-			if (function_exists("sqlite_query")) 
-			{
-			  $pg = true;
-			} 
-			else 
-			{
-			  $pg = false;
-			}
-			if (!$pg)
-			{
-				echo '<font color="orange">Not found - only necessary if you want to use SQLite.</font>';
-			}
+			if (function_exists("sqlite_query"))
+				echo '<font color="green">SQLite Support found!</font>';
 			else
 			{
-				echo '<font color="green">SQLite Support found!</font>';
+				$fatal = true;
+				echo '<font color="orange">Not found</font>';
 			}
 		?>
-	</td>
-  </tr>
-  <tr>
-    <td>PHP Register Globals</td>
-    <td>
-		<?php
-			// Now let's check for GD support
-			if (ini_get('register_globals') == "1")
-			{
-				echo '<font color="red">On - <strong>HUGE Possible Security Risk</strong></font>';
-			} 
-			else 
-			{
-				echo '<font color="green">Off</font>';
-			}
-		?>	
 	</td>
   </tr>
   <tr>
   	<td colspan="2"><br><strong>Checking Permissions</strong><br><br>
   </tr>
   <tr>
-    <td>Settings</td>
+    <td>Data directory (./data)</td>
     <td>
 		<?php
-			// Now let's check to see if things are writeable
-			$file = "../settings";
-			$error = true;
-			if (file_exists($file) and is_file($file))
+			$dataDir = "../data";
+			$error = false;
+			if (file_exists($dataDir) and is_dir($dataDir))
 			{
-				for ($i = 0; $i < 2; $i++)
-				{
-					if (!is_writable($file))
-					{
-						@chmod($file, 660);
-					}
-					else
-					{
-						$error = false;
-						break;						
-					}
-				}
-				if ($error)
-					echo "<font color='red'>Settings file not writable! Please make sure the file \"settings\" can be written 
-					 by the webserver but, only during the installation. When the installation ends it should be back to normal permissions.</font><br>";
+				if (is_writable($dataDir))
+					echo '<font color="green">this dir is writable</font><br>';
+				else
+					$error = true;
 			}
 			else
-			{
-				if(fclose(fopen("settings")) === true)
-					$error = false;
-				else
-					echo "<font color='red'>Settings file does not exist and I cant create it. Please create an empty file called \"settings\".</font><br>";
-			}
-			if (!$error)
-				echo '<font color="green">Writable!</font><br>';
-		?>	
-	</td>
-  </tr>
-  <tr>
-    <td>Database directory (./db)</td>
-    <td>
-		<?php
-			// Now let's check all the directories
-			$dirs = array("../db");
-			
-			// Now let's test each dir
-			$fileError = false;
-			foreach($dirs as $dir)
-			{
-				$file = $include_path. $dir;
-				if (!is_writable($file))
-				{
-					$fileError = true;
-					echo $file. " - not writable!<br>";
-				}
-			}
-			if ($fileError)
-			{
 				$error = true;
-			}
 			if ($error)
 			{
 				$fatal = true;
-				echo '<font color="red">FATAL ERROR: the database directory is not writable</font>';
-				echo '<br>';
-			} 
-			else 
-			{
-				echo '<font color="green">this dir is writable</font><br>';
+				echo '<font color="red">FATAL ERROR: the database directory is not writable</font><br>';
 			}
 		?>	
 	</td>
@@ -187,10 +106,7 @@
 			else 
 			{
 				echo '<font color="red"><strong>This files are missing: </strong><br />';
-				foreach($missing as $file)
-				{
-					echo $file. "<br />";
-				}
+				foreach($missing as $file) { echo $file. "<br />"; }
 				echo '</font>';
 			}
 		?>	
@@ -260,28 +176,6 @@
 			</tr>
 			<tr>
 				<td width="50%" class="td">
-					post_max_size:
-				</td>
-				<td width="25%" align="center" class="td">
-					<?php
-						if (ini_get('post_max_size') >= 32)
-						{
-							echo '<font color="green">';
-						} 
-						else 
-						{
-							echo '<font color="red">';
-							$recheck = true;
-						}
-						echo ini_get('post_max_size'). "</font><br>\n";
-					?>
-				</td>
-				<td width="25%" align="center" class="td">
-					32M+
-				</td>
-			</tr>
-			<tr>
-				<td width="50%" class="td">
 					file_uploads:
 				</td>
 				<td width="25%" align="center" class="td">
@@ -329,16 +223,20 @@
   </tr>
   <tr>
   	<td>
-		<br>
-		<form action="./index.php" method="post">
-			<input type="submit" value="Recheck" class="submit">
-		</form>
+		<?php if ($recheck): ?>
+			<br>
+			<form action="./index.php" method="post">
+				<input type="submit" value="Recheck" class="submit">
+			</form>
+		<?php endif; ?>
 	</td>
 	<td>
-		<br>
-		<form action="./index.php?step=2" method="post">
-			<input type="submit" value="Continue to Step 2 >" class="submit">
-		</form>		
+		<?php if ($fatal): ?>
+			<br>
+			<form action="./index.php?step=2" method="post">
+				<input type="submit" value="Continue to Step 2 >" class="submit">
+			</form>
+		<?php endif; ?>
 	</td>
   </tr>
 </table>
