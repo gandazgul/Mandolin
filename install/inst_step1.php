@@ -7,6 +7,7 @@
     <td>
 		<?php
 			$fatal = false;
+			$recheck = false;
 			// Let's check the PHP Version
 			if (phpversion() < 4.3)
 			{
@@ -152,13 +153,13 @@
 					300+
 				</td>
 			</tr>
-			<tr>
+			<!--tr>
 				<td width="50%" class="td">
 					memory_limit:
 				</td>
 				<td width="25%" align="center" class="td">
 					<?php
-						if (ini_get('memory_limit') >= 32)
+						/*if (ini_get('memory_limit') >= 32)
 						{
 							echo '<font color="green">';
 						} 
@@ -211,13 +212,13 @@
 							echo '<font color="red">';
 							$recheck = true;
 						}
-						echo ini_get('upload_max_filesize'). "</font><br>\n";
+						echo ini_get('upload_max_filesize'). "</font><br>\n"*/;
 					?>
 				</td>
 				<td width="25%" align="center" class="td">
 					32M+
 				</td>
-			</tr>
+			</tr-->
 		</table>	
 	</td>
   </tr>
@@ -231,7 +232,7 @@
 		<?php endif; ?>
 	</td>
 	<td>
-		<?php if ($fatal): ?>
+		<?php if (!$fatal): ?>
 			<br>
 			<form action="./index.php?step=2" method="post">
 				<input type="submit" value="Continue to Step 2 >" class="submit">

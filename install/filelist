@@ -108,4 +108,4 @@
 ../install/filelist
 ../install/index.php
 ../install/inst_step1.php
-../install/users.db.sql
+../install/mandolin.sql
