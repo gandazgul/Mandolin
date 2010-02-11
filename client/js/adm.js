@@ -6,20 +6,12 @@ $(document).ready(function(){
 
 	$("#userTable").tablesorter({
 		headers: {
-			1: { sorter: false },
-			2: { sorter: false },
-			3: { sorter: false }				
+			1: {sorter: false},
+			2: {sorter: false},
+			3: {sorter: false}				
 		},
 		sortList: [[0,0]]
 	});
-});
-
-$(document).ready(function(){//intialize add user dialog
-	var name = $("#userName"),
-		password = $("#userPassword"),
-		admin = $("#userAdmin"),
-		allFields = $([]).add(name).add(admin).add(password),
-		tips = $("#validateTips");
 
 	function updateTips(t) {
 		tips.text(t).effect("highlight",{},1500);
@@ -48,7 +40,8 @@ $(document).ready(function(){//intialize add user dialog
 		}
 
 	}
-	
+
+	//intialize add user dialog
 	$("#addUserDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
@@ -58,6 +51,12 @@ $(document).ready(function(){//intialize add user dialog
 		buttons: {
 			'Create an account': function() 
 			{
+				var name = $("#userName"),
+				password = $("#userPassword"),
+				admin = $("#userAdmin"),
+				allFields = $([]).add(name).add(admin).add(password),
+				tips = $("#udValidateTips");
+
 				var bValid = true;
 				allFields.removeClass('ui-state-error');
 
@@ -66,18 +65,14 @@ $(document).ready(function(){//intialize add user dialog
 
 				bValid = bValid && checkRegexp(name,/^[a-z]([0-9a-z_])+$/i,"Username may consist of a-z, 0-9, underscores, begin with a letter.");
 				bValid = bValid && checkRegexp(password,/^([0-9a-zA-Z])+$/,"Password field only allow : a-z 0-9");
-				
-				if (bValid) 
+
+				if (bValid)
 				{
-					postData =  "a=addu";
-					postData += "&u=" + name.val();
-					postData += "&p=" + password.val();
-					//alert(admin.attr('checked'));
-					postData += "&adm=" + admin.attr('checked');
-					postData += "&SID=" + SID;
+					var postData =  "a=addu&u=" + name.val() + "&p=" + password.val() + "&adm=" + admin.attr('checked') + "&SID=" + SID;
 					$.post("./server/adm.php", postData, addUser, "json");
 					$(this).dialog('close');
 				}
+				
 			},
 			Cancel: function() 
 			{
@@ -89,9 +84,30 @@ $(document).ready(function(){//intialize add user dialog
 			allFields.val('').removeClass('ui-state-error');
 		}
 	});
-});
 
-$(document).ready(function(){//add folder dialog init
+	//import user dialog init
+	$("#importUsersDlg").dialog({
+		bgiframe: true,
+		resizable: false,
+		autoOpen: false,
+		height: 168,
+		modal: true,
+		buttons: {
+			'Start Import': function()
+			{
+				var postData = "a=";
+				$.post("./server/adm.php", postData, TODO, 'json');
+
+				$(this).dialog('close');
+			},
+			'Cancel': function()
+			{
+				$(this).dialog('close');
+			}
+		}
+	});
+
+	//add folder dialog init
 	$("#addFolderDiag").dialog({
 		bgiframe: true,
 		resizable: false,
@@ -102,7 +118,7 @@ $(document).ready(function(){//add folder dialog init
 			'Add this folder': function() 
 			{
 				$("#loading").show();
-				postData = "a=addFolderToDB&f=" + $("#folderName").val() + "&SID=" + SID;
+				var postData = "a=addFolderToDB&f=" + $("#folderName").val() + "&SID=" + SID;
 				$.post("./server/adm.php", postData, addFolder, 'json');
 				
 				$(this).dialog('close');
@@ -127,13 +143,50 @@ $(document).ready(function(){//add folder dialog init
 		},
 		buttons: {
 			'Yes. I\'m sure': function() {
-				postData = "a=delU&id=" + $(this).dialog('option', 'userID') + "&SID=" + SID;
+				var postData = "a=delU&id=" + $(this).dialog('option', 'userID') + "&SID=" + SID;
 				$.post("./server/adm.php", postData, delUser, 'json');
 				$(this).dialog('close');
 			},
 			Cancel: function() {
 				$(this).dialog('close');
 			}
+		}
+	});
+
+	var button = $('#btnImportUsers'), interval;
+
+	new AjaxUpload(button, {
+		action: './server/adm.php?a=post&SID=' + SID,
+		name: 'usersFile',
+		autoSubmit: true,
+		onSubmit : function(file, ext){
+			// change button text, when user selects file
+			button.text('Uploading');
+
+			// If you want to allow uploading only 1 file at time,
+			// you can disable upload button
+			this.disable();
+
+			// Uploding -> Uploading. -> Uploading...
+			interval = window.setInterval(function(){
+				var text = button.text();
+				if (text.length < 13){
+					button.text(text + '.');
+				} else {
+					button.text('Uploading');
+				}
+			}, 200);
+		},
+		onComplete: function(file, response){
+			button.text('Import CSV User List');
+			window.clearInterval(interval);
+			this.enable();
+
+			usersArr = JSON.parse(response);
+			//create users table. time to practice with a jbst template?
+			alert(usersArr.strResult[0]['user_name']);
+
+			$("#importUsersDlg").dialog('open');
 		}
 	});
 });
@@ -148,19 +201,19 @@ function addFolder(data)
 	{
 		$("#loading").hide();
 		$("#musicFoldersList").append("<option>" + data.resultStr + "</option>");
-		folders = new Array();
+		var folders = new Array();
 		
 		$("#musicFoldersList option").each(function()
 		{
 			folders.push($(this).val());
 		});
 		
-		keys = new Array("musicFolders");
-		values = new Array(JSON.stringify(folders));
+		var keys = new Array("musicFolders");
+		var values = new Array(JSON.stringify(folders));
 		
-		setObj = new settings(keys, values);
+		var setObj = new settings(keys, values);
 		alert(JSON.stringify(setObj));
-		postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+		var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
 }
@@ -188,25 +241,25 @@ function _loadUSettings(data)
 
 function loadUSettings()
 {
-	keysArr = new Array();
+	var keysArr = new Array();
 	$(".usettings").each(function()
 	{
 		keysArr.push($(this)[0].id);
 	});
 	//alert(keysArr[0]);
-	postData = "a=uget&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
+	var postData = "a=uget&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, _loadUSettings, 'json');
 }
 
 function loadSettings()
 {
-	keysArr = new Array();
+	var keysArr = new Array();
 	$(".settings").each(function()
 	{
 		keysArr.push($(this)[0].id);
 	});
 	//alert(keysArr[0]);
-	postData = "a=get&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
+	var postData = "a=get&keys=" + JSON.stringify(keysArr) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, _loadSettings, 'json');
 }
 
@@ -217,7 +270,7 @@ var settings = function(pKeys, pValues, className){
 	
 	if (pKeys && pValues)
 	{
-		for(i = 0; i < pKeys.length; i++)
+		for(var i = 0; i < pKeys.length; i++)
 		{
 			thisvar.keys.push(pKeys[i]);
 			thisvar.values.push(pValues[i]);
@@ -236,17 +289,17 @@ var settings = function(pKeys, pValues, className){
 
 function saveUSettings()
 {
-	setObj = new settings(null, null, "usettings");	
+	var setObj = new settings(null, null, "usettings");
 	//alert(JSON.stringify(setObj));
-	postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+	var postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
 }
 
 function saveSettings()
 {
-	setObj = new settings(null, null, "settings");	
+	var setObj = new settings(null, null, "settings");
 	//alert(JSON.stringify(setObj));
-	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+	var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
 }
 
@@ -257,7 +310,7 @@ function changePassw()
 	else
     if ($("#reNewPassw").val() == $("#newPassw").val())
 	{
-		postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
+		var postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}
 	else
@@ -267,10 +320,7 @@ function changePassw()
 function saveUser(id)
 {
 	//alert($("#passw" + id).val());
-	postData =  "a=saveu";
-	postData += "&id=" + id;
-	postData += "&un=" + $("#userName" + id).html();
-	postData += "&p=" + $("#passw" + id).val();
+	var postData =  "a=saveu&id=" + id + "&un=" + $("#userName" + id).html() + "&p=" + $("#passw" + id).val();
 	postData += "&adm=" + $("#admin" + id).attr('checked');
 	postData += "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
@@ -293,12 +343,13 @@ function addUser(data)
 
 function _addUser()
 {
+	$("#validateTips").html("All form fields are required.");
 	$("#addUserDiag").dialog('open');
 }
 
 function createDB()
 {
-	res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
+	var res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
 	if (res)
 	{
 		document.location = "./?p=createDB";
@@ -307,21 +358,21 @@ function createDB()
 
 function removeFolder()
 {
-	index = $("#musicFoldersList").attr("selectedIndex");
+	var index = $("#musicFoldersList").attr("selectedIndex");
 	$("#musicFoldersList option:eq("+ index +")").remove();
-	folders = new Array();
+	var folders = new Array();
 	
 	$("#musicFoldersList option").each(function()
 	{
 		folders.push($(this).val());
 	});
 	
-	keys = new Array("musicFolders");
-	values = new Array(JSON.stringify(folders));
+	var keys = new Array("musicFolders");
+	var values = new Array(JSON.stringify(folders));
 	
-	setObj = new settings(keys, values);	
+	var setObj = new settings(keys, values);
 	//alert(JSON.stringify(setObj));
-	postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+	var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 	$.post("./server/adm.php", postData, displayError);
 }
 

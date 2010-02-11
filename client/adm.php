@@ -10,6 +10,7 @@
 ?>
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
+<script type="text/javascript" src="./client/js/lib/ajaxupload_min.js"></script>
 
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form action="" class="ui-form ui-widget top">
@@ -18,7 +19,7 @@
 	</form>
 </div>
 <div id="addUserDiag" title="Create new user">
-	<p id="validateTips">All form fields are required.</p>
+	<p id="udValidateTips">All form fields are required.</p>
 	<form class="ui-form ui-widget" action="">
 		<label for="userName">Username</label>
 		<input type="text" name="userName" id="userName" class="text ui-widget-content ui-corner-all" />
@@ -27,6 +28,8 @@
 		<label for="userAdmin">Admin?</label>
 		<input type="checkbox" name="userAdmin" id="userAdmin" class="ui-widget-content ui-corner-all" />
 	</form>
+</div>
+<div id="importUsersDlg" title="Import users">
 </div>
 <div id="delUserConfDialog" title="Delete user">
 	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
@@ -117,6 +120,7 @@
 				</fieldset>
 				<fieldset class="ui-widget-content ui-corner-all top">
 					<button type="button" onclick="_addUser()" class="ui-state-default ui-corner-all">Add User</button>
+					<button type="button" id="btnImportUsers" class="ui-state-default ui-corner-all">Import CSV User List</button>
 				</fieldset>
 			</form>
 		</div>

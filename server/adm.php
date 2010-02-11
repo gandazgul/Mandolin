@@ -2,7 +2,7 @@
 session_name("Mandolin");
 session_start();
 //print_r($_POST);
-if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
+if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
 	exit();	
@@ -12,8 +12,10 @@ require_once("../models/UsersDB.php");
 $usersDB = new UsersDB();
 require_once("../models/MusicDB.php");
 $musicDB = new MusicDB();
+require_once '../models/Settings.php';
+require_once '../server/result.class.php';
 
-$action = $_POST["a"];
+$action = $_REQUEST["a"];
 
 try
 {
@@ -139,6 +141,46 @@ function delU()
 	global $usersDB;
 	
 	echo $usersDB->deleteUser($_POST['id']);
+}
+
+function post()
+{
+	global $settings, $result;
+
+	$uploaddir = $settings->get('baseDir');
+	if ((substr($uploaddir, -1) != '/') and (substr($uploaddir, -1) != '\\'))
+		$uploaddir .= "/";
+	$uploaddir .= "data/";
+	$uploadfile = $uploaddir . basename($_FILES['usersFile']['name']);
+	//$uploadfile = $uploaddir . 'users.csv'; echo $uploadfile;
+	
+	if (move_uploaded_file($_FILES['usersFile']['tmp_name'], $uploadfile))
+	{
+		$fh = fopen($uploadfile, 'r');
+		if ($fh)
+		{
+			$columnsArr = fgetcsv($fh);
+			//print_r($columnsArr);
+			$result->isError = false;
+			$result->strResult = array();
+			//$fieldsArr = array('user_name', 'user_password', 'user_settings', 'user_admin_level');
+			while (!feof($fh))
+			{
+				$result->strResult[] = array_combine($columnsArr, fgetcsv($fh));
+			}
+			fclose($fh);
+		}
+		else
+		{
+			$result->strResult = "ERROR: Couldnt open the uploaded file.";
+		}
+	}
+	else
+	{
+		$result->strResult = "ERROR: File was not uploaded correctly.";
+	}
+
+	echo json_encode($result);
 }
 
 ?>

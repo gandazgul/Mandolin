@@ -56,14 +56,26 @@
 	{
 		exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
 	}
+	else
+	{
+		$p = (isset($_GET["p"])) ? $_GET["p"] : $mainPage;
+	}
 
 	try
 	{
-		//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
-		$dbh = new PDO($settings->get("dbDSN"));
-		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
-		unset($dbh);
+		if (!file_exists("./install/") and !is_dir("./install/"))
+		{
+			//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+			$dbh = new PDO($settings->get("dbDSN"));
+			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
+			unset($dbh);
+		}
+		else
+		{
+			$p = "install";
+			if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
+		}
 	}
 	catch (PDOException $e)
 	{
