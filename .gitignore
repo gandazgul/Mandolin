@@ -1,6 +1,4 @@
 .~lock.*
 ~*
 .tmp*
-.project
-./db/users.db
-pl.xml
+nbproject
