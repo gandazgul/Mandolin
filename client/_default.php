@@ -52,28 +52,24 @@ class CDefault //extends CController
 	}
 
 	function login()
-	{
-		if (is_dir("./install/")):?>
-			<p style="margin-top: 10px" class="title">If this is the first time you access Mandolin, then <a href="./install">click here to install</a>.
-			If you already completed the installation then, delete the "install" directory before trying to login.</p>
-		<?php else: ?>
-			<div id="main">
-				<form action="./?p=checkAuth" method="post" class="ui-form ui-widget">
-					<fieldset class="ui-widget-content ui-corner-all">
-						<legend class="ui-widget-header">Please login</legend>
-						<?php if(isset($_GET["passw"])): ?>
-							<strong class="message">ERROR: Incorrect Username and/or Password</strong>
-						<?php endif; ?>
-						<label for="username">Username:</label>
-						<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
-						<label for="passw">Password:</label>
-						<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
-						<button type="submit" class="ui-state-default ui-corner-all">Login</button>
-					</fieldset>
-				</form>
-			</div>
-		<?php
-		endif;
+	{?>
+		<div id="main">
+			
+			<form action="./?p=checkAuth" method="post" class="ui-form ui-widget">
+				<fieldset class="ui-widget-content ui-corner-all">
+					<legend class="ui-widget-header">Please login</legend>
+					<?php if(isset($_GET["passw"])): ?>
+						<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+					<?php endif; ?>
+					<label for="username">Username:</label>
+					<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
+					<label for="passw">Password:</label>
+					<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
+					<button type="submit" class="ui-state-default ui-corner-all">Login</button>
+				</fieldset>
+			</form>
+		</div>
+	<?php
 	}
 
 	function logout()

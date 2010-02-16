@@ -3,9 +3,11 @@
 	session_start();
 	$sess_id = session_id();
 
-	$p = (isset($_GET["p"])) ? $_GET["p"] : $settings->get("mainPage");
-	if ((!isset($_SESSION["id"]) or !($_SESSION["id"] == sha1($sess_id))) and ($p != "checkAuth"))
-		$p = "login";
+	if ($p != "install")
+	{
+		if ((!isset($_SESSION["id"]) or !($_SESSION["id"] == sha1($sess_id))) and ($p != "checkAuth"))
+			$p = "login";
+	}
 
 	$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";
 ?>
