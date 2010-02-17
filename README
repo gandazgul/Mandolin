@@ -1,0 +1,22 @@
+Thank you for downloading Mandolin.
+
+INSTALL
+
+Mandolin is a web application to use it you need a web server. You will also need PHP 4.3 or later.
+Copy the files you just downloaded to your webserver root directory and follow the steps below.
+
+1 - Rename the install folder from 'install--' to 'install'
+2 - Delete the DB file if is there as it contains dummy data used during development.
+3 - Browse to the aplication and the install script will start, follow the screens to configure the system.
+4 - After the install is complete you want to delete the 'install' folder and follow the last instructions from the install page.
+5 - Add you music library folder in the admin page and you should be all set to use Mandolin.
+
+If you have any questions, suggestions, critiques or wanna help leave me a message in github.
+
+MODIFYING THE CODE
+
+Mandolin is licensed under the GPL v2.
+There is a HACKING file that you should read to understand how the code is setup and what is the logic behind it.
+There is also a TODO file with known problems and things I have planned to do in the near future.
+
+Enjoy!
