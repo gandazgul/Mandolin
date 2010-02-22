@@ -54,7 +54,6 @@ class CDefault //extends CController
 	function login()
 	{?>
 		<div id="main">
-			
 			<form action="./?p=checkAuth" method="post" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
 					<legend class="ui-widget-header">Please login</legend>
