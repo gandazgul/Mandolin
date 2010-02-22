@@ -1,12 +1,22 @@
 @charset "UTF-8";
 /**
- * "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
- * (en) stylesheet for screen layout
- * (de) Stylesheet für das Bildschirm-Layout
+ * This work has been taken from YAML, this file has been modified to be
+ * used by this project only and not as part of the YAML framework.
+ *
+ * Mandolin is licensed under the GPL but this CSS file is licenced, like the original work, under 
+ * Creative Commons - Attribution 2.0 Generic 
+ * (http://creativecommons.org/licenses/by/2.0/)
+ *
+ * YAML: "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) central stylesheet
  *
  * @creator       YAML Builder V1.2b (http://builder.yaml.de)
  * @file          basemod.css
  * @-yaml-minver  3.1
+ *
+ * @file		base.css
+ * @creator		Carlos Ravelo, based on YAML
+ *
  */
 
 @media screen, projection
@@ -24,12 +34,14 @@
 	/* Layout Properties | Layout-Eigenschaften */
 	.page_margins { width: auto;  min-width: 740px; max-width: 90em; background: #fff; }
 	.page { padding: 10px 15px 10px 10px; }
+	.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; }
 	#header { padding: 10px 2em 1em 10px; color: #000; background:#edf2f8 url("../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; }
 	#header div.title { position: absolute; top: 10px; left: 200px }
 	#nav { overflow:hidden; }
 	div.hlist { background-color: #c8ddf3 }
 	#main { margin: 10px 0; background: #fff; }
 	#teaser { clear: both; padding: 0 2em; margin: 10px 0; }
+	#errorDiv { display: none; }
 	#footer { padding: 10px 20px; color:#666; background: #EDF2F8; }
 	#footerHead { background-color: #C8DDF3;  height: 5px; }
 

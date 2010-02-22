@@ -163,7 +163,9 @@
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em; }
   .center { display:block; text-align:center; margin: 0.5em auto; }
   .message { color:#666666; display:block; margin-bottom:0.5em; }
-
+  
+  .title { font-weight: bold; font-size: 10pt; margin-bottom: 0px; }
+  .ulTitle { list-style-image: none; list-style-position: outside; list-style-type: none; margin: 0 0 0 -4px; padding: 0; }
  /**
   * ------------------------------------------------------------------------------------------------- #
   *
@@ -191,6 +193,12 @@
   tbody tr:hover th[scope="row"],
   tbody tr:hover tbody th.sub { background: #f0e8e8; }
   tbody tr:hover td { background: #fff8f8; }
+
+  /*jquery.table.sorter plugin CSS */
+	table.tablesorter { width: 100%; }
+	table.tablesorter thead tr .header { background-image: url(../images/bg.gif); background-repeat: no-repeat;	background-position: center right; cursor: pointer; }
+	table.tablesorter thead tr .headerSortUp { background-image: url(../images/asc.gif); }
+	table.tablesorter thead tr .headerSortDown { background-image: url(../images/desc.gif); }
 
  /**
   * ------------------------------------------------------------------------------------------------- #

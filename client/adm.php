@@ -173,8 +173,8 @@
 					<input type="text" id="keyLastsFor" class="settings ui-widget-content ui-corner-all text" />
 					<label for="lameCMD">Where is LAME located? (Leave blank if you dont want to use it. If you dont install LAME then OGGDEC and FLAC are not needed; also you will have problems streaming, high bitrate mp3/ogg and flac files.) </label>
 					<input type="text" id="lameCMD" class="settings ui-widget-content ui-corner-all text" />
-					<label for="oggdecCMD">Where is OGGDEC located? </label>
-					<input type="text" id="oggdecCMD" class="settings ui-widget-content ui-corner-all text" />
+					<label for="oggCMD">Where is OGGDEC located? </label>
+					<input type="text" id="oggCMD" class="settings ui-widget-content ui-corner-all text" />
 					<label for="flacCMD">Where is FLAC located? </label>
 					<input type="text" id="flacCMD" class="settings ui-widget-content ui-corner-all text" />
 					<!--label for="version">Version: </label>

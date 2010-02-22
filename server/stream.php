@@ -68,11 +68,11 @@ if (!$readfile)
 			break;
 		}
 		case "ogg" : {
-			$oggencCMD = $settings->get('oggencCMD');
-			if ($oggencCMD == "") 
+			$oggCMD = $settings->get('oggCMD');
+			if ($oggCMD == "") 
 				$readfile = true;
 			else
-				$cmd = "$oggencCMD \"$song_path\" -o - | $lameCMD --silent --nores -h -b $bitrate - -";
+				$cmd = "$oggCMD \"$song_path\" -o - | $lameCMD --silent --nores -h -b $bitrate - -";
 			break;
 		}
 		case "flac" : {
