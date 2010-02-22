@@ -5,20 +5,24 @@
 		exit();
 	}
 ?>
-<link type="text/css" rel="stylesheet" href="./client/css/jquery.contextMenu.css" />
-<script type="text/javascript" language="javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
+<link type="text/css" rel="stylesheet" href="./client/css/lib/jquery.contextMenu.css" />
+<script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
 
 <form method="post" action="./server/music.php" id="playForm">
-	<input type="hidden" name="a" value="play" />
-	<input type="hidden" name="sng" id="sng" />
-	<input type="hidden" name="SID" id="SID" />
-	<input type="hidden" name="rnd" id="rnd" value="false" />
+	<div>
+		<input type="hidden" name="a" value="play">
+		<input type="hidden" name="sng" id="sng">
+		<input type="hidden" name="SID" id="SID">
+		<input type="hidden" name="rnd" id="rnd" value="false">
+	</div>
 </form>
 
 <div id="addToPLDiag" title="Add selected songs to a playlist">
 	<form action="" class="ui-form ui-widget">
-		<label for="tmpPlList">Select a playlist:</label>
-		<select id="tmpPlList" class="ui-widget-content ui-corner-all text"></select>
+		<div>
+			<label for="tmpPlList">Select a playlist:</label>
+			<select id="tmpPlList" class="ui-widget-content ui-corner-all text"></select>
+		</div>
 	</form>
 </div>
 
@@ -44,8 +48,10 @@
 <div id="teaser">
 	<div id="errorDiv" class="important"></div>
 	<form action="" class="ui-form">
-		<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
-		<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="side ui-widget-content ui-corner-all" />
+		<div>
+			<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
+			<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="side ui-widget-content ui-corner-all" />
+		</div>
 	</form>
 </div>
 <div id="main">
