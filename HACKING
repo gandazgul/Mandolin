@@ -7,9 +7,13 @@ index_mobi.php - the index file for the mobil version of the application
 /client/js - javascript files (one for each client file e.g. adm.php -> adm.js)
 /client/js/lib - JS libraries used. (jquery and pluggins, JSON)
 /client/css - css files. There is one for each client file e.g. adm.php -> adm.css (this files will contain CSS clases needed only by their
-						client file) and 2 global files:
-	layout.css - widths, heights, floats, position, etc.
+						client file)
+/client/css/lib - css files used by the libraries, (e.g. jqueryUI)
+/client/css/global :
+	base.css - basic page layout and general clasess
 	content.css - colors, fonts, font size, backgrounds, etc
+	mod.ie.css - hacks to make it look right in IE 7
+	nav.slidingdoor.css - css for the navigation
 /client/images - images used within the application
 /client/flash - the flash player - not being used yet
 /client/views - templates used in the system - only one for now, I plan to make it more template driven in the future.
