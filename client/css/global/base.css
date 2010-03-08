@@ -35,7 +35,7 @@
 	.page_margins { width: auto;  min-width: 740px; max-width: 90em; background: #fff; }
 	.page { padding: 10px 15px 10px 10px; }
 	.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; }
-	#header { padding: 10px 2em 1em 10px; color: #000; background:#edf2f8 url("../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; }
+	#header { padding: 10px 2em 1em 10px; color: #000; background:#edf2f8 url("../../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; }
 	#header div.title { position: absolute; top: 10px; left: 200px }
 	#nav { overflow:hidden; }
 	div.hlist { background-color: #c8ddf3 }
@@ -83,7 +83,7 @@
 
 	.page_margins {
 		border: 0 none;
-		background-image:  url(../images/gfxborder/border_left.gif);
+		background-image:  url(../../images/gfxborder/border_left.gif);
 		background-repeat:repeat-y;
 		background-position:left;
 	}
@@ -91,7 +91,7 @@
 	.page {
 		border: 0 none;
 		margin: 0 0 0 5px; padding: 10px 15px 10px 10px;
-		background-image:  url(../images/gfxborder/border_right.gif);
+		background-image:  url(../../images/gfxborder/border_right.gif);
 		background-repeat:repeat-y;
 		background-position:right;
 	}
@@ -102,7 +102,7 @@
 		height: 20px;
 		font-size:0;
 		margin-bottom: -15px;
-		background-image:  url(../images/gfxborder/border_top.gif);
+		background-image:  url(../../images/gfxborder/border_top.gif);
 		background-repeat:repeat-x;
 		background-position:top left;
 	}
@@ -113,7 +113,7 @@
 		height: 20px;
 		margin-top: -15px;
 		font-size:0;
-		background-image:  url(../images/gfxborder/border_bottom.gif);
+		background-image:  url(../../images/gfxborder/border_bottom.gif);
 		background-repeat:repeat-x;
 		background-position:bottom left;
 	}
@@ -123,7 +123,7 @@
 		width: 20px;
 		height: 20px;
 		font-size:0;
-		background-image:  url(../images/gfxborder/corner_tl.gif);
+		background-image:  url(../../images/gfxborder/corner_tl.gif);
 		background-position: top left;
 	}
 
@@ -133,7 +133,7 @@
 		width: 20px;
 		height: 20px;
 		font-size:0;
-		background-image:  url(../images/gfxborder/corner_tr.gif);
+		background-image:  url(../../images/gfxborder/corner_tr.gif);
 		background-position: top right;
 	}
 
@@ -141,7 +141,7 @@
 		float:left;
 		width: 20px;
 		height: 20px;
-		background-image:  url(../images/gfxborder/corner_bl.gif);
+		background-image:  url(../../images/gfxborder/corner_bl.gif);
 		background-position: bottom left;
 	}
 
@@ -150,7 +150,7 @@
 		float:right;
 		width: 20px;
 		height: 20px;
-		background-image:  url(../images/gfxborder/corner_br.gif);
+		background-image:  url(../../images/gfxborder/corner_br.gif);
 		background-position: bottom right;
 	}
 

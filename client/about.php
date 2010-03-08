@@ -12,13 +12,13 @@
 	<p>We try to make <span class="title">Mandolin</span> cross-browser compatible:<br />
 	<ul>
 		<li class="ulTitle">Tested and works fully in:</li>
-		<li>FF3.x, Chrome 3 and 4, Safari for Windows 3.2.2 and 4.0, IE8</li>
+		<li>FF3.x, Chrome 3 and 4, Safari for Windows 3.2.2 and 4.0, IE8, Opera 10.5</li>
 		<li class="ulTitle">Works, but it has some visual problems, not affecting function:</li>
 		<li>IE6 and IE7</li>
 		<li class="ulTitle">Will test in:</li>
 		<li>FF2.x, FF for Mac, Safari for Mac</li>
 		<li class="ulTitle">Backburner:</li>
-		<li>Opera, Netscape, other Browsers</li>
+		<li>Netscape, other Browsers</li>
 	</ul> 
 	<p class="title">Mandolin is hosted @Github. The lastest code is on the branch: master. The last stable release is marked with a tag named after the version, you can download packed tags from Github:<br />
 	<a href="http://github.com/gandazgul/Mandolin">Mandolin at GitHub</a><br />
