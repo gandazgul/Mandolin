@@ -1,10 +1,15 @@
-/* 
-    Document   : main.css
-    Created on : Feb 22, 2010, 5:42:57 PM
-    Author     : gandazgul
-    Description:
-        main.css just imports all others. So the client only needs to worry about this one file.
-*/
+@charset "UTF-8";
+/**
+ *
+ * @description	This file links all other global files. That way each page only has to include this one file.
+ *
+ * @author		Carlos Ravelo
+ * @copyright	Copyright 2010, Carlos Ravelo
+ * @created		03/09/2010
+ * @file		main.css
+ * @version		1.0
+ *
+ */
 
 @import url('./base.css');
 @import url('./content.css');
