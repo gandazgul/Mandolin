@@ -99,8 +99,8 @@ class UsersDB
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
 			else
 				$this->resultArr["resultStr"] .= "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-			$this->resultArr["resultStr"] .= "<td><button type='button' onclick=\"saveUser('$id')\" class='ui-state-default ui-corner-all'>Save</button>&nbsp;";
-			$this->resultArr["resultStr"] .= "<button type='button' onclick=\"_delUser('$id')\" class='ui-state-default ui-corner-all'>Delete</button><span></span></td>";
+			$this->resultArr["resultStr"] .= "<td><button type='button' onclick=\"saveUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Save</button>&nbsp;";
+			$this->resultArr["resultStr"] .= "<button type='button' onclick=\"_delUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Delete</button><span></span></td>";
 			$this->resultArr["resultStr"] .=  "</tr>";
 		}
 		

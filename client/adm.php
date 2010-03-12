@@ -49,7 +49,7 @@
 					<input type="password" id="newPassw" class="text ui-widget-content ui-corner-all" />
 					<label for="oldPassw">Re-Type New password:</label>
 					<input type="password" id="reNewPassw" class="text ui-widget-content ui-corner-all" />
-					<button type="button" onclick="changePassw()" class="ui-state-default ui-corner-all">Change Password</button>
+					<button type="button" onclick="changePassw()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Change Password</button>
 				</fieldset>
 			</form>
 		</div>
@@ -57,7 +57,7 @@
 		<div>
 			<form action="" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-header"> Settings </legend>
+					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Settings </legend>
 					<label for="plFormat">What format do you want your playlists to be? (Default: XSPF) </label>
 					<select id="plFormat" class="usettings ui-widget-content ui-corner-all text">
 						<option value="xspf">XSPF - XML Playlist, www.xspf.org</option>
@@ -77,7 +77,7 @@
 					</select>
 					<!--label for="version">Version: </label>
 					<input type="text" id="version" class="usettings ui-widget-content ui-corner-all" /-->
-					<button type="button" id="btnSaveUSettings" onclick="saveUSettings()" class="ui-state-default ui-corner-all">Save Settings</button>
+					<button type="button" id="btnSaveUSettings" onclick="saveUSettings()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Save Settings</button>
 				</fieldset>
 			</form>
 		</div>
@@ -109,8 +109,8 @@
 								else
 									echo "<td><input type='checkbox' id='admin$id'/><span></span></td>";
 								echo "<td>";
-								echo "<button type='button' onclick=\"saveUser('$id')\" class='ui-state-default ui-corner-all'>Save</button>&nbsp;";
-								echo "<button type='button' onclick=\"_delUser('$id')\" class='ui-state-default ui-corner-all'>Delete</button>";
+								echo "<button type='button' onclick=\"saveUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Save</button>&nbsp;";
+								echo "<button type='button' onclick=\"_delUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Delete</button>";
 								echo "<span></span></td>";
 								echo "</tr>";
 							}
@@ -119,8 +119,8 @@
 					</table>
 				</fieldset>
 				<fieldset class="ui-widget-content ui-corner-all top">
-					<button type="button" onclick="_addUser()" class="ui-state-default ui-corner-all">Add User</button>
-					<button type="button" id="btnImportUsers" class="ui-state-default ui-corner-all">Import CSV User List</button>
+					<button type="button" onclick="_addUser()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Add User</button>
+					<button type="button" id="btnImportUsers"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Import CSV User List</button>
 				</fieldset>
 			</form>
 		</div>
@@ -129,7 +129,7 @@
 			<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
 			<form action="" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-header"> Music Folders </legend>
+					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Music Folders </legend>
 					<div class="subcolumns">
 						<div class="c50l">
 							<div class="subcl0">
@@ -147,9 +147,9 @@
 						</div>
 						<div class="c25l">
 							<div class="subcl1">
-								<button type="button" id="btnNewFolder" onclick="$('#addFolderDiag').dialog('open')" class='ui-state-default ui-corner-all' style="width: 200px;">Add Folder</button><br />
-								<button type="button" id="btnRemoveFolder" onclick="removeFolder()" class='ui-state-default ui-corner-all' style="width: 200px;">Remove Folder</button><br /><br />
-								<button type="button" id="btnRecreateDB" onclick='createDB()' class='ui-state-default ui-corner-all' style="width: 200px;">Recreate Database</button>
+								<button type="button" id="btnNewFolder" onclick="$('#addFolderDiag').dialog('open')" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Add Folder</button><br />
+								<button type="button" id="btnRemoveFolder" onclick="removeFolder()" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Remove Folder</button><br /><br />
+								<button type="button" id="btnRecreateDB" onclick='createDB()' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Recreate Database</button>
 							</div>
 						</div>
 						<div class="c25l">
@@ -165,7 +165,7 @@
 		<div>
 			<form action="" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-header"> Settings </legend>
+					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Settings </legend>
 					
 					<label for="baseURL">Where is Mandolin currently hosted? (URL) </label>
 					<input type="text" id="baseURL" class="settings ui-widget-content ui-corner-all text" />
@@ -179,7 +179,7 @@
 					<input type="text" id="flacCMD" class="settings ui-widget-content ui-corner-all text" />
 					<!--label for="version">Version: </label>
 					<input type="text" id="version" class="settings ui-widget-content ui-corner-all text" /-->
-					<button type="button" id="btnSaveSettings" onclick="saveSettings()" class='ui-state-default ui-corner-all'>Save Settings</button>
+					<button type="button" id="btnSaveSettings" onclick="saveSettings()" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Save Settings</button>
 				</fieldset>
 			</form>
 		</div>

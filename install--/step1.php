@@ -124,7 +124,7 @@
 						{
 							echo '<font color="red">';
 							$recheck = true;
-							$fatal = true;
+							//$fatal = true;
 						}
 						echo $max_execution_time. "</font><br>\n"
 					?>

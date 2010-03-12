@@ -212,7 +212,7 @@ function addFolder(data)
 		var values = new Array(JSON.stringify(folders));
 		
 		var setObj = new settings(keys, values);
-		alert(JSON.stringify(setObj));
+		//alert(JSON.stringify(setObj));
 		var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
 		$.post("./server/adm.php", postData, displayError);
 	}

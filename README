@@ -6,10 +6,11 @@ Mandolin is a web application to use it you need a web server. You will also nee
 Copy the files you just downloaded to your webserver root directory and follow the steps below.
 
 1 - Rename the install folder from 'install--' to 'install'
-2 - Delete the DB file if is there as it contains dummy data used during development.
-3 - Browse to the aplication and the install script will start, follow the screens to configure the system.
-4 - After the install is complete you want to delete the 'install' folder and follow the last instructions from the install page.
-5 - Add you music library folder in the admin page and you should be all set to use Mandolin.
+2 - Delete the data/mandolin.db file if is there as it contains dummy data used during development.
+3 - Set the appropiate permissions for your files on the server. IMPORTANT: the data/ folder and the settings.json file within need to be writable by the user where the webserver runs (for apache is usually www-data)
+4 - Browse to the aplication and the install script will start, follow the screens to configure the system.
+5 - After the install is complete you want to delete the 'install' folder and follow the last instructions from the install page.
+6 - Add you music library folder in the admin page and you should be all set to use Mandolin.
 
 If you have any questions, suggestions, critiques or wanna help leave me a message in github.
 

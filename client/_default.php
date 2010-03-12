@@ -54,17 +54,23 @@ class CDefault //extends CController
 	function login()
 	{?>
 		<div id="main">
-			<form action="./?p=checkAuth" method="post" class="ui-form ui-widget">
-				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-header">Please login</legend>
+			<form action="./?p=checkAuth" method="post" class="ui-form">
+				<fieldset class="ui-widget-content ui-widget-content ui-corner-all">
+					<legend class="ui-widget-content ui-widget-header ui-corner-all">Please login</legend>
 					<?php if(isset($_GET["passw"])): ?>
 						<strong class="message">ERROR: Incorrect Username and/or Password</strong>
 					<?php endif; ?>
-					<label for="username">Username:</label>
-					<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
-					<label for="passw">Password:</label>
-					<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
-					<button type="submit" class="ui-state-default ui-corner-all">Login</button>
+					<p>
+						<label for="username">Username:</label>
+						<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
+					</p>
+					<p>
+						<label for="passw">Password:</label>
+						<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
+					</p>
+					<p>
+						<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Login</button>
+					</p>
 				</fieldset>
 			</form>
 		</div>

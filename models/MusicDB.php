@@ -96,6 +96,7 @@ class MusicDB
 	//------------------------------------------------------------ ADD Folder to DB --------------------------------------------------------
 	function _addToDB($folder, $root_length) 
 	{
+		set_time_limit(600);
 		$extArr = array("mp3", "ogg", "flac", "wma", "mp4", "ape"); //m4a and m4b is itunes witchery. CONVERT YOUR FILES TO OGG. thank you.
 		if (substr($folder, -1) != '/')	{ $folder .= '/'; }
 		$songStmt = $this->dbh->prepare("INSERT INTO music(song_id, song_path, song_name, song_ext, song_album, song_art) VALUES (:song_id, :song_path, :song_name, :song_ext, :alb_id, :art_id)");

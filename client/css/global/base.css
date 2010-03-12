@@ -155,12 +155,15 @@
 	}
 
 	/*JQUERY UI*/
+	.ui-form legend { padding: 0.5em }
+	.ui-form label  { display:inline-block; }
 	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 12px; width: 95%; padding: .3em; }
 	.ui-form input.textNoMargin, .ui-form select.textNoMargin { display: block; width: 95%; padding: .3em; }
 	.ui-form input.side { margin-bottom: 12px; padding: .3em; }
-	.ui-form button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration: none; !important; cursor:pointer; position: relative; text-align: center; }
 	.ui-form fieldset { padding: 0.8em; }
 	.ui-form fieldset.top, .ui-form.top { margin-top: 4px; }
-	.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+
+	/*.ui-form button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration: none !important; cursor:pointer; position: relative; text-align: center; }
+	.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }*/
 
 }

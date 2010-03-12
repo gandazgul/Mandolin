@@ -18,13 +18,13 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="./client/images/logo.ico" />
 		<link href="./client/css/global/main.css" rel="stylesheet" type="text/css" />
-		<link href="./client/css/lib/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css" />
+		<link href="./client/css/lib/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css" />
 		<link href='./client/css/<?php echo $p; ?>.css' rel='stylesheet' type='text/css' />
 		<!--[if IE]>
 		<link href="./client/css/global/mod.ie.css" rel="stylesheet" type="text/css" />
 		<![endif]-->
-		<script type="text/javascript" src="./client/js/lib/jquery-1.3.2.min.js"></script>
-		<script type="text/javascript" src="./client/js/lib/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="./client/js/lib/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="./client/js/lib/jquery-ui-1.8rc3.custom.min.js"></script>
 		<script type="text/javascript"><?php echo "SID = '".sha1(session_id())."';"; ?></script>
 		<script type="text/javascript" src="./client/js/main.js"></script>
 		<script type='text/javascript' src='./client/js/<?php echo $p; ?>.js'></script>
@@ -40,7 +40,7 @@
 					<img alt="Mandolin logo" src="./client/images/logo.jpg" />
 					<div class="title">
 						<h1>Welcome <strong><?php echo $username; ?></strong> to Mandolin v<?php echo $settings->get('version'); ?></h1>
-						<h2><em>"Because music is important"</em></h2>
+						<h2><em>&ldquo;Because music is important&rdquo;</em></h2>
 					</div>
 				</div>
 
