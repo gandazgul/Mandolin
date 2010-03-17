@@ -9,7 +9,7 @@
 	$usersDB = new UsersDB('./models/dbfiles/users.db'); 
 ?>
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="./client/js/lib/json2_mini.js"></script>
+<script type="text/javascript" src="./client/js/lib/json2.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/ajaxupload_min.js"></script>
 
 <div id="addFolderDiag" title="Add a folder to music library">

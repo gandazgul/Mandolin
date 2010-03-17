@@ -70,7 +70,7 @@
 ./client/js/lib/jquery-ui-1.8rc3.custom.min.js
 ./client/js/lib/jquery.contextMenu.js
 ./client/js/lib/jquery.tablesorter.min.js
-./client/js/lib/json2_mini.js
+./client/js/lib/json2.min.js
 ./client/js/main.js
 ./client/js/minmax.js
 ./client/js/movies.js
