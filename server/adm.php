@@ -5,7 +5,7 @@ session_start();
 if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 {
 	header("Location: ..");
-	exit();	
+	exit();
 }
 
 require_once("../models/UsersDB.php");
@@ -126,6 +126,7 @@ function saveu()
 {
 	global $usersDB;
 
+	//print_r($_POST);
 	echo $usersDB->alterUser($_POST['id'], $_POST['un'], $_POST['adm'], $_POST['p']);
 }
 
@@ -166,7 +167,9 @@ function post()
 			//$fieldsArr = array('user_name', 'user_password', 'user_settings', 'user_admin_level');
 			while (!feof($fh))
 			{
-				$result->strResult[] = array_combine($columnsArr, fgetcsv($fh));
+				$csv = fgetcsv($fh);
+				if ($csv != "")
+					$result->strResult[] = array_combine($columnsArr, $csv);
 			}
 			fclose($fh);
 		}

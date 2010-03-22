@@ -11,6 +11,25 @@
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/ajaxupload_min.js"></script>
+<script type="text/javascript" src="./client/js/lib/jquery-jtemplates.min.js"></script>
+<script type="text/javascript">
+	var userData = <?php echo json_encode($usersDB->listUsers()); ?>;
+</script>
+<textarea id="userRow" style="display: none;">
+	<tr id='tr{$T.user_id}'>
+		<td>
+			<input type='checkbox' name='userCheck{$T.user_id}' id='userCheck{$T.user_id}' value='{$T.user_id}' />
+			<span id='userName{$T.user_id}'>{$T.user_name}</span>
+		</td>
+		<td><input type='password' id='passw{$T.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
+		<td><input type='checkbox' id='admin{$T.user_id}' {#if ($T.user_admin_level == 1) || ($T.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
+		<td>
+			<button onclick="saveUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
+			<button onclick="_delUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
+		</td>
+	</tr>
+</textarea>
+
 
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form action="" class="ui-form ui-widget top">
@@ -30,6 +49,20 @@
 	</form>
 </div>
 <div id="importUsersDlg" title="Import users">
+	<table id="userTable" class="tablesorter">
+		<thead><tr>
+			<th scope="col">Username</th>
+			<th scope="col">Password</th>
+			<th scope="col">Admin?</th>
+			<th scope="col">&nbsp;</th>
+		</tr></thead>
+		<tbody id="usersTableBody"></tbody>
+		<textarea id="usersTempl" style="display: none;">
+			{#foreach $T as user}
+				{#include vUserRow root=$T.user}
+			{#/for}
+		</textarea>
+	</table>
 </div>
 <div id="delUserConfDialog" title="Delete user">
 	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
@@ -93,34 +126,17 @@
 							<th scope="col">Admin?</th>
 							<th scope="col">&nbsp;</th>
 						</tr></thead>
-						<tbody>
-						<?php
-							$uArr = $usersDB->listUsers();
-						
-							for ($i = 0; $i < count($uArr); $i++)
-							{
-								$id = $uArr[$i]["user_id"];
-								echo "<tr id='tr$id'>";
-								//echo "<td><input type='checkbox' name='userCheck$id' id='userCheck$id' value='$id' />";
-								echo "<td><span id='userName$id'>".$uArr[$i]["user_name"]."</span></td>";
-								echo "<td><input type='password' id='passw$id' class='ui-widget-content ui-corner-all textNoMargin' /><span></span></td>";
-								if ($uArr[$i]["user_admin_level"] == 1)
-									echo "<td><input type='checkbox' id='admin$id' checked='checked' /><span></span></td>";
-								else
-									echo "<td><input type='checkbox' id='admin$id'/><span></span></td>";
-								echo "<td>";
-								echo "<button type='button' onclick=\"saveUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Save</button>&nbsp;";
-								echo "<button type='button' onclick=\"_delUser('$id')\" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Delete</button>";
-								echo "<span></span></td>";
-								echo "</tr>";
-							}
-						?>
-						</tbody>
+						<tbody id="usersTableBody"></tbody>
+						<textarea id="usersTempl" style="display: none;">
+							{#foreach $T as user}
+								{#include vUserRow root=$T.user}
+							{#/for}
+						</textarea>
 					</table>
 				</fieldset>
 				<fieldset class="ui-widget-content ui-corner-all top">
-					<button type="button" onclick="_addUser()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Add User</button>
-					<button type="button" id="btnImportUsers"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Import CSV User List</button>
+					<button onclick="_addUser(); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Add User</button>
+					<button id="btnImportUsers"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Import CSV User List</button>
 				</fieldset>
 			</form>
 		</div>

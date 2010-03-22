@@ -4,11 +4,16 @@ $(document).ready(function(){
 	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
+	var userRow = $.createTemplate($("#userRow").text());
+	$("#usersTableBody").setTemplate($("#usersTempl").text(), {vUserRow: userRow});
+	$("#usersTableBody").processTemplate(userData);
+
 	$("#userTable").tablesorter({
 		headers: {
 			1: {sorter: false},
 			2: {sorter: false},
-			3: {sorter: false}				
+			3: {sorter: false},
+			4: {sorter: false}
 		},
 		sortList: [[0,0]]
 	});
@@ -153,9 +158,9 @@ $(document).ready(function(){
 		}
 	});
 
-	var button = $('#btnImportUsers'), interval;
+	var button = $('#btnImportUsers .ui-button-text'), interval;
 
-	new AjaxUpload(button, {
+	new AjaxUpload($('#btnImportUsers'), {
 		action: './server/adm.php?a=post&SID=' + SID,
 		name: 'usersFile',
 		autoSubmit: true,
@@ -183,10 +188,18 @@ $(document).ready(function(){
 			this.enable();
 
 			usersArr = JSON.parse(response);
-			//create users table. time to practice with a jbst template?
-			alert(usersArr.strResult[0]['user_name']);
+			if (usersArr.isError)
+			{
+				displayError(usersArr.strResult);
+			}
+			else
+			{
+				
+				$('#result').setTemplate('{#include t1 root=$T.table[0]}', {t1: template1})
 
-			$("#importUsersDlg").dialog('open');
+				$("#usersTableBody").processTemplate(usersArr.strResult);
+				$("#importUsersDlg").dialog('open');
+			}			
 		}
 	});
 });
@@ -323,6 +336,7 @@ function saveUser(id)
 	var postData =  "a=saveu&id=" + id + "&un=" + $("#userName" + id).html() + "&p=" + $("#passw" + id).val();
 	postData += "&adm=" + $("#admin" + id).attr('checked');
 	postData += "&SID=" + SID;
+	//alert(postData);
 	$.post("./server/adm.php", postData, displayError);
 }
 
