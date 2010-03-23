@@ -16,18 +16,7 @@
 	var userData = <?php echo json_encode($usersDB->listUsers()); ?>;
 </script>
 <textarea id="userRow" style="display: none;">
-	<tr id='tr{$T.user_id}'>
-		<td>
-			<input type='checkbox' name='userCheck{$T.user_id}' id='userCheck{$T.user_id}' value='{$T.user_id}' />
-			<span id='userName{$T.user_id}'>{$T.user_name}</span>
-		</td>
-		<td><input type='password' id='passw{$T.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
-		<td><input type='checkbox' id='admin{$T.user_id}' {#if ($T.user_admin_level == 1) || ($T.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
-		<td>
-			<button onclick="saveUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
-			<button onclick="_delUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
-		</td>
-	</tr>
+
 </textarea>
 
 
@@ -49,17 +38,23 @@
 	</form>
 </div>
 <div id="importUsersDlg" title="Import users">
-	<table id="userTable" class="tablesorter">
+	<table id="importUserTable" class="tablesorter">
 		<thead><tr>
 			<th scope="col">Username</th>
-			<th scope="col">Password</th>
-			<th scope="col">Admin?</th>
-			<th scope="col">&nbsp;</th>
+			<th scope="col"></th>
 		</tr></thead>
-		<tbody id="usersTableBody"></tbody>
-		<textarea id="usersTempl" style="display: none;">
+		<tbody id="importUserTableBody"></tbody>
+		<textarea id="importUserTempl" style="display: none;">
 			{#foreach $T as user}
-				{#include vUserRow root=$T.user}
+				<tr id='tr{$T.user.user_id}'>
+					<td>
+						<input type='checkbox' name='userCheck{$T.user.user_id}' id='userCheck{$T.user.user_id}' value='{$T.user.user_id}' />
+						<span id='userName{$T.user.user_id}'>{$T.user.user_name}</span>
+					</td>
+					<td>
+						<input id="userData{$T.user.user_id}" type="hidden" value='{#ldelim}"user_password":"{$T.user.user_password}","user_admin_level":"{$T.user.user_admin_level}"{#rdelim}' />
+					</td>
+				</tr>
 			{#/for}
 		</textarea>
 	</table>
@@ -129,7 +124,18 @@
 						<tbody id="usersTableBody"></tbody>
 						<textarea id="usersTempl" style="display: none;">
 							{#foreach $T as user}
-								{#include vUserRow root=$T.user}
+								<tr id='tr{$T.user.user_id}'>
+									<td>
+										<input type='checkbox' name='userCheck{$T.user.user_id}' id='userCheck{$T.user.user_id}' value='{$T.user.user_id}' />
+										<span id='userName{$T.user.user_id}'>{$T.user.user_name}</span>
+									</td>
+									<td><input type='password' id='passw{$T.user.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
+									<td><input type='checkbox' id='admin{$T.user.user_id}' {#if ($T.user.user_admin_level == 1) || ($T.user.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
+									<td>
+										<button onclick="saveUser('{$T.user.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
+										<button onclick="_delUser('{$T.user.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
+									</td>
+								</tr>
 							{#/for}
 						</textarea>
 					</table>

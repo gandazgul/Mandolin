@@ -4,8 +4,7 @@ $(document).ready(function(){
 	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
-	var userRow = $.createTemplate($("#userRow").text());
-	$("#usersTableBody").setTemplate($("#usersTempl").text(), {vUserRow: userRow});
+	$("#usersTableBody").setTemplateElement('usersTempl');
 	$("#usersTableBody").processTemplate(userData);
 
 	$("#userTable").tablesorter({
@@ -95,13 +94,24 @@ $(document).ready(function(){
 		bgiframe: true,
 		resizable: false,
 		autoOpen: false,
-		height: 168,
 		modal: true,
 		buttons: {
 			'Start Import': function()
 			{
-				var postData = "a=";
-				$.post("./server/adm.php", postData, TODO, 'json');
+				$("#importUserTableBody tr").each(function(index, tr){
+
+					if($(this).children("td:eq(0)").children("input").attr("checked"))
+					{
+						uID = $(this).children("td:eq(0)").children("span").html();
+						//alert(uID);
+						uData = $(this).children("td:eq(1)").children("input").val();
+						//alert(uData);
+						data = JSON.parse(uData);
+						var postData =  "a=addu&u=" + uID + "&p=" + data.user_password + "&adm=" + data.user_admin_level + "&SID=" + SID;
+						//alert(postData);
+						$.post("./server/adm.php", postData, addUser, "json");
+					}
+				});
 
 				$(this).dialog('close');
 			},
@@ -194,10 +204,8 @@ $(document).ready(function(){
 			}
 			else
 			{
-				
-				$('#result').setTemplate('{#include t1 root=$T.table[0]}', {t1: template1})
-
-				$("#usersTableBody").processTemplate(usersArr.strResult);
+				$("#importUserTableBody").setTemplateElement('importUserTempl');
+				$("#importUserTableBody").processTemplate(usersArr.strResult);
 				$("#importUsersDlg").dialog('open');
 			}			
 		}
@@ -347,7 +355,7 @@ function addUser(data)
 		displayError(data.resultStr);
 	}
 	else
-	{
+	{//TODO FIX THIS TO USE TEMPL
 		$('#userTable tbody').append(data.resultStr);
 		$("#userTable").trigger("update");
 		var sorting = [[0,1]];
