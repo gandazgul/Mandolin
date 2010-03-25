@@ -78,9 +78,10 @@ class UsersDB
 		$this->resultArr["isError"] = false;
 		
 		$user_adm_level = (strtolower($user_adm_level) == "true") ? 1 : 0;
+		$user_passw = (strlen($user_passw) == 40) ? $user_passw : sha1($user_passw);//I am asumming that is the password is 40 chars long its already sha1
 		try
 		{
-			$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '".sha1($user_passw)."', $user_adm_level)");
+			$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '$user_passw', $user_adm_level)");
 			if ($result == 0)
 			{
 				$error = $this->dbh->errorInfo();
