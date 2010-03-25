@@ -133,7 +133,7 @@ function saveu()
 function addu()
 {
 	global $usersDB;
-	
+
 	echo $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
 }
 

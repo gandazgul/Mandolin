@@ -49,7 +49,7 @@
 	<div id="errorDiv" class="important"></div>
 	<form action="" class="ui-form">
 		<div>
-			<label for="sQuery" class="title">Type in Artist, Album or Song name: </label>
+			<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
 			<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="side ui-widget-content ui-corner-all" />
 		</div>
 	</form>

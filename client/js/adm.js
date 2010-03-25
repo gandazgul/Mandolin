@@ -4,7 +4,8 @@ $(document).ready(function(){
 	
 	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
 
-	$("#usersTableBody").setTemplateElement('usersTempl');
+	var vUserRow = $.createTemplate($("#userRow").text());
+	$("#usersTableBody").setTemplate($('#usersTempl').text(), {userRow: vUserRow});
 	$("#usersTableBody").processTemplate(userData);
 
 	$("#userTable").tablesorter({
@@ -356,7 +357,10 @@ function addUser(data)
 	}
 	else
 	{//TODO FIX THIS TO USE TEMPL
-		$('#userTable tbody').append(data.resultStr);
+		var div = $("<div>");
+		div.setTemplate($('#userRow').text());
+		div.processTemplate(data.resultStr);
+		$('#usersTableBody').append(div.html());
 		$("#userTable").trigger("update");
 		var sorting = [[0,1]];
 		$("#userTable").trigger("sorton",[sorting]);

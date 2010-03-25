@@ -6,7 +6,7 @@
 	}
 	
 	include './models/UsersDB.php';
-	$usersDB = new UsersDB('./models/dbfiles/users.db'); 
+	$usersDB = new UsersDB('./models/dbfiles/users.db');
 ?>
 <script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="./client/js/lib/json2.min.js"></script>
@@ -15,11 +15,21 @@
 <script type="text/javascript">
 	var userData = <?php echo json_encode($usersDB->listUsers()); ?>;
 </script>
+
 <textarea id="userRow" style="display: none;">
-
+	<tr id='tr{$T.user_id}'>
+		<td>
+			<input type='checkbox' name='userCheck{$T.user_id}' id='userCheck{$T.user_id}' value='{$T.user_id}' />
+			<span id='userName{$T.user_id}'>{$T.user_name}</span>
+		</td>
+		<td><input type='password' id='passw{$T.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
+		<td><input type='checkbox' id='admin{$T.user_id}' {#if ($T.user_admin_level == 1) || ($T.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
+		<td>
+			<button onclick="saveUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
+			<button onclick="_delUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
+		</td>
+	</tr>
 </textarea>
-
-
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form action="" class="ui-form ui-widget top">
 		<label for="folderName">Folder Full Path:</label>
@@ -124,18 +134,7 @@
 						<tbody id="usersTableBody"></tbody>
 						<textarea id="usersTempl" style="display: none;">
 							{#foreach $T as user}
-								<tr id='tr{$T.user.user_id}'>
-									<td>
-										<input type='checkbox' name='userCheck{$T.user.user_id}' id='userCheck{$T.user.user_id}' value='{$T.user.user_id}' />
-										<span id='userName{$T.user.user_id}'>{$T.user.user_name}</span>
-									</td>
-									<td><input type='password' id='passw{$T.user.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
-									<td><input type='checkbox' id='admin{$T.user.user_id}' {#if ($T.user.user_admin_level == 1) || ($T.user.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
-									<td>
-										<button onclick="saveUser('{$T.user.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
-										<button onclick="_delUser('{$T.user.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
-									</td>
-								</tr>
+								{#include userRow root=$T.user}
 							{#/for}
 						</textarea>
 					</table>

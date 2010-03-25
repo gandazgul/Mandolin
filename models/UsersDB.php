@@ -77,27 +77,34 @@ class UsersDB
 	{
 		$this->resultArr["isError"] = false;
 		
-		$user_adm_level = ($user_adm_level == "true") ? 1 : 0;
-		
-		$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '".sha1($user_passw)."', $user_adm_level)");
-		if ($result == 0)
+		$user_adm_level = (strtolower($user_adm_level) == "true") ? 1 : 0;
+		try
 		{
-			$error = $this->dbh->errorInfo();
+			$result = $this->dbh->exec("INSERT INTO users(user_name, user_password, user_admin_level) VALUES ('$user_name', '".sha1($user_passw)."', $user_adm_level)");
+			if ($result == 0)
+			{
+				$error = $this->dbh->errorInfo();
+				$this->resultArr["isError"] = true;
+				$this->resultArr["resultStr"] = "FATAL ERROR: While creating a new user: ".$error[2];
+			}
+			else
+			{
+				$result = $this->dbh->query("SELECT max(user_id) FROM users");
+				$result = $result->fetchAll();
+				$id = $result[0][0];
+				$result['user_id'] = $id;
+				$result['user_name'] = $user_name;
+				$result['user_password'] = $user_passw;
+				$result['user_admin_level'] = $user_adm_level;
+				$this->resultArr["resultStr"] = $result;
+			}
+		}
+		catch (PDOException $e)
+		{
 			$this->resultArr["isError"] = true;
-			$this->resultArr["resultStr"] = "FATAL ERROR: While creating a new user: ".$error[2];
+			$this->resultArr["resultStr"] = $e->getMessage();
 		}
-		else
-		{
-			$result = $this->dbh->query("SELECT max(user_id) FROM users");
-			$result = $result->fetchAll();
-			$id = $result[0][0];
-			$result['user_id'] = $id;
-			$result['user_name'] = $user_name;
-			$result['user_password'] = $user_passw;
-			$result['user_admin_level'] = $user_adm_level;
-			$this->resultArr["resultStr"] = json_encode($result);
-		}
-		
+
 		return json_encode($this->resultArr);
 	}
 	

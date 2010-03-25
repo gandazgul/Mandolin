@@ -44,8 +44,9 @@ that then uses the DB models (/models/) classes to perform the requested operati
 has the following structure:
 
 DBModelResponse - isError : bool
-				  errorCode: int - if isError is true this will contain the error code
-				  strResult: string - if isError is true this contains a string with the error message, else it contains the requested data in json format.
+		  errorCode: int - if isError is true this will contain the error code
+		  errorMsg: string - if isError is true this will contain the error message		  
+		  data: variant - it contains the requested data
 
 I tried my best to make the server files restful using only GET and POST.
 GET - get all entries in the table

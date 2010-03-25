@@ -1,3 +1,6 @@
+DONE but needs refining
+- Finish the install script.
+
 TODO HIGH PRIORITY: 
 - recreateDB is not calling the addtodb function ever.
 - break up addtoDB, make and add album, addArtist, addSong. and maybe something else.
@@ -5,7 +8,9 @@ TODO HIGH PRIORITY:
 - make the models always return the same object,
 	isError: bool
 	resultStr: str (will contain the result of the query or the message of success/failure)
-
+- Playlists, Artists and Albums should have a link to go to the site and select it automatically
+- Playlists, Artists and Albums should have a link to download the playlist instantly
+    - Make right click menus for albums and artists work.
 
 TODO:
 - Add more settings.
@@ -18,8 +23,6 @@ TODO:
 - Make the movies list an accordion and make it 100% wide, make the movie player popup.
 
 - concat MP3 for blackberry.
-
-- Finish the install script.
 
 - do security tests, with the sessions.
 

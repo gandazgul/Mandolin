@@ -18,13 +18,13 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="./client/images/logo.ico" />
 		<link href="./client/css/global/main.css" rel="stylesheet" type="text/css" />
-		<link href="./client/css/lib/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css" />
+		<link href="./client/css/lib/jquery-ui-1.8.custom.css" rel="stylesheet" type="text/css" />
 		<link href='./client/css/<?php echo $p; ?>.css' rel='stylesheet' type='text/css' />
 		<!--[if IE]>
 		<link href="./client/css/global/mod.ie.css" rel="stylesheet" type="text/css" />
 		<![endif]-->
 		<script type="text/javascript" src="./client/js/lib/jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="./client/js/lib/jquery-ui-1.8rc3.custom.min.js"></script>
+		<script type="text/javascript" src="./client/js/lib/jquery-ui-1.8.custom.min.js"></script>
 		<script type="text/javascript"><?php echo "SID = '".sha1(session_id())."';"; ?></script>
 		<script type="text/javascript" src="./client/js/main.js"></script>
 		<script type='text/javascript' src='./client/js/<?php echo $p; ?>.js'></script>
