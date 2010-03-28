@@ -1,14 +1,20 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
 
 class SongsModel
 {
 	private $dbh;
-	private $resultArr;
+	private $result;
+	public $song_id;
+	public $song_art;
+	public $song_album;
 
-	function __construct()
+	function __construct($song_id, $song_art, $song_album)
 	{
 		global $settings;
+
+		$this->result = new Result();
 
 		try
 		{
@@ -18,43 +24,74 @@ class SongsModel
 		}
 		catch (PDOException $e)
 		{
-			die($e->getMessage());
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
 		}
 
-		$this->resultArr = array();
-		$this->resultArr['isError'] = false;
-		$this->resultArr['resultStr'] = "";
+		if (isset ($song_id)) { $this->song_id = $song_id; }
+		if (isset ($song_art)) { $this->song_art = $song_art; }
+		if (isset ($song_album)) { $this->song_album = $song_album; }
 	}
 
 	function __destruct()
 	{
 		unset($this->dbh);
-		unset($this->resultArr);
+		unset($this->result);
 	}
 
 	//----------------------------------------------GET SONGS------------------------------------------------------------------
-	function get($alb_id)
+	function getSongs()
 	{
-		$sngArr = array();
-		$tok = strtok($alb_id, "|");
-		while($tok !== false)
+		if (isset ($this->song_id))
 		{
-			$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
+			//get info about the song
+		}
+		else
+		if (isset ($this->song_art))
+		{
+			//get all songs by that artist.
+		}
+		else
+		if (isset ($this->song_album))
+		{
+			$tok = strtok($this->song_album, "|");
+			while($tok !== false)
 			{
-				$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
-			}
-			$tok = strtok("|");
-		}//from the while
+				try
+				{
+					$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
+					if ($query)
+					{
+						$queryArr = $query->fetchAll();
+						//print_r($queryArr);
+						$sngArr = array();
+						for($i = 0; $i < count($queryArr); $i++)
+						{
+							$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
+						}
+						$tok = strtok("|");
 
-		return $sngArr;
-	}
+						$this->result->data = $sngArr;
+					}
+					else
+					{
+						$this->result->isError = true;
+						$error = $this->dbh->errorInfo();
+						$this->result->errorCode = $error[1];
+						$this->result->errorStr = $error[2];
+					}
+				}
+				catch (PDOException $e)
+				{
+					$this->result->isError = true;
+					$this->result->errorCode = $e->getCode();
+					$this->result->errorStr = $e->getMessage();
+				}
+			}//from the while
 
-	function get_json($alb_id)
-	{
-		return json_encode($this->get($alb_id));
+			return $this->result;
+		}
 	}
 
 	/*function getInfo($song_id, $columns)

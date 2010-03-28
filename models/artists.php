@@ -1,14 +1,18 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
 
 class ArtistsModel
 {
 	private $dbh;
-	private $resultArr;
+	private $result;
+	public $art_id;
 
-	function __construct()
+	function __construct($art_id)
 	{
 		global $settings;
+
+		$this->result = new Result();
 
 		try
 		{
@@ -18,41 +22,63 @@ class ArtistsModel
 		}
 		catch (PDOException $e)
 		{
-			die($e->getMessage());
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
 		}
 
-		$this->resultArr = array();
-		$this->resultArr['isError'] = false;
-		$this->resultArr['resultStr'] = "";
+		if (isset ($art_id))
+		{
+			$this->art_id = $art_id;
+		}
 	}
 
 	function __destruct()
 	{
 		unset($this->dbh);
-		unset($this->resultArr);
+		unset($this->result);
 	}
 
 	//----------------------------------------------GET ARTIRSTS------------------------------------------------------------------
-	function get()
+	function getArtists()
 	{
-		$query = $this->dbh->query("SELECT * FROM artists ORDER BY `art_name`");
-		$queryArr = $query->fetchAll();
-		//print_r($queryArr);
-		$artArr = array();
-		for ($i = 0; $i < count($queryArr); $i++)
+		if (isset ($this->art_id))
 		{
-			$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
+			//get info about album
 		}
-		//print_r($artArr);
-		return $artArr;
-	}
+		else
+		{
+			try
+			{
+				$query = $this->dbh->query("SELECT * FROM artists ORDER BY `art_name`");
+				if ($query)
+				{
+					$queryArr = $query->fetchAll();
+					$artArr = array();
+					for ($i = 0; $i < count($queryArr); $i++)
+					{
+						$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
+					}
 
-	function get_json()
-	{
+					$this->result->data = $artArr;
+				}
+				else
+				{
+					$this->result->isError = true;
+					$error = $this->dbh->errorInfo();
+					$this->result->errorCode = $error[1];
+					$this->result->errorStr = $error[2];
+				}
+			}
+			catch (PDOException $e)
+			{
+				$this->result->isError = true;
+				$this->result->errorCode = $e->getCode();
+				$this->result->errorStr = $e->getMessage();
+			}
+		}
 
-		return json_encode($this->get());
+		return $this->result;
 	}
 }
-
-$artists = new ArtistsModel();
 ?>

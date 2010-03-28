@@ -31,12 +31,6 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-$artists->__destruct();
-unset($artists);
-$albums->__destruct();
-unset($albums);
-$songs->__destruct();
-unset($songs);
 $playlists->__destruct();
 unset($playlists);
 
@@ -53,31 +47,52 @@ function gett()//returns total artists, albums and songs
 
 function artists()
 {
-	global $artists;
-	
 	if (isset($_GET["id"]))
 	{
-		//output infor about the artist wich id is: $_REQUEST["id"]
+		//output infor about the album wich id is: $_GET["id"]
 	}
-	else
-		echo $artists->get_json();
+	else//list all artists
+	{
+		$artists = new ArtistsModel(null);
+		$artResult = $artists->getArtists();
+		if ($artResult->isError)
+		{
+			echo json_encode($artResult);
+		}
+		else
+		{
+			echo json_encode($artResult->data);
+		}
+		$artists->__destruct();
+		unset($artists);
+	}
 }
 
 function albums()
 {
-	global $albums;
-
 	if (isset($_GET["id"]))
 	{
-		//output infor about the artist wich id is: $_REQUEST["id"]
+		//output infor about the album wich id is: $_GET["id"]
 	}
-	else if (isset($_REQUEST["artist_id"]))
+	else
+	if (isset($_REQUEST["artist_id"]))
 	{
-		echo $albums->get_json($_REQUEST["artist_id"]);
+		$albums = new AlbumsModel($_REQUEST["artist_id"]);
+		$albResult = $albums->getAlbums();
+		if ($albResult->isError)
+		{
+			echo json_encode($albResult);
+		}
+		else
+		{
+			echo json_encode($albResult->data);
+		}
+		$albums->__destruct();
+		unset($albums);
 	}
 	else
 	{
-		//list all albums	
+		//list all albums
 	}	
 }
 

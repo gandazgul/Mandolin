@@ -1,15 +1,19 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
 
 class AlbumsModel
 {
 	private $dbh;
-	private $resultArr;
+	private $result;
+	public $art_id;
 
-	function __construct()
+	function __construct($art_id)
 	{
 		global $settings;
 
+		$this->result = new Result();
+		
 		try
 		{
 			//$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
@@ -18,45 +22,59 @@ class AlbumsModel
 		}
 		catch (PDOException $e)
 		{
-			die($e->getMessage());
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
 		}
 
-		$this->resultArr = array();
-		$this->resultArr['isError'] = false;
-		$this->resultArr['resultStr'] = "";
+		$this->art_id = $art_id;
 	}
 
 	function __destruct()
 	{
 		unset($this->dbh);
-		unset($this->resultArr);
+		unset($this->result);
 	}
 
 	//----------------------------------------------GET ALBUMS------------------------------------------------------------------
-	function get($art_id)
+	function getAlbums()
 	{
-		$albArr = array();
-		$tok = strtok($art_id, "|");
+		$tok = strtok($this->art_id, "|");
 		while($tok !== false)
 		{
-			$query = $this->dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
-			$queryArr = $query->fetchAll();
-			//print_r($queryArr);
-			for($i = 0; $i < count($queryArr); $i++)
+			try
 			{
-				$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
+				$query = $this->dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
+				if ($query)
+				{
+					$queryArr = $query->fetchAll();
+					//print_r($queryArr);
+					$albArr = array();
+					for($i = 0; $i < count($queryArr); $i++)
+					{
+						$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
+					}
+					$tok = strtok("|");
+
+					$this->result->data = $albArr;
+				}
+				else
+				{
+					$this->result->isError = true;
+					$error = $this->dbh->errorInfo();
+					$this->result->errorCode = $error[1];
+					$this->result->errorStr = $error[2];
+				}
 			}
-			$tok = strtok("|");
+			catch (PDOException $e)
+			{
+				$this->result->isError = true;
+				$this->result->errorCode = $e->getCode();
+				$this->result->errorStr = $e->getMessage();
+			}
 		}//from the while
 
-		return $albArr;
-	}
-
-	function get_json($art_id)
-	{
-		return json_encode($this->get($art_id));
+		return $this->result;
 	}
 }
-
-$albums = new AlbumsModel();
 ?>
