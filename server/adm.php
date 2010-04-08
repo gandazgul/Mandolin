@@ -10,9 +10,9 @@ if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 
 require_once("../models/UsersDB.php");
 $usersDB = new UsersDB();
-require_once("../models/MusicDB.php");
-$musicDB = new MusicDB();
-require_once '../models/Settings.php';
+require_once("../models/music.php");
+$mMusic = new MusicModel();
+require_once '../models/settings.php';
 require_once '../server/result.class.php';
 
 $action = $_REQUEST["a"];
@@ -26,23 +26,20 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-$usersDB->__destruct();
 unset($usersDB);
-$settings->__destruct();
 unset($settings);
-$musicDB->__destruct();
-unset($musicDB);
+unset($mMusic);
 
 
 function addFolderToDB()
 {
-	global $musicDB;
+	global $mMusic;
 	
 	$resultArr = array();
 	$resultArr["isError"] = false;
 	if (is_dir($_POST["f"]))
 	{
-		if ($musicDB->addToDB($_POST["f"], strlen($_POST["f"])))
+		if ($mMusic->addToDB($_POST["f"], strlen($_POST["f"])))
 		{
 			$resultArr["resultStr"] = $_POST["f"];
 		}

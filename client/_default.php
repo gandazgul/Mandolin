@@ -107,10 +107,10 @@ class CDefault //extends CController
 		}
 		ini_set('max_execution_time', '6000');
 
-		require_once './models/MusicDB.php';
-		$musicDB = new MusicDB();
+		require_once './models/music.php';
+		$mMusic = new MusicModel();
 
-		$musicDB->recreateDB();
+		$mMusic->recreateDB();
 		//---------------------------------------------NOW LET'S FILL THE DATABASE----------------------------------------
 		?>
 		<div id='teaser'>
@@ -134,7 +134,7 @@ class CDefault //extends CController
 					for ($i = 0; $i < count($folderArr); $i++)
 					{
 						$curFolder = $folderArr[$i];
-						$musicDB->addToDB($curFolder, strlen($curFolder));
+						$mMusic->addToDB($curFolder, strlen($curFolder));
 						echo "<li>$curFolder - DONE</li>";
 					}
 				?>

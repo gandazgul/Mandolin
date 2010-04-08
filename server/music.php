@@ -13,8 +13,8 @@ require_once '../models/albums.php';
 require_once '../models/songs.php';
 require_once '../models/playlists.php';
 
-require_once '../models/MusicDB.php';
-$musicDB = new MusicDB();
+require_once '../models/music.php';
+$mMusic = new MusicModel();
 require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
 require_once '../models/UsersDB.php';
@@ -31,18 +31,16 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-$playlists->__destruct();
 unset($playlists);
-
-unset($musicDB);
+unset($mMusic);
 unset($usersDB);
 unset($moviesDB);
 
 function gett()//returns total artists, albums and songs
 {
-	global $musicDB;
+	global $mMusic;
 	
-	echo $musicDB->getTotals_json();
+	echo $mMusic->getTotals_json();
 }
 
 function artists()
@@ -78,16 +76,7 @@ function albums()
 	if (isset($_REQUEST["artist_id"]))
 	{
 		$albums = new AlbumsModel($_REQUEST["artist_id"]);
-		$albResult = $albums->getAlbums();
-		if ($albResult->isError)
-		{
-			echo json_encode($albResult);
-		}
-		else
-		{
-			echo json_encode($albResult->data);
-		}
-		$albums->__destruct();
+		echo json_encode($albums->getAlbums());
 		unset($albums);
 	}
 	else
@@ -110,19 +99,16 @@ function songs()
 	else
 	if (isset($_GET['art_id'])) { $songs->song_art = $_GET['art_id']; }
 
-	$sngResult = $songs->getSongs();
-	if ($sngResult->isError) { echo json_encode($sngResult); }
-	else
-	{ echo json_encode($sngResult->data); }
+	echo json_encode($songs->getSongs());
 	
 	unset ($songs);
 }
 
 function search()
 {
-	global $musicDB;
+	global $mMusic;
 	
-	echo $musicDB->search_json($_GET["q"]);
+	echo json_encode($mMusic->search($_GET["q"]));
 }
 
 function play()//makes a list of the tracks selected in the sng list

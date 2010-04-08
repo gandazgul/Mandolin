@@ -1,14 +1,17 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/Settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
 
-class MusicDB
+class MusicModel //this module holds functions pertaining to artists albums and songs that make use of all three tables.
 {
 	private $dbh;
-	private $resultArr;
+	private $result;
 
 	function __construct()
 	{
 		global $settings;
+
+		$this->result = new Result();
 
 		try
 		{
@@ -18,12 +21,10 @@ class MusicDB
 		}
 		catch (PDOException $e)
 		{
-			die($e->getMessage());
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
 		}
-
-		$this->resultArr = array();
-		$this->resultArr['isError'] = true;
-		$this->resultArr['resultStr'] = "";
 	}
 
 	function __destruct()
@@ -33,45 +34,47 @@ class MusicDB
 	}
 
 	//-------------------------------------------------------Search-------------------------------------------------------------------------
-	function search_json($queryStr)
+	function search($queryStr) //this might be doable using more advanced SQL.
 	{
-		$this->resultArr['isError'] = false;
 		$queryArr = array();
 		
 		$queries = array();
-		$queries[] = "SELECT art_id, art_name FROM artists WHERE `art_name`  LIKE '%$queryStr%'";
-		$queries[] = "SELECT alb_id, alb_name FROM albums WHERE `alb_name` LIKE '%$queryStr%'";
-		$queries[] = "SELECT song_id, song_name, song_comments FROM music WHERE `song_name` LIKE '%$queryStr%'";
-		$sections = array();
-		$sections[] = "art";
-		$sections[] = "alb";
-		$sections[] = "sng";
-		$attributes = array();
-		$attributes[] = "id";
-		$attributes[] = "name";
-		$attributes[] = "comm";
-		
-		for ($section = 0; $section < 3; $section++)//go thru the 3 queries and sections
+		$queries[] = "SELECT art_id, art_name FROM artists WHERE art_name  LIKE '%$queryStr%'";
+		$queries[] = "SELECT alb_id, alb_name FROM albums WHERE alb_name LIKE '%$queryStr%'";
+		$queries[] = "SELECT song_id, song_name FROM music WHERE song_name LIKE '%$queryStr%'";
+		$sections = array("art", "alb", "sng");
+		$attributes = array("id", "name");
+
+		try
 		{
-			$queryArr = $this->dbh->query($queries[$section])->fetchAll();
-			$curSection = $sections[$section];
-			
-			if (count($queryArr) != 0)// if we found something
+			for ($section = 0; $section < 3; $section++)//go thru the 3 queries and sections
 			{
-				for ($result = 0; $result < count($queryArr); $result++)//go thru all the results
+				$queryArr = $this->dbh->query($queries[$section])->fetchAll();
+				$curSection = $sections[$section];
+
+				if (count($queryArr) != 0)// if we found something
 				{
-					for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
+					for ($result = 0; $result < count($queryArr); $result++)//go thru all the results
 					{
-						$this->resultArr['resultStr'][$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
+						for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
+						{
+							$this->result->data[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
+						}
 					}
 				}
+				else
+					$this->result->data[$curSection] = array();
 			}
-			else
-				$this->resultArr['resultStr'][$curSection] = array();
 		}
-	
-		//print_r($resultArr);
-		return json_encode($this->resultArr);
+		catch (PDOException $e)
+		{
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
+		}
+
+		//print_r($this->result->data);
+		return $this->result;
 	}	
 	
 	//-----------------------------------------------------GET TOTALS----------------------------------------------------------------------

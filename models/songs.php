@@ -55,28 +55,26 @@ class SongsModel
 			$colName = 'song_album';
 		}
 
+		$stmt = $this->dbh->prepare("SELECT song_id, song_name FROM music WHERE $colName=? ORDER BY song_name");
 		$tok = strtok($idList, "|");
 		while($tok !== false)
 		{
-			try
+			try//try the query
 			{
-				$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `$colName`='$tok' ORDER BY `song_name`");
-				if ($query)
+				if ($stmt->execute(array($tok)) === true)//if we got it
 				{
-					$queryArr = $query->fetchAll();
+					$queryArr = $stmt->fetchAll();
 					//print_r($queryArr);
-					$sngArr = array();
 					for($i = 0; $i < count($queryArr); $i++)
 					{
-						$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
+						$this->result->data[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
 					}
 					$tok = strtok("|");
-
-					$this->result->data = $sngArr;
 				}
 				else
 				{
-					return $this->dbhError();
+					$this->dbhError();
+					break;
 				}
 			}
 			catch (PDOException $e)
@@ -84,6 +82,7 @@ class SongsModel
 				$this->result->isError = true;
 				$this->result->errorCode = $e->getCode();
 				$this->result->errorStr = $e->getMessage();
+				break;
 			}
 		}//from the while
 
@@ -96,8 +95,6 @@ class SongsModel
 		$error = $this->dbh->errorInfo();
 		$this->result->errorCode = $error[1];
 		$this->result->errorStr = $error[2];
-
-		return $this->result;
 	}
 
 	/*function getInfo($song_id, $columns)

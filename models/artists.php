@@ -44,9 +44,9 @@ class ArtistsModel
 	{
 		if (isset ($this->art_id))
 		{
-			//get info about album
+			//get info about this artist
 		}
-		else
+		else//else get a list of all artists
 		{
 			try
 			{

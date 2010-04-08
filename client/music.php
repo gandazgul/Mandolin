@@ -50,7 +50,7 @@
 	<form action="" class="ui-form">
 		<div>
 			<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
-			<input type="text" id="sQuery" onkeyup="search(this.value, true)" size="85" class="side ui-widget-content ui-corner-all" />
+			<input type="text" id="searchBox" size="85" class="side ui-widget-content ui-corner-all" />
 		</div>
 	</form>
 </div>

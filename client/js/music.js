@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$.getJSON('./server/music.php', 'a=gett&SID=' + SID, putTotals);
+	$.getJSON('./server/music.php', 'a=gett&SID=' + SID, displayTotals);
 	getArtists();
 
 	$("#artistsList").selectable({
@@ -12,7 +12,7 @@ $(document).ready(function(){
 			//alert(strResult);
 			$("#albumList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 			postData = "a=albums&artist_id=" + artIDList + "&SID=" + SID;
-			$.get("./server/music.php", postData, displayAlbums, "json");
+			$.getJSON("./server/music.php", postData, displayAlbums);
 		}
 	});
 
@@ -26,7 +26,7 @@ $(document).ready(function(){
 			//alert(strResult);
 			$("#songList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 			postData = "a=songs&album_id=" + albIDList + "&SID=" + SID;
-			$.get("./server/music.php", postData, displaySongs, "json");
+			$.getJSON("./server/music.php", postData, displaySongs);
 		}
 	});
 
@@ -66,9 +66,54 @@ $(document).ready(function(){
 			}
 		}
 	});
+
+	jQuery.print = function(message, insertionType)
+	{
+		if (typeof(message) == 'object')
+		{
+			var string = '{<br />',
+			values = [],
+			counter = 0;
+			$.each(message, function(key, value)
+			{
+				if (value && value.nodeName)
+				{
+					var domnode = '&lt;' + value.nodeName.toLowerCase();
+					domnode += value.className ? ' class="' + value.className + '"' : '';
+					 domnode += value.id ? ' id="' + value.id + '"' : '';
+					 domnode += '&gt;';
+					 value = domnode;
+				}
+				values[counter++] = key + ': ' + value;
+			});
+
+			string += values.join(',<br />');
+			string += '<br />}';
+			message = string;
+		 }
+
+		 var $output = $('#print-output');
+
+		 if ($output.length === 0) 
+		 {
+			$output = $('<div id="print-output" />').appendTo('body');
+		 }
+
+		 var $newMessage = $('<div class="print-output-line" />');
+		 $newMessage.html(message);
+		 insertionType = insertionType || 'append';
+		 $output[insertionType]($newMessage);
+	};
+
+	$("#searchBox").keyup(function(e){
+		if (e.keyCode != 17)
+		{
+			search($(this).val(), true);
+		}
+	});
 });
 
-function putTotals(data)
+function displayTotals(data)
 {
 	if (data.isError)
 	{}
@@ -101,12 +146,14 @@ function addToPLResponse(data)
 function procSearchResults(results)
 {
 	if (results.isError)
-	{}
+	{
+		displayError(results.errorStr);
+	}
 	else
 	{
-		displayArtists(results['resultStr']["art"]);
-		displayAlbums(results['resultStr']["alb"]);
-		displaySongs(results['resultStr']["sng"]);
+		displayArtists(results.data.art);
+		displayAlbums(results.data.alb);
+		displaySongs(results.data.sng);
 	}
 }
 
@@ -151,98 +198,111 @@ function displayAddToPLDiag(savedPLArr)
 	$("#addToPLDiag").dialog('open');
 }
 
-function displaySongs(sngArr)
+function displaySongs(songs)
 {
-	$("#songList").html('');
-	for (i = 0; i < sngArr.length; i++)
+	if (songs.isError)
 	{
-		$("#songList").append("<li class='ui-widget-content' id='" + sngArr[i].id + "'>"+ sngArr[i].name +"</li>");	
+		displayError(songs.errorStr);
 	}
-	
-	$("#songList li").contextMenu(
-		{menu: 'songsMenu'}, 
-		function(action, el, pos)
+	else
+	{
+		$("#songList").html('');
+		for (i = 0; i < songs.data.length; i++)
 		{
-			sngIDList = $("#songList").getAllSelectedItems();
-			
+			$("#songList").append("<li class='ui-widget-content' id='" + songs.data[i].id + "'>"+ songs.data[i].name +"</li>");
+		}
+
+		$("#songList li").contextMenu(
+			{menu: 'songsMenu'},
+			function(action, el, pos)
+			{
+				sngIDList = $("#songList").getAllSelectedItems();
+
+				switch (action)
+				{
+					case "playrand":
+					case "play": {
+						//alert(sngIDs);
+						if (sngIDList == "")
+						{
+							displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+						}
+						else
+						{
+							if (action == "playrand")
+								$("#rnd").val("true");
+							else
+								$("#rnd").val("false");
+							$("#sng").val(sngIDList);
+							$("#SID").val(SID);
+							$("#playForm").get(0).submit();
+						}
+						break;
+					}
+					case "selectall": {
+						$("#songList").children().addClass("ui-selected");
+						break;
+					}
+					case "createpl": {
+						if (sngIDList == "")
+						{
+							alert("You must select some tracks to add to the new playlist");
+						}
+						else
+						{
+							var plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+							//alert(plName);
+							if (plName != null)
+							{
+								postData = "a=playlists&pl_contents=" + sngIDList + "&pl_name=" + escape(plName) + "&SID=" + SID;
+								$.post("./server/playlists.php", postData, displayError);
+							}
+						}
+						break;
+					}
+					case "addtopl": {
+						postData = "a=playlists&SID=" + SID;
+						$.get("./server/playlists.php", postData, displayAddToPLDiag, "json");
+						break;
+					}
+				}//switch
+
+			}//function
+		);
+		$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
+	}
+}//displaySongs
+
+function displayAlbums(albums)
+{
+	if (albums.isError)
+	{
+		displayError(albums.errorStr);
+	}
+	else
+	{
+		$("#albumList").html('');
+		$("#songList").html('');
+		//alert(albArr[0].id);
+		for (i = 0; i < albums.data.length; i++)
+		{
+			$("#albumList").append("<li class='ui-widget-content' id='"+ albums.data[i].id +"'>"+ albums.data[i].name +"</li>");
+		}
+
+		$("#albumList li").contextMenu({
+			menu: 'artnAlbMenu'
+		}, function(action, el, pos) {
 			switch (action)
 			{
+				case "play":
 				case "playrand":
-				case "play": {
-					//alert(sngIDs);
-					if (sngIDList == "")
-					{
-						displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
-					}
-					else
-					{
-						if (action == "playrand")
-							$("#rnd").val("true");
-						else
-							$("#rnd").val("false");
-						$("#sng").val(sngIDList);
-						$("#SID").val(SID);
-						$("#playForm").get(0).submit();
-					}
+				{
+					alert("TODO: Implement this. Album: " + $(el).attr('id'));
 					break;
 				}
-				case "selectall": {
-					$("#songList").children().addClass("ui-selected");
-					break;
-				}
-				case "createpl": {
-					if (sngIDList == "")
-					{
-						alert("You must select some tracks to add to the new playlist");
-					}
-					else
-					{
-						var plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
-						//alert(plName);
-						if (plName != null)
-						{
-							postData = "a=playlists&pl_contents=" + sngIDList + "&pl_name=" + escape(plName) + "&SID=" + SID;
-							$.post("./server/playlists.php", postData, displayError);
-						}
-					}		
-					break;
-				}
-				case "addtopl": {
-					postData = "a=playlists&SID=" + SID;
-					$.get("./server/playlists.php", postData, displayAddToPLDiag, "json");
-					break;
-				}
-			}//switch
-			
-		}//function
-	);
-	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
-}
-
-function displayAlbums(albArr)
-{
-	$("#albumList").html('');
-	$("#songList").html('');
-	//alert(albArr[0].id);
-	for (i = 0; i < albArr.length; i++)
-	{
-		$("#albumList").append("<li class='ui-widget-content' id='"+ albArr[i].id +"'>"+ albArr[i].name +"</li>");	
-	}
-	
-	$("#albumList li").contextMenu({
-		menu: 'artnAlbMenu'
-	}, function(action, el, pos) {
-		switch (action)
-		{
-			case "play":
-			case "playrand":
-			{ 
-				alert("TODO: Implement this. Album: " + $(el).attr('id')); 
-				break; 
 			}
-		}
-	});
-	//$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');	
+		});
+	}
 }
 
 function displayArtists(artArr)

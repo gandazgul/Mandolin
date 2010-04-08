@@ -90,9 +90,9 @@
 ./models/artists.php
 ./models/index.php
 ./models/MoviesDB.php
-./models/MusicDB.php
+./models/music.php
 ./models/playlists.php
-./models/Settings.php
+./models/settings.php
 ./models/songs.php
 ./models/UsersDB.php
 ./server/adm.php

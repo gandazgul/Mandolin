@@ -9,8 +9,6 @@ if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
 	exit();	
 }
 
-require_once '../models/MusicDB.php';
-$musicDB = new MusicDB();
 require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
 require_once '../models/UsersDB.php';
@@ -29,7 +27,6 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-unset($musicDB);
 unset($usersDB);
 unset($moviesDB);
 unset($settings);

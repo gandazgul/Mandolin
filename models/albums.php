@@ -39,24 +39,21 @@ class AlbumsModel
 	//----------------------------------------------GET ALBUMS------------------------------------------------------------------
 	function getAlbums()
 	{
+		$stmt = $this->dbh->prepare("SELECT alb_id, alb_name FROM albums WHERE alb_art_id=? ORDER BY alb_name");
 		$tok = strtok($this->art_id, "|");
 		while($tok !== false)
 		{
-			try
+			try//try the query
 			{
-				$query = $this->dbh->query("SELECT alb_id, alb_name FROM albums WHERE `alb_art_id`='$tok' ORDER BY `alb_name`");
-				if ($query)
+				if ($stmt->execute(array($tok)) === true)//if we got it
 				{
-					$queryArr = $query->fetchAll();
+					$queryArr = $stmt->fetchAll();
 					//print_r($queryArr);
-					$albArr = array();
 					for($i = 0; $i < count($queryArr); $i++)
 					{
-						$albArr[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
+						$this->result->data[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
 					}
 					$tok = strtok("|");
-
-					$this->result->data = $albArr;
 				}
 				else
 				{
@@ -64,6 +61,7 @@ class AlbumsModel
 					$error = $this->dbh->errorInfo();
 					$this->result->errorCode = $error[1];
 					$this->result->errorStr = $error[2];
+					break;
 				}
 			}
 			catch (PDOException $e)
@@ -71,6 +69,7 @@ class AlbumsModel
 				$this->result->isError = true;
 				$this->result->errorCode = $e->getCode();
 				$this->result->errorStr = $e->getMessage();
+				break;
 			}
 		}//from the while
 
