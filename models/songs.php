@@ -43,55 +43,61 @@ class SongsModel
 	//----------------------------------------------GET SONGS------------------------------------------------------------------
 	function getSongs()
 	{
-		if (isset ($this->song_id))
-		{
-			//get info about the song
-		}
-		else
 		if (isset ($this->song_art))
 		{
-			//get all songs by that artist.
+			$idList = $this->song_art;
+			$colName = 'song_art';
 		}
 		else
 		if (isset ($this->song_album))
 		{
-			$tok = strtok($this->song_album, "|");
-			while($tok !== false)
-			{
-				try
-				{
-					$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `song_album`='$tok' ORDER BY `song_name`");
-					if ($query)
-					{
-						$queryArr = $query->fetchAll();
-						//print_r($queryArr);
-						$sngArr = array();
-						for($i = 0; $i < count($queryArr); $i++)
-						{
-							$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
-						}
-						$tok = strtok("|");
-
-						$this->result->data = $sngArr;
-					}
-					else
-					{
-						$this->result->isError = true;
-						$error = $this->dbh->errorInfo();
-						$this->result->errorCode = $error[1];
-						$this->result->errorStr = $error[2];
-					}
-				}
-				catch (PDOException $e)
-				{
-					$this->result->isError = true;
-					$this->result->errorCode = $e->getCode();
-					$this->result->errorStr = $e->getMessage();
-				}
-			}//from the while
-
-			return $this->result;
+			$idList = $this->song_album;
+			$colName = 'song_album';
 		}
+
+		$tok = strtok($idList, "|");
+		while($tok !== false)
+		{
+			try
+			{
+				$query = $this->dbh->query("SELECT song_id, song_name FROM music WHERE `$colName`='$tok' ORDER BY `song_name`");
+				if ($query)
+				{
+					$queryArr = $query->fetchAll();
+					//print_r($queryArr);
+					$sngArr = array();
+					for($i = 0; $i < count($queryArr); $i++)
+					{
+						$sngArr[] = array("id" => $queryArr[$i]["song_id"], "name" => $queryArr[$i]["song_name"]);
+					}
+					$tok = strtok("|");
+
+					$this->result->data = $sngArr;
+				}
+				else
+				{
+					return $this->dbhError();
+				}
+			}
+			catch (PDOException $e)
+			{
+				$this->result->isError = true;
+				$this->result->errorCode = $e->getCode();
+				$this->result->errorStr = $e->getMessage();
+			}
+		}//from the while
+
+		return $this->result;
+	}
+
+	private function dbhError()
+	{
+		$this->result->isError = true;
+		$error = $this->dbh->errorInfo();
+		$this->result->errorCode = $error[1];
+		$this->result->errorStr = $error[2];
+
+		return $this->result;
 	}
 
 	/*function getInfo($song_id, $columns)
@@ -155,6 +161,4 @@ class SongsModel
 		return json_encode($this->getInfo($songList, $columns));
 	}
 }
-
-$songs = new SongsModel();
 ?>

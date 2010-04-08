@@ -98,20 +98,24 @@ function albums()
 
 function songs()
 {
-	global $songs;
+	$songs = new SongsModel(null, null, null);
 
 	if (isset($_GET['id']))
 	{
 		//echo information about the song and link for lyrics
+		$songs->song_id = $_GET['id'];
 	}
-	else if (isset($_REQUEST['album_id']))
-	{
-		echo $songs->get_json($_REQUEST["album_id"]);
-	}
+	else 
+	if (isset($_GET['album_id'])) { $songs->song_album = $_GET['album_id']; }
 	else
-	{
-		//list all songs in the db
-	}
+	if (isset($_GET['art_id'])) { $songs->song_art = $_GET['art_id']; }
+
+	$sngResult = $songs->getSongs();
+	if ($sngResult->isError) { echo json_encode($sngResult); }
+	else
+	{ echo json_encode($sngResult->data); }
+	
+	unset ($songs);
 }
 
 function search()
