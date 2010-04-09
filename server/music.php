@@ -115,7 +115,8 @@ function play()//makes a list of the tracks selected in the sng list
 {
 	global $usersDB, $settings, $playlists;
 
-	$name = isset($_REQUEST["pl"]) ? $_REQUEST["pl"] : "playlist";
+	$plName = "playlist";
+	$plArr = array();
 	$musicURL = $settings->get('baseURL');
 	if (substr($musicURL, -1) != "/")
 		$musicURL .= "/";
@@ -126,8 +127,24 @@ function play()//makes a list of the tracks selected in the sng list
 		$plArr = explode('|', $sng, -1);
 	}
 	else
+	if (isset ($_REQUEST["pl"]))
 	{
+		$plName = $_REQUEST["pl"];
 		$plArr = $usersDB->getPLContents($_SESSION["username"], $name);
+	}
+	if (isset ($_REQUEST['art']))
+	{
+		$songs = new SongsModel(null, $_REQUEST['art_id'], null);
+		$plArr = $songs->getSongs();
+		if ($plArr->isError)
+		{
+			die("ERROR: " . $plArr->errorStr);
+		}
+		else
+		{
+			$plArr = $plArr->data;
+		}
+		unset($songs);
 	}
 	//print_r($plArr);
 	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
@@ -144,7 +161,7 @@ function play()//makes a list of the tracks selected in the sng list
 		$plFormat = $plFormat['resultStr']['plFormat'];
 
 		header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
-		header("Content-Disposition: filename=\"$name.$plFormat\"");
+		header("Content-Disposition: filename=\"$plName.$plFormat\"");
 		header("Content-Transfer-Encoding: plain");
 		echo $playlists->get_file($plFormat, $plArr, $musicURL);
 	}
