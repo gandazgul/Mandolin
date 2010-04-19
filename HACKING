@@ -1,7 +1,7 @@
 -- FOLDER STRUCTURE --
 index.php - detects the user's browser (mobil or PC) and includes the correct index file.
 index_pc.php - the index file for the PC version of the application
-index_mobi.php - the index file for the mobil version of the application
+index_mobi.php - the index file for the mobile version of the application
 
 /client  - client files, this files contain mainly HTML. There is one for each section.
 /client/js - javascript files (one for each client file e.g. adm.php -> adm.js)
@@ -15,7 +15,6 @@ index_mobi.php - the index file for the mobil version of the application
 	mod.ie.css - hacks to make it look right in IE 7
 	nav.slidingdoor.css - css for the navigation
 /client/images - images used within the application
-/client/flash - the flash player - not being used yet
 /client/views - templates used in the system - only one for now, I plan to make it more template driven in the future.
 
 /server - the ajax server, this files process the ajax requests coming from the JS in the client and use the DB models to retrieve data and
@@ -36,8 +35,8 @@ all other files not on this list are development files and can be deleted in a p
 
 -- HOW DOES IT WORK --
 The index file includes all other client files based on a parameter called "p", so for example: index.php?p=music will load the music.php page 
-in the client folder. if "p" is not a valid file, then a "main" page, defined in the settings, will be loaded, the main page could any of them.
-In case the "main" page doesnt exist an error will thrown.
+in the client folder. if "p" is not a valid file, then a "main" page, defined in the settings, will be loaded, the main page could be any of them.
+In case the "main" page doesnt exist an error will be thrown.
 
 All client pages have a corresponding javascript file with the same name, that makes AJAX requests to a server-side php file, with the same name, 
 that then uses the DB models (/models/) classes to perform the requested operations in the DBs, the result is always given in the same object that 
@@ -45,8 +44,8 @@ has the following structure:
 
 DBModelResponse - isError : bool
 		  errorCode: int - if isError is true this will contain the error code
-		  errorMsg: string - if isError is true this will contain the error message		  
-		  data: variant - it contains the requested data
+		  errorStr: string - if isError is true this will contain the error message		  
+		  data: mixed - it contains the requested data, is usualy an array
 
 I tried my best to make the server files restful using only GET and POST.
 GET - get all entries in the table
@@ -58,3 +57,4 @@ POST - Will be considered a new entry for the table
 POST:ID=? - Will be considered modifications to record ID. This might be replaced by the proper PUT HTTP verb in the future.
 POST:A=delete:ID=? - will delete a record. This might be replaced by the proper DELETE HTTP Verb in the future.
 POST:A=? will also call a function called A defined within the file.
+
