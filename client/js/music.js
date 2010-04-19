@@ -207,9 +207,9 @@ function displaySongs(songs)
 	else
 	{
 		$("#songList").html('');
-		for (i = 0; i < songs.data.length; i++)
+		for (var i = 0; i < songs.data.length; i++)
 		{
-			$("#songList").append("<li class='ui-widget-content' id='" + songs.data[i].id + "'>"+ songs.data[i].name +"</li>");
+			$("#songList").append("<li class='ui-widget-content' id='" + songs.data[i].song_id + "'>"+ songs.data[i].song_name +"</li>");
 		}
 
 		$("#songList li").contextMenu(
@@ -297,7 +297,22 @@ function displayAlbums(albums)
 				case "play":
 				case "playrand":
 				{
-					alert("TODO: Implement this. Album: " + $(el).attr('id'));
+					sngIDList = $("#albumList").getAllSelectedItems();
+					
+					if (sngIDList == "")
+					{
+						displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+					}
+					else
+					{
+						if (action == "playrand")
+							$("#rnd").val("true");
+						else
+							$("#rnd").val("false");
+						$("#sng").attr("name", "alb_id").val(sngIDList);
+						$("#SID").val(SID);
+						$("#playForm").get(0).submit();
+					}
 					break;
 				}
 			}
@@ -322,8 +337,22 @@ function displayArtists(artArr)
 			case "play":
 			case "playrand":
 			{ 
-				alert("TODO: Implement this. Artist: " + $(el).attr('id')); 
-				
+				sngIDList = $("#artistsList").getAllSelectedItems();
+
+				if (sngIDList == "")
+				{
+					displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+				}
+				else
+				{
+					if (action == "playrand")
+						$("#rnd").val("true");
+					else
+						$("#rnd").val("false");
+					$("#sng").attr("name", "art_id").val(sngIDList);
+					$("#SID").val(SID);
+					$("#playForm").get(0).submit();
+				}
 				break; 
 			}
 		}

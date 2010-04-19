@@ -5,7 +5,7 @@ $(document).ready(function(){
 	$("#plList").selectable({
 		stop: function(){
 			var plList = $(this).getAllSelectedItems();
-			$("#plContents").append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
+			$("#plContents").html('').append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
 			postData = "a=playlists&id=" + plList + "&SID=" + SID;
 			//alert(postData);
 			$.get("./server/playlists.php", postData, displayPLContents, "json");
@@ -110,18 +110,20 @@ function displaySavedPL(savedPLArr)
 	);
 }
 
-function displayPLContents(plContArr)
+//ajax callback for playlist content, get data and display it in list
+function displayPLContents(result)
 {
 	$("#plContents").html('');
-	if (plContArr['isError'])
-		displayError(plContArr['resultStr'])
+	if (result.isError)
+		displayError(result.errorStr);
 	else
 	{
-		for (var i = 0; i < plContArr['resultStr'].length; i++)
+		for (var i = 0; i < result.data.length; i++)
 		{
-			$("#plContents").append("<li class='ui-widget-content' id='"+ plContArr['resultStr'][i][0]['song_id'] +"'>"+ plContArr['resultStr'][i][0]['song_name'] +"</li>");
+			$("#plContents").append("<li class='ui-widget-content' id='"+ result.data[i].song_id +"'>"+ result.data[i].song_name +"</li>");
 		}
 
+		//jquery function to get all items form a select in a list separated by |
 		jQuery.fn.getAllItems = function(){
 			var result = "";
 			$(this).find("li").each(function(i, objOption){

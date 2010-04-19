@@ -17,7 +17,7 @@ class Result
 		$this->isError = false;
 		$this->errorCode = 0;
 		$this->errorStr = "";
-		$this->data = null;
+		$this->data = array();
 	}
 
 	function  __destruct()

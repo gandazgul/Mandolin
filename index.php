@@ -1,4 +1,11 @@
 <?php
+$mobile_browser = '0';
+if (isset ($_GET['mobi']))
+{
+	$mobile_browser = ($_GET['mobi'] == 'true') ? 1 : 0;
+}
+else
+{
 	/* This code is the work of Andy Moore (http://www.andymoore.info/) and you can find the original here (http://www.andymoore.info/php-to-detect-mobile-phones/).
 	 * Date Retrieved: 10/15/2009
 	 * 
@@ -11,7 +18,7 @@
 	 * 
 	 * If anyone has any improvements on this code, or implementations for other languages, please let me know!
 	 */
-	$mobile_browser = '0';
+
 	 
 	if(preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone)/i', strtolower($_SERVER['HTTP_USER_AGENT']))) 
 	{
@@ -49,36 +56,37 @@
 	{
 	    $mobile_browser = 0;
 	} 
+}//is it mobile or not?
 
-	require_once './models/Settings.php';
-	$mainPage = $settings->get("mainPage");
-	if (!file_exists("./client/$mainPage.php"))
+require_once './models/Settings.php';
+$mainPage = $settings->get("mainPage");
+if (!file_exists("./client/$mainPage.php"))
+{
+	exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
+}
+else
+{
+	$p = (isset($_GET["p"])) ? $_GET["p"] : $mainPage;
+}
+
+try
+{
+	if (!file_exists("./install/") and !is_dir("./install/"))
 	{
-		exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
+		//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
+		$dbh = new PDO($settings->get("dbDSN"));
+		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
+		unset($dbh);
 	}
 	else
 	{
-		$p = (isset($_GET["p"])) ? $_GET["p"] : $mainPage;
+		$p = "install";
+		if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
 	}
-
-	try
-	{
-		if (!file_exists("./install/") and !is_dir("./install/"))
-		{
-			//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
-			$dbh = new PDO($settings->get("dbDSN"));
-			$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
-			unset($dbh);
-		}
-		else
-		{
-			$p = "install";
-			if($mobile_browser > 0){ include('index_mobi.php'); }else{ include('index_pc.php'); }
-		}
-	}
-	catch (PDOException $e)
-	{
-		die($e->getMessage());
-	}
+}
+catch (PDOException $e)
+{
+	die($e->getMessage());
+}
 ?>

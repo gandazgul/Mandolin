@@ -32,6 +32,7 @@ catch(Exception $e)
 }
 
 unset($playlists);
+unset($mSongs);
 unset($mMusic);
 unset($usersDB);
 unset($moviesDB);
@@ -87,21 +88,27 @@ function albums()
 
 function songs()
 {
-	$songs = new SongsModel(null, null, null);
+	global $mSongs;
 
-	if (isset($_GET['id']))
+	if (isset($_GET['id']))		//echo information about the song and link for lyrics
 	{
-		//echo information about the song and link for lyrics
-		$songs->song_id = $_GET['id'];
+		$whereCol = 'song_id';
+		$whereVal = explode("|", $_GET['id'], -1);
 	}
 	else 
-	if (isset($_GET['album_id'])) { $songs->song_album = $_GET['album_id']; }
+	if (isset($_GET['album_id'])) 
+	{
+		$whereCol = "song_album";
+		$whereVal = explode("|", $_GET['album_id'], -1);
+	}
 	else
-	if (isset($_GET['art_id'])) { $songs->song_art = $_GET['art_id']; }
+	if (isset($_GET['art_id']))
+	{
+		$whereCol = "song_art";
+		$whereVal = explode("|", $_GET['art_id'], -1);
+	}
 
-	echo json_encode($songs->getSongs());
-	
-	unset ($songs);
+	echo json_encode($mSongs->getSongs("song_id, song_name", $whereCol, $whereVal));
 }
 
 function search()
@@ -113,7 +120,7 @@ function search()
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $usersDB, $settings, $playlists;
+	global $settings, $playlists, $mSongs, $usersDB;
 
 	$plName = "playlist";
 	$plArr = array();
@@ -127,29 +134,42 @@ function play()//makes a list of the tracks selected in the sng list
 		$plArr = explode('|', $sng, -1);
 	}
 	else
-	if (isset ($_REQUEST["pl"]))
+	if (isset ($_REQUEST["pl_id"]))
 	{
-		$plName = $_REQUEST["pl"];
-		$plArr = $usersDB->getPLContents($_SESSION["username"], $name);
+		$plArr = $playlists->get($_REQUEST["pl_id"]);
 	}
-	if (isset ($_REQUEST['art']))
+	else
 	{
-		$songs = new SongsModel(null, $_REQUEST['art_id'], null);
-		$plArr = $songs->getSongs();
-		if ($plArr->isError)
+		if (isset ($_REQUEST['art_id']))
 		{
-			die("ERROR: " . $plArr->errorStr);
+			$whereCol = "song_art";
+			$whereVal = explode("|", $_REQUEST['art_id'], -1);
 		}
 		else
+		if (isset ($_REQUEST['alb_id']))
 		{
-			$plArr = $plArr->data;
+			$whereCol = "song_album";
+			$whereVal = explode("|", $_REQUEST['alb_id'], -1);
 		}
-		unset($songs);
+
+		$result = $mSongs->getSongs("song_id", $whereCol, $whereVal);
+		if ($result->isError)
+			die("ERROR: " . $result->errorStr);
+		else
+		{
+			foreach ($result->data as $row)
+			{
+				$plArr[] = $row['song_id'];
+			}
+		}
 	}
-	//print_r($plArr);
+
+	if (count($plArr) == 0) die("Nothing to play");
+
+	//print_r($plArr); //print what we have so far
 	if (isset($_REQUEST["rnd"]) and ($_REQUEST["rnd"] == "true"))
 		shuffle($plArr);
-	//print_r($plArr);
+	//print_r($plArr); //check if it was randomized
 
 	$plFormat = json_decode($usersDB->loadSettings($_SESSION['username'], array("plFormat")), true);
 	if ($plFormat['isError'])
@@ -160,9 +180,9 @@ function play()//makes a list of the tracks selected in the sng list
 	{
 		$plFormat = $plFormat['resultStr']['plFormat'];
 
-		header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
+		/*header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
 		header("Content-Disposition: filename=\"$plName.$plFormat\"");
-		header("Content-Transfer-Encoding: plain");
+		header("Content-Transfer-Encoding: plain");*/
 		echo $playlists->get_file($plFormat, $plArr, $musicURL);
 	}
 }

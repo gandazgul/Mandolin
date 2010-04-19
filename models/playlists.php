@@ -29,7 +29,7 @@ class PlaylistsModel
 		$this->resultArr['resultStr'] = "";
 
 		$this->plFormats['xspf']['head'] = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n\t<trackList>\n";
-		$this->plFormats['xspf']['track'] = "\t\t<track>\n\t\t\t<title>".'%3$d%1$s'."</title>\n\t\t\t<location>".'%2$s'."</location>\n\t\t</track>\n";
+		$this->plFormats['xspf']['track'] = "\t\t<track>\n\t\t\t<title>".'%3$d - %1$s'."</title>\n\t\t\t<location>".'%2$s'."</location>\n\t\t</track>\n";
 		$this->plFormats['xspf']['foot'] = "\t</trackList>\n</playlist>";
 		$this->plFormats['xspf']['amp'] = "&amp;";
 		$this->plFormats['m3u']['head'] = "#EXTM3U\n";
@@ -116,7 +116,6 @@ class PlaylistsModel
 			$song_id = $queryArr[0]['song_id'];
 			$song_name = $queryArr[0]['song_name'];
 			$songURL = $musicURL."server/stream.php?k=".$_SESSION["key"].$this->plFormats[$plFormat]['amp']."s=$song_id";
-			//			#EXTINF:LENGTH,SONG_NAME";
 			$result .= sprintf($this->plFormats[$plFormat]['track'], $song_name, $songURL, $i + 1);
 		}
 

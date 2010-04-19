@@ -10,6 +10,7 @@ if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 
 require_once '../models/playlists.php';
 require_once '../models/songs.php';
+
 $action = $_REQUEST["a"];
 
 try
@@ -21,14 +22,12 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-$playlists->__destruct();
 unset($playlists);
-$songs->__destruct();
-unset($songs);
+unset($mSongs);
 
 function playlists()//returns the list of playlists/the contents of playlist->ID/Create a new playlist
 {
-	global $playlists, $songs;
+	global $playlists, $mSongs;
 
 	if (isset($_POST['pl_name']))
 	{
@@ -36,11 +35,13 @@ function playlists()//returns the list of playlists/the contents of playlist->ID
 		if ($playlists->post($pl_name, $_POST["pl_contents"]))
 			echo "Playlist: \"$pl_name\" was created successfuly, switch to the \"Music Playlists\" tab to play or edit it.";
 	}
-	else if (isset($_GET['id']))
+	else
+	if (isset($_GET['id']))
 	{
-		$plContents = $playlists->get($_GET['id']);
-		//print_r($plContents);
-		echo $songs->getInfo_json($plContents, array('song_id', 'song_name'));
+		$whereCol = "song_id";
+		$whereVal = $playlists->get($_GET['id']);
+		//print_r($whereVal);
+		echo json_encode($mSongs->getSongs('song_id, song_name', $whereCol, $whereVal));
 	}
 	else
 		echo $playlists->get_json(null);

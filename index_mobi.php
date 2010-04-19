@@ -22,17 +22,17 @@
 			<div id="plList">
 				<?php
 					$userName = $_SESSION["username"];
-					include_once './models/UsersDB.php';
-					$usersDB = new UsersDB("./models/dbfiles/users.db");
+					include_once './models/playlists.php';
+					$mPlaylist = new PlaylistsModel($userName);
 					
-					$resultArr = $usersDB->getPLsForUser($userName);
+					$resultArr = $mPlaylist->get(null);
+					//print_r($resultArr);
 					for($i = 0; $i < count($resultArr); $i++)
 					{
-						echo "<a href='./server/music.php?a=play&pl=".$resultArr[$i]."&SID=".$_SESSION["id"]."'>".$resultArr[$i]."</a><br />\n";
+						echo "<a href='./server/music.php?a=play&pl_id=".$resultArr[$i]['id']."&SID=".$_SESSION["id"]."'>".$resultArr[$i]['name']."</a><br />\n";
 					}
 					
-					$usersDB->__destruct();
-					unset($usersDB);
+					unset($mPlaylist);
 				?>
 			</div>
 		</center>
