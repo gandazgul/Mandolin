@@ -23,7 +23,7 @@ class Settings
 		else
 		{
 			if(fclose(fopen($this->dbfilepath)) === false)
-				die("<font color='red'>Settings file does not exist and I cant create it. Please create an empty file called \"settings\".</font><br>");
+				die("<font color='red'>Settings file does not exist and I cant create it. Please create an empty file called \"settings.json\" in the \"data\" folder.</font><br>");
 		}
 
 		$this->dbh = json_decode(file_get_contents($this->dbfilepath), true);

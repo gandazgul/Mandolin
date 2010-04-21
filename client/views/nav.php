@@ -7,7 +7,7 @@
 		if ($p == "music")
 			echo "<li class='active'><strong><img src='./client/images/music.png' class='nav_icon' />Music</strong></li>";
 		else
-			echo "<li><a href='.'><img src='./client/images/music.png' class='nav_icon' />Music</a></li>";
+			echo "<li><a href='./?p=music'><img src='./client/images/music.png' class='nav_icon' />Music</a></li>";
 
 		if ($p == "playlists")
 			echo "<li class='active'><strong><img src='./client/images/playlists.png' class='nav_icon' />Playlists</strong></li>";

@@ -59,20 +59,12 @@ else
 }//is it mobile or not?
 
 require_once './models/Settings.php';
-$mainPage = $settings->get("mainPage");
-if (!file_exists("./client/$mainPage.php"))
-{
-	exit("FATAL ERROR: The page configured in the settings as main ($mainPage) doesnt exist, plase correct this before using the application. Default Value: music");
-}
-else
-{
-	$p = (isset($_GET["p"])) ? $_GET["p"] : $mainPage;
-}
 
 try
 {
 	if (!file_exists("./install/") and !is_dir("./install/"))
 	{
+		$p = (isset($_GET["p"])) ? $_GET["p"] : 'music';
 		//$dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
 		$dbh = new PDO($settings->get("dbDSN"));
 		$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
