@@ -182,9 +182,9 @@ function play()//makes a list of the tracks selected in the sng list
 	{
 		$plFormat = $plFormat['resultStr']['plFormat'];
 
-		/*header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
+		header("Content-type: ".$playlists->plFormatsMimeTypes[$plFormat]);
 		header("Content-Disposition: filename=\"$plName.$plFormat\"");
-		header("Content-Transfer-Encoding: plain");*/
+		header("Content-Transfer-Encoding: plain");
 		echo $playlists->get_file($plFormat, $plArr, $musicURL);
 	}
 }
