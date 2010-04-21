@@ -40,8 +40,8 @@
 				<div id="header">
 					<img alt="Mandolin logo" src="./client/images/logo.jpg" />
 					<div class="title">
-						<h1>Welcome <strong><?php echo $username; ?></strong> to Mandolin v<?php echo $settings->get('version'); ?></h1>
-						<h2><em>&ldquo;Because music is important&rdquo;</em></h2>
+						<h2>Welcome <strong><?php echo $username; ?></strong> to Mandolin v<?php echo $settings->get('version'); ?></h2>
+						<h3><em>&ldquo;Because music is important&rdquo;</em></h3>
 					</div>
 				</div>
 
@@ -73,7 +73,9 @@
 				<!-- begin: #footer -->
 				<div id="footerHead">&nbsp;</div>
 				<div id="footer">
-					<a href="http://www.gnu.org/licenses/gpl.html">Copyleft (L)</a> 2009 SCTree | <a href="http://github.com/gandazgul/Mandolin" target="_bank">Get the code @GitHub</a> | Layout based on <a href="http://www.yaml.de/">YAML</a> | <a href="./?mobi=true">See mobile version</a>
+					Copyright &copy; 2009 SCTree (<a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPLv2</a>)
+					&nbsp;|&nbsp;
+					<a href="./?mobi=true">See mobile version</a>
 				</div>
 			</div>
 			<div id="border-bottom">

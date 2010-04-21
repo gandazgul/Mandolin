@@ -1,8 +1,8 @@
 $(document).ready(function(){
 	loadSettings();
 	loadUSettings();
-	
-	$("#accordion").accordion({autoHeight: false, collapsible: true, active: false});
+
+	$("#admAccordion").accordion({autoHeight: false, collapsible: true, active: false}).css('margin', '1em 0');
 
 	var vUserRow = $.createTemplate($("#userRow").text());
 	$("#usersTableBody").setTemplate($('#usersTempl').text(), {userRow: vUserRow});
@@ -168,7 +168,12 @@ $(document).ready(function(){
 			}
 		}
 	});
-
+	//import users from csv --------------------------------------------------------------------------------------------------------------------------
+	$("#btnImportUsers").button({
+		icons: {
+			primary: 'ui-icon-user-import'
+		}
+	});
 	var button = $('#btnImportUsers .ui-button-text'), interval;
 
 	new AjaxUpload($('#btnImportUsers'), {
@@ -210,6 +215,116 @@ $(document).ready(function(){
 				$("#importUsersDlg").dialog('open');
 			}			
 		}
+	});
+	//Add user --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnAddUser").button({
+		icons: {
+			primary: 'ui-icon-user-add'
+		}
+	}).click(function(){
+		$("#validateTips").html("All form fields are required.");
+		$("#addUserDiag").dialog('open');
+	});
+	//save user info --------------------------------------------------------------------------------------------------------------------------------
+	$(".btnSaveUser").button({
+		icons: {
+			primary: 'ui-icon-user-save'
+		}
+	}).click(function(){
+		var postData =  "a=saveu&id=" + this.value + "&un=" + $("#userName" + this.value).html() + "&p=" + $("#passw" + this.value).val();
+		postData += "&adm=" + $("#admin" + this.value).attr('checked');
+		postData += "&SID=" + SID;
+		alert(postData);
+		$.post("./server/adm.php", postData, displayError);
+	});
+	//delete user --------------------------------------------------------------------------------------------------------------------------------
+	$(".btnDelUser").button({
+		icons: {
+			primary: 'ui-icon-user-delete'
+		}
+	}).click(function(){
+		$("#delUserConfDialog").dialog('option', 'userID', this.value).dialog('open');
+	});
+	//change password  --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnChangePassw").button({
+		icons: {
+			primary: 'ui-icon-ok'
+		}
+	}).click(function(){
+		if ( ($("#reNewPassw").val() == "" ) || ( $("#newPassw").val() == "" ) || ( $("#oldPassw").val() == "" ) )
+		   displayError("ERROR: Passwords can't be empty");
+		else
+		if ($("#reNewPassw").val() == $("#newPassw").val())
+		{
+			var postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
+			$.post("./server/adm.php", postData, displayError);
+		}
+		else
+			displayError("ERROR: Passwords don't match");
+	});
+	//user settings --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnSaveUSettings").button({
+		icons: {
+			primary: 'ui-icon-ok'
+		}
+	}).click(function(){
+		var setObj = new settings(null, null, "usettings");
+		var postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+		$.post("./server/adm.php", postData, displayError);
+	});
+	//add folder --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnAddFolder").button({
+		icons: {
+			primary: 'ui-icon-add-folder'
+		}
+	}).click(function(){
+		$('#addFolderDiag').dialog('open');
+	});
+	//remove folder  --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnRemoveFolder").button({
+		icons: {
+			primary: 'ui-icon-delete-folder'
+		}
+	}).click(function(){
+		var index = $("#musicFoldersList").attr("selectedIndex");
+		$("#musicFoldersList option:eq("+ index +")").remove();
+		var folders = new Array();
+
+		$("#musicFoldersList option").each(function()
+		{
+			folders.push($(this).val());
+		});
+
+		var keys = new Array("musicFolders");
+		var values = new Array(JSON.stringify(folders));
+
+		var setObj = new settings(keys, values);
+		//alert(JSON.stringify(setObj));
+		var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+		$.post("./server/adm.php", postData, displayError);
+	});
+	//recreate DB  --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnRecreateDB").button({
+		icons: {
+			primary: 'ui-icon-recreate-db'
+		}
+	}).click(function(){
+		var res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
+		if (res)
+		{
+			document.location = "./?p=createDB";
+		}
+	});
+	//save system settings  --------------------------------------------------------------------------------------------------------------------------------
+	$("#btnSaveSettings").button({
+		icons: {
+			primary: 'ui-icon-ok'
+		}
+	}).click(function(){
+		var setObj = new settings(null, null, "settings");
+		//alert(JSON.stringify(setObj));
+		var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
+		$.post("./server/adm.php", postData, displayError);
 	});
 });
 
@@ -309,46 +424,6 @@ var settings = function(pKeys, pValues, className){
 	}
 };
 
-function saveUSettings()
-{
-	var setObj = new settings(null, null, "usettings");
-	//alert(JSON.stringify(setObj));
-	var postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
-	$.post("./server/adm.php", postData, displayError);
-}
-
-function saveSettings()
-{
-	var setObj = new settings(null, null, "settings");
-	//alert(JSON.stringify(setObj));
-	var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
-	$.post("./server/adm.php", postData, displayError);
-}
-
-function changePassw()
-{
-	if ( ($("#reNewPassw").val() == "" ) || ( $("#newPassw").val() == "" ) || ( $("#oldPassw").val() == "" ) )
-	   displayError("ERROR: Passwords can't be empty");
-	else
-    if ($("#reNewPassw").val() == $("#newPassw").val())
-	{
-		var postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
-		$.post("./server/adm.php", postData, displayError);
-	}
-	else
-		displayError("ERROR: Passwords don't match");
-}
-
-function saveUser(id)
-{
-	//alert($("#passw" + id).val());
-	var postData =  "a=saveu&id=" + id + "&un=" + $("#userName" + id).html() + "&p=" + $("#passw" + id).val();
-	postData += "&adm=" + $("#admin" + id).attr('checked');
-	postData += "&SID=" + SID;
-	//alert(postData);
-	$.post("./server/adm.php", postData, displayError);
-}
-
 function addUser(data)
 {
 	if (data.isError)
@@ -365,46 +440,6 @@ function addUser(data)
 		var sorting = [[0,1]];
 		$("#userTable").trigger("sorton",[sorting]);
 	}
-}
-
-function _addUser()
-{
-	$("#validateTips").html("All form fields are required.");
-	$("#addUserDiag").dialog('open');
-}
-
-function createDB()
-{
-	var res = confirm("This process takes some time based on how much music you have, network speed, etc. Please be patient.");
-	if (res)
-	{
-		document.location = "./?p=createDB";
-	}
-}
-
-function removeFolder()
-{
-	var index = $("#musicFoldersList").attr("selectedIndex");
-	$("#musicFoldersList option:eq("+ index +")").remove();
-	var folders = new Array();
-	
-	$("#musicFoldersList option").each(function()
-	{
-		folders.push($(this).val());
-	});
-	
-	var keys = new Array("musicFolders");
-	var values = new Array(JSON.stringify(folders));
-	
-	var setObj = new settings(keys, values);
-	//alert(JSON.stringify(setObj));
-	var postData = "a=set&data=" + JSON.stringify(setObj) + "&SID=" + SID;
-	$.post("./server/adm.php", postData, displayError);
-}
-
-function _delUser(id)
-{
-	$("#delUserConfDialog").dialog('option', 'userID', id).dialog('open');
 }
 
 function delUser(data)

@@ -99,7 +99,7 @@ function songs()
 	if (isset($_GET['album_id'])) 
 	{
 		$whereCol = "song_album";
-		$whereVal = explode("|", $_GET['album_id'], -1);
+		$whereVal = explode("|", $_GET['album_id']);
 	}
 	else
 	if (isset($_GET['art_id']))
@@ -131,7 +131,7 @@ function play()//makes a list of the tracks selected in the sng list
 	if (isset($_REQUEST["sng"]))
 	{
 		$sng = $_REQUEST["sng"];
-		$plArr = explode('|', $sng, -1);
+		$plArr = explode('|', $sng);
 	}
 	else
 	if (isset ($_REQUEST["pl_id"]))
@@ -143,15 +143,17 @@ function play()//makes a list of the tracks selected in the sng list
 		if (isset ($_REQUEST['art_id']))
 		{
 			$whereCol = "song_art";
-			$whereVal = explode("|", $_REQUEST['art_id'], -1);
+			$whereVal = explode("|", $_REQUEST['art_id']);
 		}
 		else
 		if (isset ($_REQUEST['alb_id']))
 		{
 			$whereCol = "song_album";
-			$whereVal = explode("|", $_REQUEST['alb_id'], -1);
+			$whereVal = explode("|", $_REQUEST['alb_id']);
 		}
-
+	}
+	if (isset($whereCol))//if either art_id or alb_id was defined
+	{
 		$result = $mSongs->getSongs("song_id", $whereCol, $whereVal);
 		if ($result->isError)
 			die("ERROR: " . $result->errorStr);

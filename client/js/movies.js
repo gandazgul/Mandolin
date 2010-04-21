@@ -66,7 +66,6 @@ function displayMovies(movArr)
 			}
 		}
 	});
-	$('#moviesMenu').disableContextMenuItems('#rename,#delete');
 	
 	$("#moviesList").children().each(function(){
 		$(this).click(function(){

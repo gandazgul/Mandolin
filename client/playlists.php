@@ -14,8 +14,8 @@
 	<li class="play"><a href="#play">Play Selected</a></li>
 	<li class="playrand"><a href="#playrand">Shuffle then Play</a></li>
 	<li class="shuffle separator"><a href="#shuffle">Shuffle Playlist</a></li>
-	<li class="rename"><a href="#rename">Rename Playlist</a></li>
-	<li class="delete"><a href="#delete">Delete Playlist</a></li>
+	<li class="pl_rename"><a href="#rename">Rename Playlist</a></li>
+	<li class="pl_delete"><a href="#delete">Delete Playlist</a></li>
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
@@ -23,8 +23,8 @@
 	<li class="play"><a href="#play">Play Selected</a></li>
 	<li class="playrand"><a href="#playrand">Play Random</a></li>
 	<li class="selectall separator"><a href="#selectall">Select All</a></li>
-	<li class="up separator"><a href="#moveup">Move up</a></li>
-	<li class="down"><a href="#movedown">Move down</a></li>
+	<li class="pl_up separator"><a href="#moveup">Move up</a></li>
+	<li class="pl_down"><a href="#movedown">Move down</a></li>
 	<li class="delete"><a href="#delete">Delete from Playlist</a></li>
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
@@ -35,19 +35,17 @@
 	<input type="hidden" name="SID" id="SID" />
 	<input type="hidden" name="rnd" id="rnd" value="false" />
 </form>
-<div id="teaser">
-	<div id="errorDiv" class="important"></div>
-</div>
-<div id="main">
+<div id="errorDiv" class="important"></div>
+<div id="main" class="ui-widget-content ui-corner-all">
 	<div class="subcolumns">
 		<div class="c33l">
 			<div class="subcl2">
-				<p class="title">Saved Playlists:&nbsp;<span id="plTotal"></span></p>
+				<h3>Saved Playlists:&nbsp;<span id="plTotal"></span></h3>
 			</div>
 		</div>
 		<div class="c33l">
 			<div class="subcl1">
-				<p class="title">Contents for the selected Playlists:</p>
+				<h3>Contents for the selected Playlists:</h3>
 			</div>
 		</div>
 		<div class="c33l">

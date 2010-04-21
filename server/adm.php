@@ -13,7 +13,7 @@ $usersDB = new UsersDB();
 require_once("../models/music.php");
 $mMusic = new MusicModel();
 require_once '../models/settings.php';
-require_once '../server/result.class.php';
+//require_once '../server/result.class.php';
 
 $action = $_REQUEST["a"];
 

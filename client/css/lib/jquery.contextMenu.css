@@ -54,9 +54,16 @@
 	classes to the respective LI element(s)
 */
 
-.contextMenu LI.edit A { background-image: url(images/page_white_edit.png); }
-.contextMenu LI.cut A { background-image: url(images/cut.png); }
-.contextMenu LI.copy A { background-image: url(images/page_white_copy.png); }
-.contextMenu LI.paste A { background-image: url(images/page_white_paste.png); }
-.contextMenu LI.delete A { background-image: url(images/page_white_delete.png); }
-.contextMenu LI.quit A { background-image: url(images/door.png); }
+.contextMenu LI.delete A { background-image: url(../../images/page_white_delete.png); }
+.contextMenu LI.play A { background-image: url(../../images/play.png); }
+.contextMenu LI.selectall A { background-image: url(../../images/select_all.png); }
+.contextMenu LI.createpl A { background-image: url(../../images/playlists.png); }
+.contextMenu LI.addtopl A { background-image: url(../../images/pl_add.png); }
+.contextMenu LI.cancel A { background-image: url(../../images/cancel.png); }
+.contextMenu LI.playrand A { background-image: url(../../images/a.png); }
+.contextMenu LI.shuffle A { background-image: url(../../images/arrow_switch.png); }
+.contextMenu LI.pl_rename A { background-image: url(../../images/playlist_edit.png); }
+.contextMenu LI.pl_delete A { background-image: url(../../images/playlist_delete.png); }
+.contextMenu LI.pl_up A { background-image: url(../../images/arrow_up.png); }
+.contextMenu LI.pl_down A { background-image: url(../../images/arrow_down.png); }
+.contextMenu LI.delete A { background-image: url(../../images/delete.png); }

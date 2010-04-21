@@ -45,47 +45,37 @@
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
-<div id="teaser">
+<div id="teaser" class="ui-widget-content ui-corner-all">
 	<div id="errorDiv" class="important"></div>
 	<form action="" class="ui-form">
-		<div>
-			<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
-			<input type="text" id="searchBox" size="85" class="side ui-widget-content ui-corner-all" />
-		</div>
+		<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
+		<input type="text" id="searchBox" size="110" class="text-side-no-margin ui-widget-content ui-corner-all" />
 	</form>
 </div>
-<div id="main">
+<div id="main" class="ui-widget-content ui-corner-all">
 	<div class="subcolumns">
 		<div class="c25l">
-			<div class="subcl2">
-				<p class="title">Artists:&nbsp;<span id="artTotal"></span></p>
+			<div>
+				<h3><img alt="Artists Icon" src="./client/images/artists.png" />Artists:&nbsp;<span id="artTotal"></span></h3>
 			</div>
-		</div>
-		<div class="c50l">
-			<div class="subcl1">
-				<p class="title">Albums for selected Artists:</p>
-			</div>
-		</div>
-		<div class="c25l">
-			<div class="subcl1">
-				<p class="title">Songs for selected Albums:</p>
-			</div>
-		</div>
-	</div>
-	<div class="subcolumns">
-		<div class="c25l">
-			<div class="subcl2 musicList" id="artistsListDiv">
+			<div class="musicList" id="artistsListDiv">
 				<ol id="artistsList">
 					<li><img alt="Loading..." src="./client/images/ajax-loader.gif" /></li>
 				</ol>
 			</div>
 		</div>
 		<div class="c50l">
+			<div class="subcl1">
+				<h3><img alt="Albums Icon" src="./client/images/cd.png" />&nbsp;Albums for selected Artist(s):</h3>
+			</div>
 			<div class="subcl1 musicList" id="albumListDiv">
 				<ol id="albumList"></ol>
 			</div>
 		</div>
 		<div class="c25l">
+			<div class="subcl1">
+				<h3><img alt="Songs Icon" src="./client/images/song.png" />&nbsp;Songs for selected Album(s):</h3>
+			</div>
 			<div class="subcl1 musicList" id="songListDiv">
 				<ol id="songList"></ol>
 			</div>

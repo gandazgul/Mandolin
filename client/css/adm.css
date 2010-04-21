@@ -9,3 +9,12 @@ table {
 tbody td {
 	border-bottom: none;
 }
+
+.ui-icon-user-add { background-image: url("../images/user_add.png") !important; }
+.ui-icon-user-save { background-image: url("../images/user_save.png") !important; }
+.ui-icon-user-delete { background-image: url("../images/user_delete.png") !important; }
+.ui-icon-user-import { background-image: url("../images/user_go.png") !important; }
+.ui-icon-ok { background-image: url("../images/accept.png") !important; }
+.ui-icon-add-folder { background-image: url("../images/folder_add.png") !important; }
+.ui-icon-delete-folder { background-image: url("../images/folder_delete.png") !important; }
+.ui-icon-recreate-db { background-image: url("../images/database_refresh.png") !important; }

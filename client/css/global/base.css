@@ -25,7 +25,7 @@
 
 	/* (en) Marginal areas & page background */
 	/* (de) Randbereiche & Seitenhintergrund */
-	body { background: #3b69ad none; padding: 10px 0; }
+	body { background: #3b69ad none; padding: 0; margin: 3px 0; }
 	img { border:0 solid; }
 
 	/* Layout Alignment | Layout-Ausrichtung */
@@ -35,12 +35,13 @@
 	.page_margins { width: auto;  min-width: 740px; max-width: 90em; background: #fff; }
 	.page { padding: 10px 15px 10px 10px; }
 	.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; }
+	.hidden-table, .hidden-table td, .hidden-table tr:hover td { background: none; border: none; margin: 0; width: 100%;  }
 	#header { padding: 10px 2em 1em 10px; color: #000; background:#edf2f8 url("../../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; }
 	#header div.title { position: absolute; top: 10px; left: 200px }
 	#nav { overflow:hidden; }
 	div.hlist { background-color: #c8ddf3 }
-	#main { margin: 10px 0; background: #fff; }
-	#teaser { clear: both; padding: 0 2em; margin: 10px 0; }
+	#main { margin: 1em 0; padding: 1em; background: #fff; }
+	#teaser { clear: both; padding: 1em; margin: 1em 0; }
 	#errorDiv { display: none; }
 	#footer { padding: 10px 20px; color:#666; background: #EDF2F8; }
 	#footerHead { background-color: #C8DDF3;  height: 5px; }
@@ -48,6 +49,13 @@
 	/* (en) navigation: horizontal adjustment | (de) horizontale Ausrichtung  */
 	#nav ul { margin-left: 20px; }
 
+	#login-form {
+		left: 50%;
+		margin-left: -150px;
+		position: absolute;
+		width: 300px;
+	}
+	#login-form fieldset.top { text-align: center; }
 	/*-------------------------------------------------------------------------*/
 
 	/**
@@ -74,8 +82,7 @@
 	.c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r { float: right; }
 
 	.subcl0 { padding: 0; }
-	.subcl1 { padding: 0 0 0 1em; }
-	.subcl2 { padding: 0 0 0 2em; }
+	.subcl1 { padding: 0 0 0 0.3em; }
 
 	.subcolumns { overflow: hidden; width: 100%; }
 
@@ -158,8 +165,8 @@
 	.ui-form legend { padding: 0.5em }
 	.ui-form label  { display:inline-block; }
 	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 12px; width: 95%; padding: .3em; }
-	.ui-form input.textNoMargin, .ui-form select.textNoMargin { display: block; width: 95%; padding: .3em; }
-	.ui-form input.side { margin-bottom: 12px; padding: .3em; }
+	.ui-form input.text-no-margin, .ui-form select.text-no-margin { display: block; width: 95%; padding: .3em; }
+	.ui-form input.text-side-no-margin { padding: .3em; }
 	.ui-form fieldset { padding: 0.8em; }
 	.ui-form fieldset.top, .ui-form.top { margin-top: 4px; }
 

@@ -4,44 +4,23 @@ $(document).ready(function(){
 
 	$("#artistsList").selectable({
 		stop: function(){
-			var artIDList = "";
-			$(".ui-selected", this).each(function(){
-				//var index = $("#artistsList li").index(this);
-				artIDList += this.id + "|";
-			});
-			//alert(strResult);
 			$("#albumList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-			postData = "a=albums&artist_id=" + artIDList + "&SID=" + SID;
+			postData = "a=albums&artist_id=" + $(this).getAllSelectedItems() + "&SID=" + SID;
 			$.getJSON("./server/music.php", postData, displayAlbums);
 		}
 	});
 
 	$("#albumList").selectable({
 		stop: function(){
-			var albIDList = "";
-			$(".ui-selected", this).each(function(){
-				//var index = $("#artistsList li").index(this);
-				albIDList += this.id + "|";
-			});
-			//alert(strResult);
 			$("#songList").empty().append("<li class='ui-widget-content'><img alt='Loading...' src='./client/images/ajax-loader.gif' /></li>");
-			postData = "a=songs&album_id=" + albIDList + "&SID=" + SID;
+			postData = "a=songs&album_id=" + $(this).getAllSelectedItems() + "&SID=" + SID;
 			$.getJSON("./server/music.php", postData, displaySongs);
 		}
 	});
 
 	$("#songList").selectable({
-		/*stop: function(){
-			var strResult = "";
-			//alert(this.id);
-			$(".ui-selected", this).each(function(){
-				//var index = $("#artistsList li").index(this);
-				var alb_id = this.id;
-				strResult += alb_id + "|";
-			});
-			alert(strResult);
-			getSongs(strResult);
-		}*/
+		stop: function(){
+		}
 	});
 
 	$("#addToPLDiag").dialog({
@@ -286,7 +265,7 @@ function displayAlbums(albums)
 		//alert(albArr[0].id);
 		for (i = 0; i < albums.data.length; i++)
 		{
-			$("#albumList").append("<li class='ui-widget-content' id='"+ albums.data[i].id +"'>"+ albums.data[i].name +"</li>");
+			$("#albumList").append("<li class='ui-widget-content' id='"+ albums.data[i].alb_id +"'>"+ albums.data[i].alb_name +"</li>");
 		}
 
 		$("#albumList li").contextMenu({

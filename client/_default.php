@@ -36,8 +36,8 @@ class CDefault //extends CController
 					$key = sha1($username."@".$passw.":".time());
 					$usersDB->updateKey($username, $key);
 				}
-				session_name("Mandolin");
-				session_start();
+				//session_name("Mandolin");
+				//session_start();
 				session_regenerate_id();
 				$_SESSION["key"] = $key;
 				$_SESSION["username"] = $username;
@@ -54,33 +54,40 @@ class CDefault //extends CController
 	function login()
 	{?>
 		<div id="main">
-			<form action="./?p=checkAuth" method="post" class="ui-form">
-				<fieldset class="ui-widget-content ui-widget-content ui-corner-all">
-					<legend class="ui-widget-content ui-widget-header ui-corner-all">Please login</legend>
+			<form action="./?p=checkAuth" method="post" id="login-form" class="ui-form">
+				<fieldset class="ui-widget-content ui-corner-all">
 					<?php if(isset($_GET["passw"])): ?>
-						<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+					<strong class="message">ERROR: Incorrect Username and/or Password</strong>
 					<?php endif; ?>
-					<p>
-						<label for="username">Username:</label>
-						<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
-					</p>
-					<p>
-						<label for="passw">Password:</label>
-						<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
-					</p>
-					<p>
-						<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Login</button>
-					</p>
+					<label for="username">Username:</label>
+					<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />
+					<label for="passw">Password:</label>
+					<input type="password" size="20" name="passw" id="passw" class="text ui-widget-content ui-corner-all" />
+				</fieldset>
+				<fieldset class="ui-widget-content ui-corner-all top">
+					<button type="submit" id="btnLogin">Login</button>
 				</fieldset>
 			</form>
 		</div>
+		<script type="text/javascript">
+			$("#nav").hide();
+			$("#main").css('height', '180px');
+			$('#btnLogin').button({
+				icons:{
+					primary: 'ui-icon-ok'
+				}
+			});
+		</script>
+		<style type="text/css">
+			.ui-icon-ok { background-image: url("./client/images/accept.png") !important; }
+		</style>
 	<?php
 	}
 
 	function logout()
 	{
-		session_name("Mandolin");
-		session_start();
+		//session_name("Mandolin");
+		//session_start();
 
 		$_SESSION = array();
 		unset($sess_id);

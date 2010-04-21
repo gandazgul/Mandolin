@@ -22,11 +22,11 @@
 			<input type='checkbox' name='userCheck{$T.user_id}' id='userCheck{$T.user_id}' value='{$T.user_id}' />
 			<span id='userName{$T.user_id}'>{$T.user_name}</span>
 		</td>
-		<td><input type='password' id='passw{$T.user_id}' class='ui-widget-content ui-corner-all textNoMargin' /></td>
+		<td><input type='password' id='passw{$T.user_id}' class='ui-widget-content ui-corner-all text-no-margin' /></td>
 		<td><input type='checkbox' id='admin{$T.user_id}' {#if ($T.user_admin_level == 1) || ($T.user_admin_level == 'TRUE')}checked='checked'{#/if} /></td>
 		<td>
-			<button onclick="saveUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Save</span></button>&nbsp;
-			<button onclick="_delUser('{$T.user_id}'); return false;" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class="ui-button-text">Delete</span></button>
+			<button type="button" value="{$T.user_id}" class="btnSaveUser">Save</button>&nbsp;
+			<button type="button" value="{$T.user_id}" class="btnDelUser">Delete</button>
 		</td>
 	</tr>
 </textarea>
@@ -72,11 +72,9 @@
 <div id="delUserConfDialog" title="Delete user">
 	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
 </div>
-<div id="teaser">
-	<div id="errorDiv" class="important"></div>
-</div>
-<div id="main" style="padding: 0 20px;">
-	<div id="accordion">
+<div id="errorDiv" class="important"></div>
+<!--div id="main"-->
+	<div id="admAccordion">
 		<h3><a href="#">&nbsp;<img src="./client/images/passwadm.png" alt="User Administration Icon">&nbsp;Change Password</a></h3>
 		<div>
 			<form action="" class="ui-form ui-widget">
@@ -87,15 +85,16 @@
 					<input type="password" id="newPassw" class="text ui-widget-content ui-corner-all" />
 					<label for="oldPassw">Re-Type New password:</label>
 					<input type="password" id="reNewPassw" class="text ui-widget-content ui-corner-all" />
-					<button type="button" onclick="changePassw()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Change Password</button>
+				</fieldset>
+				<fieldset class="ui-widget-content ui-corner-all top">
+					<button type="button" id="btnChangePassw">Change Password</button>
 				</fieldset>
 			</form>
 		</div>
-		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;User Settings</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/user_settings.png" alt="Settings Icon">&nbsp;User Settings</a></h3>
 		<div>
 			<form action="" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Settings </legend>
 					<label for="plFormat">What format do you want your playlists to be? (Default: XSPF) </label>
 					<select id="plFormat" class="usettings ui-widget-content ui-corner-all text">
 						<option value="xspf">XSPF - XML Playlist, www.xspf.org</option>
@@ -115,7 +114,9 @@
 					</select>
 					<!--label for="version">Version: </label>
 					<input type="text" id="version" class="usettings ui-widget-content ui-corner-all" /-->
-					<button type="button" id="btnSaveUSettings" onclick="saveUSettings()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Save Settings</button>
+				</fieldset>
+				<fieldset class="ui-widget-content ui-corner-all top">
+					<button type="button" id="btnSaveUSettings">Save Settings</button>
 				</fieldset>
 			</form>
 		</div>
@@ -140,54 +141,40 @@
 					</table>
 				</fieldset>
 				<fieldset class="ui-widget-content ui-corner-all top">
-					<button onclick="_addUser(); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Add User</button>
-					<button id="btnImportUsers"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Import CSV User List</button>
+					<button type="button" id="btnAddUser">Add User</button>
+					<button type="button" id="btnImportUsers">Import CSV User List</button>
 				</fieldset>
 			</form>
 		</div>
-		<h3><a href="#">&nbsp;<img src="./client/images/dbadm.png" alt="DB Administration Icon">&nbsp;Database Administration</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/dbadm.png" alt="DB Administration Icon">&nbsp;Music Library</a></h3>
 		<div>
-			<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
 			<form action="" class="ui-form ui-widget">
 				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Music Folders </legend>
-					<div class="subcolumns">
-						<div class="c50l">
-							<div class="subcl0">
-								<select id="musicFoldersList" size="10" class="ui-widget-content subcolumns">
-								<?php
-									$musicFolders = json_decode($settings->get("musicFolders"));
-									//print_r($musicFolders);
-									for ($i = 0; $i < count($musicFolders); $i++)
-									{
-										echo "<option>{$musicFolders[$i]}</option>\n";
-									}
-								?>
-								</select>
-							</div>
-						</div>
-						<div class="c25l">
-							<div class="subcl1">
-								<button type="button" id="btnNewFolder" onclick="$('#addFolderDiag').dialog('open')" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Add Folder</button><br />
-								<button type="button" id="btnRemoveFolder" onclick="removeFolder()" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Remove Folder</button><br /><br />
-								<button type="button" id="btnRecreateDB" onclick='createDB()' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' style="width: 200px;">Recreate Database</button>
-							</div>
-						</div>
-						<div class="c25l">
-							<div class="subcl1">
-								<span id="loading" style="display: none;"><img src="./client/images/ajax-loader.gif" alt="Loading..." /></span>
-							</div>
-						</div>
+					<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
+					<div id="musicFolders">
+						<select id="musicFoldersList" size="10" class="ui-widget-content subcolumns">
+							<?php
+								$musicFolders = json_decode($settings->get("musicFolders"));
+								//print_r($musicFolders);
+								for ($i = 0; $i < count($musicFolders); $i++)
+								{
+									echo "<option>{$musicFolders[$i]}</option>\n";
+								}
+							?>
+						</select>
 					</div>
 				</fieldset>
+				<fieldset class="ui-widget-content ui-corner-all top">
+					<button type="button" id="btnAddFolder">Add Folder</button>
+					<button type="button" id="btnRemoveFolder">Remove Folder</button>
+					<button type="button" id="btnRecreateDB">Recreate Database</button>
+				</fieldset>
 			</form>
 		</div>
-		<h3><a href="#">&nbsp;<img src="./client/images/cog.png" alt="Settings Icon">&nbsp;System Settings - Don't mess with these settings unless you absolutely know what you are doing.</a></h3>
+		<h3><a href="#">&nbsp;<img src="./client/images/wrench.png" alt="Settings Icon">&nbsp;System Settings - Don't change these settings unless you absolutely know what you are doing.</a></h3>
 		<div>
 			<form action="" class="ui-form ui-widget">
-				<fieldset class="ui-widget-content ui-corner-all">
-					<legend class="ui-widget-content ui-widget-header ui-corner-all"> Settings </legend>
-					
+				<fieldset class="ui-widget-content ui-corner-all">					
 					<label for="baseURL">Where is Mandolin currently hosted? (URL) </label>
 					<input type="text" id="baseURL" class="settings ui-widget-content ui-corner-all text" />
 					<label for="keyLastsFor">How long (Milisecs) should playlists last? </label>
@@ -200,10 +187,12 @@
 					<input type="text" id="flacCMD" class="settings ui-widget-content ui-corner-all text" />
 					<!--label for="version">Version: </label>
 					<input type="text" id="version" class="settings ui-widget-content ui-corner-all text" /-->
-					<button type="button" id="btnSaveSettings" onclick="saveSettings()" class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>Save Settings</button>
+				</fieldset>
+				<fieldset class="ui-widget-content ui-corner-all top">
+					<button type="button" id="btnSaveSettings">Save Settings</button>
 				</fieldset>
 			</form>
 		</div>
 		<?php endif; ?>
 	</div>
-</div>
+<!--/div-->

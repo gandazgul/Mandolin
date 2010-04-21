@@ -40,6 +40,8 @@ $(document).ready(function(){
 		$(this).find(".ui-selected").each(function(i, objItem){
 			result += this.id + "|";
 		});
+		result = result.substring(0, result.length - 1);
+		//alert(result);
 		return result;
 	};
 

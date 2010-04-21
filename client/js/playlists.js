@@ -35,8 +35,7 @@ function displaySavedPL(savedPLArr)
 			{
 				case "playrand":
 				case "play": {
-					/*var plIDList = $("#plList").getAllSelectedItems();
-					//alert(plName);
+					var plIDList = $("#plList").getAllSelectedItems();
 					if (plIDList == "")
 					{
 						displayError("You must select a playlist before clicking Play.");
@@ -47,11 +46,11 @@ function displaySavedPL(savedPLArr)
 							$("#rnd").val("true");
 						else
 							$("#rnd").val("false");
-						$("#pl_or_sng").attr('name', 'pl').val(plIDList);
+						$("#pl_or_sng").attr('name', 'pl_id').val(plIDList);
 						$("#SID").val(SID);
 						$("#downForm").get(0).submit();
-					}*/
-					alert("TODO: Implement this");
+					}
+					//alert("TODO: Implement this");
 					break;
 				}
 				case "rename": {
@@ -129,6 +128,7 @@ function displayPLContents(result)
 			$(this).find("li").each(function(i, objOption){
 				result += objOption.id + "|";
 			});
+			result = result.substring(0, result.length - 1);
 			return result;
 		}
 

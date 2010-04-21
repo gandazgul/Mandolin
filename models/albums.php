@@ -40,20 +40,14 @@ class AlbumsModel
 	function getAlbums()
 	{
 		$stmt = $this->dbh->prepare("SELECT alb_id, alb_name FROM albums WHERE alb_art_id=? ORDER BY alb_name");
-		$tok = strtok($this->art_id, "|");
-		while($tok !== false)
+		$artIDArr = explode("|", $this->art_id);
+		foreach ($artIDArr as $art_id)
 		{
 			try//try the query
 			{
-				if ($stmt->execute(array($tok)) === true)//if we got it
+				if ($stmt->execute(array($art_id)) === true)//if we got it
 				{
-					$queryArr = $stmt->fetchAll();
-					//print_r($queryArr);
-					for($i = 0; $i < count($queryArr); $i++)
-					{
-						$this->result->data[] = array("id" => $queryArr[$i]["alb_id"], "name" => $queryArr[$i]["alb_name"]);
-					}
-					$tok = strtok("|");
+					$this->result->data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				}
 				else
 				{
@@ -71,7 +65,7 @@ class AlbumsModel
 				$this->result->errorStr = $e->getMessage();
 				break;
 			}
-		}//from the while
+		}//from the foreach
 
 		return $this->result;
 	}
