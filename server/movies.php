@@ -13,7 +13,7 @@ require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
 require_once '../models/UsersDB.php';
 $usersDB = new UsersDB();
-require_once '../models/Settings.php';
+require_once '../models/settings.php';
 $settings = new Settings();
 
 $action = $_REQUEST["a"];

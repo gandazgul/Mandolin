@@ -58,7 +58,7 @@ else
 	} 
 }//is it mobile or not?
 
-require_once './models/Settings.php';
+require_once './models/settings.php';
 
 try
 {

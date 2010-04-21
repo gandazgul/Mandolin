@@ -13,7 +13,7 @@ else
 //check the key is valid and current
 require_once "../models/UsersDB.php";
 $usersDB = new UsersDB();
-require_once "../models/Settings.php";
+require_once "../models/settings.php";
 $settings = new Settings();
 $userAuthInfo = json_decode($usersDB->getAuthInfo_json("", $key), true);
 $bitrate = json_decode($usersDB->loadSettings("", array('bitrate'), $key), true);

@@ -17,7 +17,7 @@
 		if (!file_exists("./data/index.php"))
 			fclose(fopen("./data/index.php", "wt"));
 
-		require_once './models/Settings.php';
+		require_once './models/settings.php';
 
 		$settings->set("baseDir", realpath(".").DIRECTORY_SEPARATOR);
 		$settings->set("dbDSN", "sqlite:".$settings->get("baseDir")."data/mandolin.db");
