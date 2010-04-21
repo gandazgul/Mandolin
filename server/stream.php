@@ -42,18 +42,17 @@ else
 
 //get the song name, path and extension
 require_once "../models/songs.php";
-$resultArr = $songs->getInfo(array($song_id), array("song_path", "song_name", "song_ext"));
-if ($resultArr['isError'])
-	exit($resultArr['resultStr']);
+$result = $mSongs->getSongs("song_path, song_name, song_ext", "song_id", array($song_id));
+if ($result->isError)
+	exit($result->errorStr);
 else
 {
-	//print_r($resultArr['resultStr']);
-	$song_path = $resultArr['resultStr'][0][0]['song_path'];
-	$song_name = $resultArr['resultStr'][0][0]['song_name'];
-	$ext = $resultArr['resultStr'][0][0]['song_ext'];
+	//print_r($result->data);
+	$song_path = $result->data[0]['song_path'];
+	$song_name = $result->data[0]['song_name'];
+	$ext = $result->data[0]['song_ext'];
 }
-$songs->__destruct();
-unset($songs);
+unset($mSongs);
 
 $lameCMD = $settings->get("lameCMD");
 $readfile = ($lameCMD == "");

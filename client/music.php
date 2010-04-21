@@ -45,8 +45,8 @@
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
+<div id="errorDiv" class="important"></div>
 <div id="teaser" class="ui-widget-content ui-corner-all">
-	<div id="errorDiv" class="important"></div>
 	<form action="" class="ui-form">
 		<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
 		<input type="text" id="searchBox" size="110" class="text-side-no-margin ui-widget-content ui-corner-all" />
