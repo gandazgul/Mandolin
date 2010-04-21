@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
+require_once dirname(__FILE__).'/settings.php';
+require_once dirname(__FILE__).'/result.php';
 
 class MusicModel //this module holds functions pertaining to artists albums and songs that make use of all three tables.
 {

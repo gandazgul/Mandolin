@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/settings.php';
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'/result.php';
+require_once dirname(__FILE__).'/settings.php';
+require_once dirname(__FILE__).'/result.php';
 
 class AlbumsModel
 {
