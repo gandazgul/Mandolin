@@ -92,11 +92,13 @@ $settings->__destruct();
 unset($settings);
 
 if (($ext == "mp3") or ($ext == "ogg") or ($ext == "flac"))
-	header('Content-type: audio/x-mpeg, audio/x-mpeg-3, audio/mpeg3, audio/mpeg, audio/x-mp3');
+	header('Content-type: audio/mpeg');
 else
-	header('Content-type: audio/x');
+	header('Content-type: application/*');
 //header("Content-length: ".filesize($song_path) ); //TODO: get the song length
-header("Content-Disposition: filename=\"".$song_name."\"");
+header("Content-Disposition: attachment; filename=\"".$song_name."\"");
+header("Cache-Control: no-cache, must-revalidate");
+header("Pragma: no-cache");
 header("Content-Transfer-Encoding: binary");
 
 if ($readfile)

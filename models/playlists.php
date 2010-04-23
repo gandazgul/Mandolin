@@ -114,7 +114,7 @@ class PlaylistsModel
 
 			$queryArr = $sngStmt->fetchAll();
 			$song_id = $queryArr[0]['song_id'];
-			$song_name = $queryArr[0]['song_name'];
+			$song_name = str_replace('+', ' ', urlencode($queryArr[0]['song_name']));
 			$songURL = $musicURL."server/stream.php?k=".$_SESSION["key"].$this->plFormats[$plFormat]['amp']."s=$song_id";
 			$result .= sprintf($this->plFormats[$plFormat]['track'], $song_name, $songURL, $i + 1);
 		}

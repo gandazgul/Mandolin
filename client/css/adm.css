@@ -18,3 +18,5 @@ tbody td {
 .ui-icon-add-folder { background-image: url("../images/folder_add.png") !important; }
 .ui-icon-delete-folder { background-image: url("../images/folder_delete.png") !important; }
 .ui-icon-recreate-db { background-image: url("../images/database_refresh.png") !important; }
+
+#loading { position: absolute; margin-left: 12px; display: none; }

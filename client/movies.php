@@ -6,7 +6,6 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/lib/jquery.contextMenu.css" />
-<script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
 
 <ul id="moviesMenu" class="contextMenu">
 	<li class="ccat"><a href="#changecat">Change Category</a></li>

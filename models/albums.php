@@ -47,7 +47,8 @@ class AlbumsModel
 			{
 				if ($stmt->execute(array($art_id)) === true)//if we got it
 				{
-					$this->result->data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$this->result->data = array_merge($this->result->data, $data);
 				}
 				else
 				{
@@ -66,7 +67,7 @@ class AlbumsModel
 				break;
 			}
 		}//from the foreach
-
+		//print_r($this->result->data);
 		return $this->result;
 	}
 }

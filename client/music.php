@@ -6,7 +6,6 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/lib/jquery.contextMenu.css" />
-<script type="text/javascript" src="./client/js/lib/jquery.contextMenu.js"></script>
 
 <form method="post" action="./server/music.php" id="playForm">
 	<div>

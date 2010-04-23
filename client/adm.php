@@ -8,14 +8,9 @@
 	include './models/UsersDB.php';
 	$usersDB = new UsersDB('./models/dbfiles/users.db');
 ?>
-<script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="./client/js/lib/json2.min.js"></script>
-<script type="text/javascript" src="./client/js/lib/ajaxupload_min.js"></script>
-<script type="text/javascript" src="./client/js/lib/jquery-jtemplates.min.js"></script>
 <script type="text/javascript">
-	var userData = <?php echo json_encode($usersDB->listUsers()); ?>;
+	<?php echo "var userData = ".json_encode($usersDB->listUsers()).";"; ?>
 </script>
-
 <textarea id="userRow" style="display: none;">
 	<tr id='tr{$T.user_id}'>
 		<td>
@@ -168,6 +163,7 @@
 					<button type="button" id="btnAddFolder">Add Folder</button>
 					<button type="button" id="btnRemoveFolder">Remove Folder</button>
 					<button type="button" id="btnRecreateDB">Recreate Database</button>
+					<span id="loading"><img alt='Loading...' src='./client/images/ajax-loader.gif' /></span>
 				</fieldset>
 			</form>
 		</div>
