@@ -1,6 +1,6 @@
 <div id="main">
 	<?php
-	$step = ($_GET["step"] == "") ? 1 : $_GET["step"];
+	$step = (isset ($_GET["step"])) ? $_GET["step"] : 1;
 	?>
 		<p style="margin-top: 10px" class="title">Installation - Step <?php echo $step; ?></p>
 	<?php
