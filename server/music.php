@@ -53,15 +53,7 @@ function artists()
 	else//list all artists
 	{
 		$artists = new ArtistsModel(null);
-		$artResult = $artists->getArtists();
-		if ($artResult->isError)
-		{
-			echo json_encode($artResult);
-		}
-		else
-		{
-			echo json_encode($artResult->data);
-		}
+		echo json_encode($artists->getArtists());
 		$artists->__destruct();
 		unset($artists);
 	}
