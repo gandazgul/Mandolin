@@ -11,12 +11,11 @@
 
 	$username = (isset($_SESSION['username'])) ? $_SESSION['username'] : "guest";
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8" />
 		<title>Mandolin v<?php echo $settings->get("version"); ?></title>
-		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="./client/images/logo.png" />
 		<link href="./client/css/global/main.css" rel="stylesheet" type="text/css" />
 		<link href="./client/css/lib/jquery-ui-1.8.custom.css" rel="stylesheet" type="text/css" />

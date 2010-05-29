@@ -7,9 +7,9 @@ var SID = '<?php echo sha1(session_id()); ?>';
 
 <?php
 echo "\n\n//---------------------------------------------------- JQUERY ----------------------------------------------------------------------\n\n";
-include_once './lib/jquery-1.4.2.min.js';
+readfile('http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js');
 echo "\n\n//---------------------------------------------------- JQUERY UI ----------------------------------------------------------------------\n\n";
-include_once './lib/jquery-ui-1.8.custom.min.js';
+readfile('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js');
 echo "\n\n//---------------------------------------------------- MAIN.JS ----------------------------------------------------------------------\n\n";
 include_once './main.js';
 if (!isset ($_GET['p'])) exit();
