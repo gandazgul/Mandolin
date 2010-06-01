@@ -19,22 +19,25 @@ $(document).ready(function(){
 	});
 
 	function updateTips(t) {
-		tips.text(t).effect("highlight",{},1500);
+		$("#udValidateTips").text(t).effect("highlight",{},1500);
 	}
 
-	function checkLength(o,n,min,max) {
-
-		if ( o.val().length > max || o.val().length < min ) {
+	function checkLength(o,n,min,max)
+	{
+		if ( o.val().length > max || o.val().length < min )
+		{
 			o.addClass('ui-state-error');
 			updateTips("Length of " + n + " must be between "+min+" and "+max+".");
 			return false;
-		} else {
+		}
+		else
+		{
 			return true;
 		}
 
 	}
 
-	function checkRegexp(o,regexp,n) {
+	function checkRegexp(o, regexp, n) {
 
 		if ( !( regexp.test( o.val() ) ) ) {
 			o.addClass('ui-state-error');
@@ -51,7 +54,7 @@ $(document).ready(function(){
 		bgiframe: true,
 		autoOpen: false,
 		resizable: false,
-		height: 310,
+		
 		modal: true,
 		buttons: {
 			'Create an account': function() 
@@ -59,8 +62,7 @@ $(document).ready(function(){
 				var name = $("#userName"),
 				password = $("#userPassword"),
 				admin = $("#userAdmin"),
-				allFields = $([]).add(name).add(admin).add(password),
-				tips = $("#udValidateTips");
+				allFields = $([]).add(name).add(admin).add(password);
 
 				var bValid = true;
 				allFields.removeClass('ui-state-error');
@@ -77,16 +79,12 @@ $(document).ready(function(){
 					$.post("./server/adm.php", postData, addUser, "json");
 					$(this).dialog('close');
 				}
-				
+				allFields.val('');
 			},
 			Cancel: function() 
 			{
 				$(this).dialog('close');
 			}
-		},
-		close: function() 
-		{
-			allFields.val('').removeClass('ui-state-error');
 		}
 	});
 
@@ -128,7 +126,6 @@ $(document).ready(function(){
 		bgiframe: true,
 		resizable: false,
 		autoOpen: false,
-		height: 168,
 		modal: true,
 		buttons: {
 			'Add this folder': function() 
@@ -150,7 +147,7 @@ $(document).ready(function(){
 		bgiframe: true,
 		resizable: false,
 		autoOpen: false,
-		height: 160,
+		height: 165,
 		width: 400,
 		modal: true,
 		overlay: {
@@ -206,7 +203,7 @@ $(document).ready(function(){
 			usersArr = JSON.parse(response);
 			if (usersArr.isError)
 			{
-				displayError(usersArr.strResult);
+				displayError(usersArr.strResult, 'error');
 			}
 			else
 			{
@@ -235,7 +232,7 @@ $(document).ready(function(){
 		postData += "&adm=" + $("#admin" + this.value).attr('checked');
 		postData += "&SID=" + SID;
 		alert(postData);
-		$.post("./server/adm.php", postData, displayError);
+		$.post("./server/adm.php", postData, displayMessage);
 	});
 	//delete user --------------------------------------------------------------------------------------------------------------------------------
 	$(".btnDelUser").button({
@@ -252,15 +249,15 @@ $(document).ready(function(){
 		}
 	}).click(function(){
 		if ( ($("#reNewPassw").val() == "" ) || ( $("#newPassw").val() == "" ) || ( $("#oldPassw").val() == "" ) )
-		   displayError("ERROR: Passwords can't be empty");
+		   displayError("ERROR: Passwords can't be empty", 'error');
 		else
 		if ($("#reNewPassw").val() == $("#newPassw").val())
 		{
 			var postData = "a=cpassw&np=" + $("#newPassw").val() + "&op=" + $("#oldPassw").val() + "&SID=" + SID;
-			$.post("./server/adm.php", postData, displayError);
+			$.post("./server/adm.php", postData, displayMessage);
 		}
 		else
-			displayError("ERROR: Passwords don't match");
+			displayError("ERROR: Passwords don't match", 'error');
 	});
 	//user settings --------------------------------------------------------------------------------------------------------------------------------
 	$("#btnSaveUSettings").button({
@@ -270,7 +267,7 @@ $(document).ready(function(){
 	}).click(function(){
 		var setObj = new settings(null, null, "usettings");
 		var postData = "a=uset&data=" + JSON.stringify(setObj) + "&SID=" + SID;
-		$.post("./server/adm.php", postData, displayError);
+		$.post("./server/adm.php", postData, displayMessage, 'json');
 	});
 	//add folder --------------------------------------------------------------------------------------------------------------------------------
 	$("#btnAddFolder").button({
@@ -330,13 +327,13 @@ $(document).ready(function(){
 
 function addFolder(data)
 {
+	$("#loading").hide();
 	if (data.isError)
 	{
 		displayError(data.resultStr);
 	}
 	else
 	{
-		$("#loading").hide();
 		$("#musicFoldersList").append("<option>" + data.resultStr + "</option>");
 		var folders = new Array();
 		
@@ -431,7 +428,7 @@ function addUser(data)
 		displayError(data.resultStr);
 	}
 	else
-	{//TODO FIX THIS TO USE TEMPL
+	{
 		var div = $("<div>");
 		div.setTemplate($('#userRow').text());
 		div.processTemplate(data.resultStr);

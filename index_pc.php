@@ -17,12 +17,14 @@
 		<meta charset="UTF-8" />
 		<title>Mandolin v<?php echo $settings->get("version"); ?></title>
 		<link rel="shortcut icon" href="./client/images/logo.png" />
-		<link href="./client/css/global/main.css" rel="stylesheet" type="text/css" />
-		<link href="./client/css/lib/jquery-ui-1.8.custom.css" rel="stylesheet" type="text/css" />
-		<link href='./client/css/<?php echo $p; ?>.css' rel='stylesheet' type='text/css' />
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/redmond/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="./client/css/global/main.css" />
+		<link rel='stylesheet' type='text/css' href='./client/css/<?php echo $p; ?>.css' />
 		<!--[if IE]>
 		<link href="./client/css/global/mod.ie.css" rel="stylesheet" type="text/css" />
 		<![endif]-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="./client/js/js.php?p=<?php echo $p; ?>"></script>
 	</head>
 	<body>

@@ -229,10 +229,11 @@ function displaySongs(songs)
 						}
 						else
 						{
-							var plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+							var plName = prompt("Enter new playlist name: ", "New Playlist");
 							//alert(plName);
 							if (plName != null)
 							{
+								plName = trim(plName);
 								postData = "a=playlists&pl_contents=" + sngIDList + "&pl_name=" + escape(plName) + "&SID=" + SID;
 								$.post("./server/playlists.php", postData, displayError);
 							}

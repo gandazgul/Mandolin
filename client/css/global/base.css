@@ -82,7 +82,7 @@
 	.c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r { float: right; }
 
 	.subcl0 { padding: 0; }
-	.subcl1 { padding: 0 0 0 0.3em; }
+	.subcl1 { padding: 0 0 0 1em; }
 
 	.subcolumns { overflow: hidden; width: 100%; }
 
@@ -164,7 +164,7 @@
 	/*JQUERY UI*/
 	.ui-form legend { padding: 0.5em }
 	.ui-form label  { display:inline-block; }
-	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 12px; width: 95%; padding: .3em; }
+	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 0.5em; width: 95%; padding: .3em; }
 	.ui-form input.text-no-margin, .ui-form select.text-no-margin { display: block; width: 95%; padding: .3em; }
 	.ui-form input.text-side-no-margin { padding: .3em; }
 	.ui-form fieldset { padding: 0.8em; }
