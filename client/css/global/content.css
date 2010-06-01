@@ -154,17 +154,16 @@
 	.highlight { color: #f60; }
 	.dimmed { color: #888; }
 
-	.info { background: #f8f8f8; color: #666; padding: 10px; margin-bottom: 0.5em; font-size: 91.7%; }
+	.message      { background: #efe; color: #040; border: 1px solid black; border-top: none; padding: 10px; margin-bottom: 1em; }
+	.warning { background: #ffe; color: #440; border: 1px solid black; border-top: none; padding: 10px; margin-bottom: 1em; }
+	.error   { background: #fee; color: #400; border: 1px solid black; border-top: none; padding: 10px; margin-bottom: 1em; }
 
-	.note { background: #efe; color: #040; border: 2px #484 solid; padding: 10px; margin-bottom: 1em; }
-	.important { background: #ffe; color: #440; /*border: 2px #884 solid;*/ border: 1px solid black; border-top: none; padding: 10px; margin-bottom: 1em; }
-	.warning { background: #fee; color: #400; border: 2px #844 solid; padding: 10px; margin-bottom: 1em; }
+	.info { background: #E1E1E1; color: #666; margin-bottom: 0.5em; font-size: 91.7%; display: block; padding: 0.3em; }
 
 	.float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em; }
 	.float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em; }
 	.center { display:block; text-align:center; margin: 0.5em auto; }
-	.message { color:#666666; display:block; margin-bottom:0.5em; }
-
+	
 	.title {
 		color:#222222;
 		font-family:"Times New Roman",Times,serif;

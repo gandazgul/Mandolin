@@ -28,9 +28,7 @@
     <td>PHP Session Support</td>
     <td>
 		<?php
-			$jz_sess_test_var = 2;
-			$jz_sess_test_var = $_SESSION['jz_sess_test'] + 1;
-			if (!function_exists('session_name') or $jz_sess_test_var <> 1)
+			if (!function_exists('session_name'))
 			{
 				echo '<font color="red">PHP Session Support not found/functioning - fatal!</font>';
 				$fatal = true;

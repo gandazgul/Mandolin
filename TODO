@@ -1,17 +1,13 @@
 DONE but needs refining
 - Finish the install script.
 
-TODO FOR 0.7
+TODO FOR 0.7.1
 - break up addtoDB, make and add album, addArtist, addSong. and maybe something else.
 - addToDB puts unknown album in every artists even if there are no loose files. It also creates an unknown artists even when there are no loose files in the music folder.
 - make the models always return the same object,
 	isError: bool
 	resultStr: str (will contain the result of the query or the message of success/failure)
 - Playlists, Artists and Albums should have a link to go to the site and select it automatically
-- Playlists, Artists and Albums should have a link to download the playlist instantly
-    - Make right click menus for albums and artists work.
-
-TODO FOR 0.7.1
 - make use of jTemplates
 - add search box for the mobile version
 - have a search-mode in the PC version that will allow for getting the album and artist when you click a song in the search results

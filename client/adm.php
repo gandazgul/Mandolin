@@ -5,12 +5,13 @@
 		exit();
 	}
 	
-	include './models/UsersDB.php';
-	$usersDB = new UsersDB('./models/dbfiles/users.db');
+	include './models/users.php';
+	$mUsers = new UsersModel();
 ?>
 <script type="text/javascript">
-	<?php echo "var userData = ".json_encode($usersDB->listUsers()).";"; ?>
+	<?php echo "var userData = ".json_encode($mUsers->listUsers()).";"; ?>
 </script>
+
 <textarea id="userRow" style="display: none;">
 	<tr id='tr{$T.user_id}'>
 		<td>
@@ -25,12 +26,14 @@
 		</td>
 	</tr>
 </textarea>
+
 <div id="addFolderDiag" title="Add a folder to music library">
 	<form action="" class="ui-form ui-widget top">
 		<label for="folderName">Folder Full Path:</label>
 		<input type="text" id="folderName" class="text ui-widget-content ui-corner-all" />
 	</form>
 </div>
+
 <div id="addUserDiag" title="Create new user">
 	<p id="udValidateTips">All form fields are required.</p>
 	<form class="ui-form ui-widget" action="">
@@ -42,6 +45,7 @@
 		<input type="checkbox" name="userAdmin" id="userAdmin" class="ui-widget-content ui-corner-all" />
 	</form>
 </div>
+
 <div id="importUsersDlg" title="Import users">
 	<table id="importUserTable" class="tablesorter">
 		<thead><tr>
@@ -64,10 +68,12 @@
 		</textarea>
 	</table>
 </div>
+
 <div id="delUserConfDialog" title="Delete user">
 	Deleting a user is permanent. To reactivate this user you will have to add him to the DB again. Are you sure you want to proceed?
 </div>
-<div id="errorDiv" class="important"></div>
+
+<div id="errorDiv"></div>
 <!--div id="main"-->
 	<div id="admAccordion">
 		<h3><a href="#">&nbsp;<img src="./client/images/passwadm.png" alt="User Administration Icon">&nbsp;Change Password</a></h3>
@@ -147,7 +153,7 @@
 				<fieldset class="ui-widget-content ui-corner-all">
 					<p>"Recreate Database" will delete the existing database and scan the music directories to recreate it. This takes time please be patient.</p>
 					<div id="musicFolders">
-						<select id="musicFoldersList" size="10" class="ui-widget-content subcolumns">
+						<select id="musicFoldersList" size="5" class="ui-widget-content subcolumns">
 							<?php
 								$musicFolders = json_decode($settings->get("musicFolders"));
 								//print_r($musicFolders);
@@ -163,7 +169,7 @@
 					<button type="button" id="btnAddFolder">Add Folder</button>
 					<button type="button" id="btnRemoveFolder">Remove Folder</button>
 					<button type="button" id="btnRecreateDB">Recreate Database</button>
-					<span id="loading"><img alt='Loading...' src='./client/images/ajax-loader.gif' /></span>
+					<span id="loading"><img alt='Loading...' src='./client/images/ajax-loader.gif' width="30" /></span>
 				</fieldset>
 			</form>
 		</div>

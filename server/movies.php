@@ -11,8 +11,8 @@ if (!isset($_POST["SID"]) or ($_POST["SID"] != sha1(session_id())))
 
 require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
-require_once '../models/UsersDB.php';
-$usersDB = new UsersDB();
+require_once '../models/users.php';
+$mUsers = new UsersModel();
 require_once '../models/settings.php';
 $settings = new Settings();
 
@@ -27,7 +27,7 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-unset($usersDB);
+unset($mUsers);
 unset($moviesDB);
 unset($settings);
 

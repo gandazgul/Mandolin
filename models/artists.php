@@ -53,14 +53,7 @@ class ArtistsModel
 				$query = $this->dbh->query("SELECT * FROM artists ORDER BY `art_name`");
 				if ($query)
 				{
-					$queryArr = $query->fetchAll();
-					$artArr = array();
-					for ($i = 0; $i < count($queryArr); $i++)
-					{
-						$artArr[] = array("id" => $queryArr[$i]["art_id"], "name" => $queryArr[$i]["art_name"]);
-					}
-
-					$this->result->data = $artArr;
+					$this->result->data = $query->fetchAll();
 				}
 				else
 				{

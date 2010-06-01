@@ -43,7 +43,6 @@ class MusicModel //this module holds functions pertaining to artists albums and 
 		$queries[] = "SELECT alb_id, alb_name FROM albums WHERE alb_name LIKE '%$queryStr%'";
 		$queries[] = "SELECT song_id, song_name FROM music WHERE song_name LIKE '%$queryStr%'";
 		$sections = array("art", "alb", "sng");
-		$attributes = array("id", "name");
 
 		try
 		{
@@ -51,19 +50,15 @@ class MusicModel //this module holds functions pertaining to artists albums and 
 			{
 				$queryArr = $this->dbh->query($queries[$section])->fetchAll();
 				$curSection = $sections[$section];
+				$this->result->data[$curSection] = new Result();
 
 				if (count($queryArr) != 0)// if we found something
 				{
 					for ($result = 0; $result < count($queryArr); $result++)//go thru all the results
 					{
-						for ($attr = 0; $attr < count($queryArr[$result]) / 2; $attr++)//go thru all the attributes in each result
-						{
-							$this->result->data[$curSection][$result][$attributes[$attr]] = $queryArr[$result][$attr];
-						}
+						$this->result->data[$curSection]->data[$result] = $queryArr[$result];
 					}
-				}
-				else
-					$this->result->data[$curSection] = array();
+				}					
 			}
 		}
 		catch (PDOException $e)

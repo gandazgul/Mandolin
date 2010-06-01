@@ -32,9 +32,9 @@ if(jQuery)( function() {
 				// Simulate a true right click
 				$(this).mousedown( function(e) {
 					var evt = e;
-					//evt.stopPropagation();
+					//evt.stopPropagation();  //if you do this then selectable doesnt work
 					$(this).mouseup( function(e) {
-						e.stopPropagation();
+						//e.stopPropagation(); //with this selectable-helper comes up on every single click even if you drag the mouse.
 						var srcElement = $(this);
 						$(this).unbind('mouseup');
 						if( evt.button == 2 ) {

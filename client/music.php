@@ -44,7 +44,7 @@
 	<li class="cancel separator"><a href="#cancel">Cancel</a></li>
 </ul>
 
-<div id="errorDiv" class="important"></div>
+<div id="errorDiv"></div>
 <div id="teaser" class="ui-widget-content ui-corner-all">
 	<form action="" class="ui-form">
 		<label for="sQuery" class="title">To begin searching type in Artist, Album or Song name:&nbsp;&nbsp;</label>
@@ -72,10 +72,10 @@
 			</div>
 		</div>
 		<div class="c25l">
-			<div class="subcl1">
+			<div>
 				<h3><img alt="Songs Icon" src="./client/images/song.png" />&nbsp;Songs for selected Album(s):</h3>
 			</div>
-			<div class="subcl1 musicList" id="songListDiv">
+			<div class="musicList" id="songListDiv">
 				<ol id="songList"></ol>
 			</div>
 		</div>

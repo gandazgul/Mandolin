@@ -11,9 +11,24 @@ function hideError()
 	}, 10000);
 }
 
-function displayError(data)
+function displayError(data, msgClass)
 {
-	$("#errorDiv").text(data).show().animate({height: "15px", padding: "10px"}, 500, "linear", hideError);
+	if (msgClass == 'success') msgClass = "message";
+	if (typeof msgClass == 'undefined') msgClass = 'error';
+
+	$("#errorDiv").addClass(msgClass).text(data).show().animate({height: "15px", padding: "10px"}, 500, "linear", hideError);
+}
+
+function displayMessage(result)
+{
+	if (result.isError)
+	{
+		displayError(result.errorStr, 'error');
+	}
+	else
+	{
+		displayError(result.data, 'message');
+	}
 }
 
 $(document).ready(function(){

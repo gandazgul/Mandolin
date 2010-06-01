@@ -15,16 +15,16 @@ class CDefault //extends CController
 	function checkAuth()
 	{
 		global $settings;
-		require_once("./models/UsersDB.php");
+		require_once("./models/users.php");
 
 		$username = $_POST["username"];
 		$passw = $_POST["passw"];
 		//echo sha1($passw)."<br />\n";
 		//echo "$username<br />\n";
-		$usersDB = new UsersDB();
-		if ($usersDB->verifyPassw($username, $passw))//if the passwords match
+		$mUsers = new UsersModel();
+		if ($mUsers->verifyPassw($username, $passw))//if the passwords match
 		{
-			$authDataArr = json_decode($usersDB->getAuthInfo_json($username), true);
+			$authDataArr = json_decode($mUsers->getAuthInfo_json($username), true);
 			if (!$authDataArr['isError'])
 			{
 				$key = $authDataArr['resultStr']['last_key']; //last key stored
@@ -34,14 +34,14 @@ class CDefault //extends CController
 				if (($last_key_date == "") or ((time() - $last_key_date) > $settings->get('keyLastsFor'))) //we didnt find a key or the key is old lets create one.
 				{
 					$key = sha1($username."@".$passw.":".time());
-					$usersDB->updateKey($username, $key);
+					$mUsers->updateKey($username, $key);
 				}
 				//session_name("Mandolin");
 				//session_start();
 				session_regenerate_id();
 				$_SESSION["key"] = $key;
 				$_SESSION["username"] = $username;
-				$_SESSION["userAdminLevel"] = $usersDB->isAdmin($username);
+				$_SESSION["userAdminLevel"] = $mUsers->isAdmin($username);
 				$_SESSION["id"] = sha1(session_id());
 				//print_r($_SESSION);
 				header("Location: .");
@@ -57,7 +57,7 @@ class CDefault //extends CController
 			<form action="./?p=checkAuth" method="post" id="login-form" class="ui-form">
 				<fieldset class="ui-widget-content ui-corner-all">
 					<?php if(isset($_GET["passw"])): ?>
-					<strong class="message">ERROR: Incorrect Username and/or Password</strong>
+					<strong class="info">ERROR: Incorrect Username and/or Password</strong>
 					<?php endif; ?>
 					<label for="username">Username:</label>
 					<input type="text" size="20" name="username" id="username" class="text ui-widget-content ui-corner-all" />

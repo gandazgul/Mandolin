@@ -229,10 +229,11 @@ function displaySongs(songs)
 						}
 						else
 						{
-							var plName = trim(prompt("Enter new playlist name: ", "New Playlist"));
+							var plName = prompt("Enter new playlist name: ", "New Playlist");
 							//alert(plName);
 							if (plName != null)
 							{
+								plName = trim(plName);
 								postData = "a=playlists&pl_contents=" + sngIDList + "&pl_name=" + escape(plName) + "&SID=" + SID;
 								$.post("./server/playlists.php", postData, displayError);
 							}
@@ -299,44 +300,51 @@ function displayAlbums(albums)
 	}
 }
 
-function displayArtists(artArr)
+function displayArtists(artists)
 {
-	$("#artistsList").html('');
-	for (i = 0; i < artArr.length; i++)
+	if (artists.isError)
 	{
-		$("#artistsList").append("<li class='ui-widget-content' id='"+ artArr[i].id +"'>"+ artArr[i].name +"</li>");
+		displayError(artists.errorStr);
 	}
-	
-	// Show menu when a list item is clicked
-	$("#artistsList li").contextMenu({
-		menu: 'artnAlbMenu'
-	}, function(action, el, pos) {
-		switch (action)
+	else
+	{
+		$("#artistsList").html('');
+		for (i = 0; i < artists.data.length; i++)
 		{
-			case "play":
-			case "playrand":
-			{ 
-				sngIDList = $("#artistsList").getAllSelectedItems();
-
-				if (sngIDList == "")
-				{
-					displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
-				}
-				else
-				{
-					if (action == "playrand")
-						$("#rnd").val("true");
-					else
-						$("#rnd").val("false");
-					$("#sng").attr("name", "art_id").val(sngIDList);
-					$("#SID").val(SID);
-					$("#playForm").get(0).submit();
-				}
-				break; 
-			}
+			$("#artistsList").append("<li class='ui-widget-content' id='" + artists.data[i].art_id  + "'>" + artists.data[i].art_name + "</li>");
 		}
-	});
-	$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
+
+		// Show menu when a list item is clicked
+		$("#artistsList li").contextMenu({
+			menu: 'artnAlbMenu'
+		}, function(action, el, pos) {
+			switch (action)
+			{
+				case "play":
+				case "playrand":
+				{
+					sngIDList = $("#artistsList").getAllSelectedItems();
+
+					if (sngIDList == "")
+					{
+						displayError("You must select some tracks before clicking Play. Try Select All, then Play.");
+					}
+					else
+					{
+						if (action == "playrand")
+							$("#rnd").val("true");
+						else
+							$("#rnd").val("false");
+						$("#sng").attr("name", "art_id").val(sngIDList);
+						$("#SID").val(SID);
+						$("#playForm").get(0).submit();
+					}
+					break;
+				}
+			}
+		});
+		$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
+	}
 }
 
 /*function sngOnChange(sng_value)

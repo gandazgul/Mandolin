@@ -8,12 +8,11 @@ if (!isset($_REQUEST["SID"]) or ($_REQUEST["SID"] != sha1(session_id())))
 	exit();
 }
 
-require_once("../models/UsersDB.php");
-$usersDB = new UsersDB();
+require_once("../models/users.php");
+$mUsers = new UsersModel();
 require_once("../models/music.php");
 $mMusic = new MusicModel();
 require_once '../models/settings.php';
-//require_once '../server/result.class.php';
 
 $action = $_REQUEST["a"];
 
@@ -26,7 +25,7 @@ catch(Exception $e)
 	echo $e->getMessage();
 }
 
-unset($usersDB);
+unset($mUsers);
 unset($settings);
 unset($mMusic);
 
@@ -46,13 +45,13 @@ function addFolderToDB()
 		else
 		{
 			$resultArr["isError"] = true;
-			$resultArr["resultStr"] = "There was an error adding the specified folder to the DB.";
+			$resultArr["resultStr"] = "ERROR: There was an error adding the specified folder to the DB.";
 		}
 	}
 	else
 	{
 		$resultArr["isError"] = true;
-		$resultArr["resultStr"] = "The specified folder doesn't exist.";
+		$resultArr["resultStr"] = "ERROR: The specified folder doesn't exist.";
 	}
 	
 	echo json_encode($resultArr);
@@ -69,7 +68,7 @@ function set()
 	{
 		$settings->set($data['keys'][$i], $data['values'][$i]);
 	}
-	
+
 	echo "Settings saved successfully";
 }
 
@@ -90,55 +89,58 @@ function get()
 
 function uset()
 {
-	global $usersDB;
-	
-	//echo $_POST['data'];
-	$resultArr = json_decode($usersDB->saveSettings($_SESSION['username'], stripslashes($_POST['data'])), true);
-	echo $resultArr['resultStr'];
+	global $mUsers;
+
+	echo json_encode($mUsers->saveSettings($_SESSION['username'], stripslashes($_POST['data'])));
 }
 
 function uget()
 {
-	global $usersDB;
+	global $mUsers;
 	
-	echo $usersDB->loadSettings($_SESSION['username'], json_decode(stripslashes($_POST['keys']), true)); 
+	echo $mUsers->loadSettings($_SESSION['username'], json_decode(stripslashes($_POST['keys']), true));
 }
 
 function cpassw()
 {
-	global $usersDB;
-	
+	global $mUsers;
+	$result = new Result();
+
 	$user = $_SESSION["username"];
 	
-	if ($usersDB->verifyPassw($user, $_POST["op"]))
+	if ($mUsers->verifyPassw($user, $_POST["op"]))
 	{
 		//echo $_SESSION["userAdminLevel"];
-		echo $usersDB->alterUser(0, $user, $_SESSION["userAdminLevel"], $_POST["np"]);
+		echo json_encode($mUsers->alterUser(0, $user, $_SESSION["userAdminLevel"], $_POST["np"]));
 	}
 	else
-		echo "ERROR: The password you entered is wrong.";
+	{
+		$result->isError = true;
+		$result->errorStr = "ERROR: The password you entered is wrong.";
+		echo json_encode($result);
+	}
 }
 
 function saveu()
 {
-	global $usersDB;
+	global $mUsers;
 
 	//print_r($_POST);
-	echo $usersDB->alterUser($_POST['id'], $_POST['un'], $_POST['adm'], $_POST['p']);
+	echo json_encode($mUsers->alterUser($_POST['id'], $_POST['un'], $_POST['adm'], $_POST['p']));
 }
 
 function addu()
 {
-	global $usersDB;
+	global $mUsers;
 
-	echo $usersDB->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
+	echo $mUsers->addNewUser($_POST['u'], $_POST['p'], $_POST['adm']);
 }
 
 function delU()
 {
-	global $usersDB;
+	global $mUsers;
 	
-	echo $usersDB->deleteUser($_POST['id']);
+	echo $mUsers->deleteUser($_POST['id']);
 }
 
 function post()
