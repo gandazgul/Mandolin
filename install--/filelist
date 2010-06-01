@@ -116,7 +116,7 @@
 ./models/playlists.php
 ./models/settings.php
 ./models/songs.php
-./models/UsersDB.php
+./models/users.php
 ./server/adm.php
 ./server/getalbumart.php
 ./server/index.php

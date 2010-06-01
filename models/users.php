@@ -1,15 +1,18 @@
 <?php
 require_once dirname(__FILE__).'/settings.php';
+require_once dirname(__FILE__).'/result.php';
 
-class UsersDB 
+class UsersModel
 {
 	private $dbh;
-	private $resultArr;
+	private $result;
 	
 	function __construct()
 	{
 		global $settings;
-		
+
+		$this->result = new Result();
+
 		try
 		{
 			//$this->dbh = new PDO($settings->get("dbDSN"), $settings->get("dbUser"), $settings->get("dbPassword"), array(PDO::ATTR_PERSISTENT => true));
@@ -18,18 +21,16 @@ class UsersDB
 		}
 		catch (PDOException $e)
 		{
-			die($e->getMessage());
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
 		}
-		
-		$this->resultArr = array();
-		$this->resultArr["isError"] = false;
-		$this->resultArr["resultStr"] = "";
 	}
 	
 	function __destruct()
 	{
 		unset($this->dbh);
-		unset($this->resultArr);
+		unset($this->result);
 	}
 	
 	//-------------------------------------------------------------- User functions ----------------------------------------------------------
@@ -37,11 +38,6 @@ class UsersDB
 	{
 		$query = $this->dbh->query("SELECT user_name, user_admin_level, user_id FROM users");
 		return $query->fetchAll();
-	}
-	
-	function listUsers_json()
-	{
-		return json_encode($this->listUsers());
 	}
 	
 	function alterUser($id, $username, $adm, $passw)
@@ -67,10 +63,13 @@ class UsersDB
 		}
 		catch(PDOException $e)
 		{
-			return "ERROR: Saving user information: ".$e->getMessage();
+			$this->result->isError = true;
+			$this->result->errorStr = "ERROR: Saving user information: ".$e->getMessage();
+			$this->result->errorCode = $e->getCode();
 		}
 		
-		return "User information saved successfully";
+		$this->result->data = "User information saved successfully";
+		return $this->result;
 	}
 	
 	function addNewUser($user_name, $user_passw, $user_adm_level)
@@ -188,19 +187,18 @@ class UsersDB
 	{
 		if ($data == "")
 		{
-			$this->resultArr['isError'] = true;
-			$this->resultArr['resultStr'] = "WARNING: You provided no settings to save";
+			$this->result->isError = true;
+			$this->result->errorStr = "WARNING: You provided no settings to save";
 		}
 		else
 		{
-			$this->resultArr['isError'] = false;
 			$queryArr = $this->dbh->query("SELECT user_settings FROM users WHERE user_name='$userName'");
 			$queryArr = $queryArr->fetchAll();
 			if (count($queryArr) == 0)
 			{
-				$this->resultArr['isError'] = true;
+				$this->result->isError = true;
 				$error = $this->dbh->errorInfo();
-				$this->resultArr['resultStr'] = "ERROR: Retrieving the user settings from the database: ".$error[2];
+				$this->result->errorStr = "ERROR: Retrieving the user settings from the database: ".$error[2];
 			}
 			else
 			{
@@ -216,18 +214,18 @@ class UsersDB
 				$result = $this->dbh->exec("UPDATE users SET user_settings='$settings' WHERE user_name='$userName'");
 				if ($result == 0)
 				{
-					$this->resultArr['isError'] = true;
+					$this->result->isError = true;
 					$error = $this->dbh->errorInfo();
-					$this->resultArr['resultStr'] = "ERROR: Saving the user settings to the database: ".$error[2];
+					$this->result->errorStr = "ERROR: Saving the user settings to the database: ".$error[2];
 				}
 				else
 				{
-					$this->resultArr['resultStr'] = "Settings saved successfully";
+					$this->result->data = "Settings saved successfully";
 				}
 			}
 		}
 		
-		return json_encode($this->resultArr);
+		return $this->result;
 	}
 	
 	function loadSettings($userName, $keysArr, $key = "")

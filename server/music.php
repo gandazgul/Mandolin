@@ -17,8 +17,8 @@ require_once '../models/music.php';
 $mMusic = new MusicModel();
 require_once '../models/MoviesDB.php';
 $moviesDB = new MoviesDB();
-require_once '../models/UsersDB.php';
-$usersDB = new UsersDB();
+require_once '../models/users.php';
+$mUsers = new UsersModel();
 
 $action = $_REQUEST["a"];
 
@@ -34,7 +34,7 @@ catch(Exception $e)
 unset($playlists);
 unset($mSongs);
 unset($mMusic);
-unset($usersDB);
+unset($mUsers);
 unset($moviesDB);
 
 function gett()//returns total artists, albums and songs
@@ -112,7 +112,7 @@ function search()
 
 function play()//makes a list of the tracks selected in the sng list
 {
-	global $settings, $playlists, $mSongs, $usersDB;
+	global $settings, $playlists, $mSongs, $mUsers;
 
 	$plName = "playlist";
 	$plArr = array();
@@ -165,7 +165,7 @@ function play()//makes a list of the tracks selected in the sng list
 		shuffle($plArr);
 	//print_r($plArr); //check if it was randomized
 
-	$plFormat = json_decode($usersDB->loadSettings($_SESSION['username'], array("plFormat")), true);
+	$plFormat = json_decode($mUsers->loadSettings($_SESSION['username'], array("plFormat")), true);
 	if ($plFormat['isError'])
 	{
 		echo $plFormat['resultStr'];

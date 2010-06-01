@@ -11,14 +11,14 @@ else
 	exit("You must provide a valid song ID.");
 	
 //check the key is valid and current
-require_once "../models/UsersDB.php";
-$usersDB = new UsersDB();
+require_once "../models/users.php";
+$mUsers = new UsersModel();
 require_once "../models/settings.php";
 $settings = new Settings();
-$userAuthInfo = json_decode($usersDB->getAuthInfo_json("", $key), true);
-$bitrate = json_decode($usersDB->loadSettings("", array('bitrate'), $key), true);
-$usersDB->__destruct();
-unset($usersDB);
+$userAuthInfo = json_decode($mUsers->getAuthInfo_json("", $key), true);
+$bitrate = json_decode($mUsers->loadSettings("", array('bitrate'), $key), true);
+$mUsers->__destruct();
+unset($mUsers);
 
 if ($userAuthInfo['isError'])
 {
