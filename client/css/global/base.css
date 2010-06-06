@@ -167,9 +167,10 @@
 	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 0.5em; width: 95%; padding: .3em; }
 	.ui-form input.text-no-margin, .ui-form select.text-no-margin { display: block; width: 95%; padding: .3em; }
 	.ui-form input.text-side-no-margin { padding: .3em; }
-	.ui-form fieldset { padding: 0.8em; }
+	.ui-form fieldset { padding: 0.8em; margin: 0; }
 	.ui-form fieldset.top, .ui-form.top { margin-top: 4px; }
 
+	.ui-accordion .ui-accordion-content { padding: 1em; }
 	/*.ui-form button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration: none !important; cursor:pointer; position: relative; text-align: center; }
 	.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }*/
 
