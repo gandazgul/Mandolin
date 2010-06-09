@@ -33,16 +33,27 @@
 				<div id="edge-tl"></div>
 				<div id="edge-tr"></div>
 			</div>
-			<div class="page">
+			<div class="page"><?php //echo $username; ?>
 				<div id="header">
 					<img alt="Mandolin logo" src="./client/images/logo.jpg" />
-					<div class="title">
-						<h2>Welcome <strong><?php echo $username; ?></strong> to Mandolin v<?php echo $settings->get('version'); ?></h2>
-						<h3><em>&ldquo;Because music is important&rdquo;</em></h3>
+					<div id="headerTitle">
+						<h1 id="appName">Mandolin v<?php echo $settings->get('version'); ?></h1>
+						<h6 id="appSubName"><em>&ldquo;Because music is important&rdquo;</em></h6>
 					</div>
+                    <div id="headerRight">
+	                    <div id="topMenu">
+		                    <a href="./?p=adm">Administration</a>&nbsp;|&nbsp;<a href="./?p=about">About</a>&nbsp;|&nbsp;<a href="./?p=logout">Logout</a>
+	                    </div>
+                        <div id="searchForm">
+                            <input type="text" class="text" id="searchBox">
+                            <div class="search_button_wrapper">
+                                <div id="search_button"></div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 
-				<?php include "./client/views/nav.php"; ?>
+				<?php if ($p != 'login') include "./client/views/nav.php"; ?>
 
 				<?php
 				$page = "./client/$p.php";

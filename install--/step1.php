@@ -14,13 +14,13 @@
 			$fatal = false;
 			$recheck = false;
 			// Let's check the PHP Version
-			if (phpversion() < 4.3)
+			if (phpversion() < 5.2)
 			{
-				echo '<font color="red">4.3+ required, '. phpversion(). ' found - fatal error!</font>';
+				echo '<font color="red">5.2+ required, '. phpversion(). ' found - fatal error!</font>';
 				$fatal = true;
 			}
 			else
-				echo ' <font color="green">'. phpversion(). ' found (4.3 or higher required)</font>';
+				echo ' <font color="green">'. phpversion(). ' found (5.2 or higher required)</font>';
 		?>
 	</td>
   </tr>

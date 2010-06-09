@@ -70,7 +70,6 @@ class CDefault //extends CController
 			</form>
 		</div>
 		<script type="text/javascript">
-			$("#nav").hide();
 			$("#main").css('height', '180px');
 			$('#btnLogin').button({
 				icons:{
