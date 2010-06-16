@@ -1,4 +1,5 @@
 .~lock.*
 ~*
 .tmp*
-nbproject
+nbproject/
+.idea/
