@@ -81,6 +81,7 @@ function albums()
 function songs()
 {
 	global $mSongs;
+	$whereCol = $whereVal = null;
 
 	if (isset($_GET['id']))		//echo information about the song and link for lyrics
 	{
@@ -101,6 +102,13 @@ function songs()
 	}
 
 	echo json_encode($mSongs->getSongs("song_id, song_name", $whereCol, $whereVal));
+}
+
+function allsongs()
+{
+	global $mSongs;
+
+	echo json_encode($mSongs->getAllSongs());
 }
 
 function search()

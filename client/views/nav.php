@@ -1,6 +1,4 @@
 <div id="nav">
-	<!-- skiplink anchor: navigation -->
-	<a id="navigation" name="navigation"></a>
 	<div class="hlist">
 		<ul>
 		<?php

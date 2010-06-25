@@ -13,7 +13,8 @@ if (!isset ($_GET['p'])) exit();
 if (($_GET['p'] != 'login') and ($_GET['p'] != 'checkAuth') and ($_GET['p'] != 'about'))
 {
 	echo "\n\n//---------------------------------------------------- ".$_GET['p'].".js ----------------------------------------------------------------------\n\n";
-	include_once './'.$_GET['p'].'.js';
+	if (file_exists('./'.$_GET['p'].'.js'))
+		include_once './'.$_GET['p'].'.js';
 }
 switch ($_GET['p'])
 {

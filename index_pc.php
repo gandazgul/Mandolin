@@ -40,17 +40,19 @@
 						<h1 id="appName">Mandolin v<?php echo $settings->get('version'); ?></h1>
 						<h6 id="appSubName"><em>&ldquo;Because music is important&rdquo;</em></h6>
 					</div>
-                    <div id="headerRight">
-	                    <div id="topMenu">
-		                    <a href="./?p=adm">Administration</a>&nbsp;|&nbsp;<a href="./?p=about">About</a>&nbsp;|&nbsp;<a href="./?p=logout">Logout</a>
-	                    </div>
-                        <div id="searchForm">
-                            <input type="text" class="text" id="searchBox">
-                            <div class="search_button_wrapper">
-                                <div id="search_button"></div>
-                            </div>
-                        </div>
-                    </div>
+					<?php if ($p != 'login'): ?>
+						<div id="headerRight">
+							<div id="topMenu">
+								<a href="./?p=adm">Administration</a>&nbsp;|&nbsp;<a href="./?p=about">About</a>&nbsp;|&nbsp;<a href="./?p=logout">Logout</a>
+							</div>
+							<div id="searchForm">
+								<input type="text" class="text" id="searchBox">
+								<div class="search_button_wrapper">
+									<div id="search_button"></div>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 				</div>
 
 				<?php if ($p != 'login') include "./client/views/nav.php"; ?>

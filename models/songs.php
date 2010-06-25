@@ -40,34 +40,58 @@ class SongsModel
 		echo $whereCol;
 		print_r($whereVal);*/
 		//prepare statement
-		$sngStmt = $this->dbh->prepare("SELECT $columns FROM music WHERE $whereCol=? ORDER BY song_name");
-		//cycle thru whereValues
-		for ($i = 0; $i < count($whereVal); $i++)
-		{
-			$val = $whereVal[$i];
-			if ($val == "") continue;
-			//echo $val;
-			try
-			{
-				$sngStmt->execute(array($val));
-				$queryArr = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
-				//print_r($queryArr);
-				if ($queryArr === false)
-				{
-					$this->dbhError();
+		if (($whereCol == null) or ($whereVal == null)) {
+			$sngStmt = $this->dbh->prepare("SELECT $columns FROM music ORDER BY song_name");
+			$sngStmt->execute();
+			$this->result->data = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
+		}else{
+			$sngStmt = $this->dbh->prepare("SELECT $columns FROM music WHERE $whereCol=? ORDER BY song_name");
+
+			//cycle thru whereValues
+			for ($i = 0; $i < count($whereVal); $i++){
+				$val = $whereVal[$i];
+				if ($val == "") continue;
+				//echo $val;
+				try{
+					$sngStmt->execute(array($val));
+					$queryArr = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
+					//print_r($queryArr);
+					if ($queryArr === false){
+						$this->dbhError();
+					}else{
+						$this->result->data = array_merge($this->result->data, $queryArr);
+					}
 				}
-				else
+				catch(PDOException $e)
 				{
-					$this->result->data = array_merge($this->result->data, $queryArr);
+					$this->result->isError = true;
+					$this->result->errorCode = $e->getCode();
+					$this->result->errorStr = $e->getMessage();
 				}
-			}
-			catch(PDOException $e)
-			{
-				$this->result->isError = true;
-				$this->result->errorCode = $e->getCode();
-				$this->result->errorStr = $e->getMessage();
 			}
 		}
+
+		return $this->result;
+	}
+
+	function getAllSongs()
+	{
+		/*echo $columns;
+		echo $whereCol;
+		print_r($whereVal);*/
+		//prepare statement
+		try{
+			$sngStmt = $this->dbh->prepare("SELECT song_name, art_name, alb_name FROM music INNER JOIN albums ON music.song_album=albums.alb_id INNER JOIN artists ON music.song_art=artists.art_id ORDER BY song_name");
+			$sngStmt->execute();
+			$this->result->data = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		catch(PDOException $e)
+		{
+			$this->result->isError = true;
+			$this->result->errorCode = $e->getCode();
+			$this->result->errorStr = $e->getMessage();
+		}
+
 		return $this->result;
 	}
 
