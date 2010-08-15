@@ -6,6 +6,7 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/lib/jquery.contextMenu.css" />
+<script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
 
 <form method="post" action="./server/music.php" id="playForm">
 	<div>
@@ -45,33 +46,16 @@
 </ul>
 
 <div id="errorDiv"></div>
-<div id="main" class="ui-widget-content ui-corner-all">
-	<div class="subcolumns">
-		<div class="c25l">
-			<div>
-				<h3><img alt="Artists Icon" src="./client/images/artists.png" />Artists:&nbsp;<span id="artTotal"></span></h3>
-			</div>
-			<div class="musicList" id="artistsListDiv">
-				<ol id="artistsList">
-					<li><img alt="Loading..." src="./client/images/ajax-loader.gif" /></li>
-				</ol>
-			</div>
-		</div>
-		<div class="c50l">
-			<div class="subcl1">
-				<h3><img alt="Albums Icon" src="./client/images/cd.png" />&nbsp;Albums for selected Artist(s):</h3>
-			</div>
-			<div class="subcl1 musicList" id="albumListDiv">
-				<ol id="albumList"></ol>
-			</div>
-		</div>
-		<div class="c25l">
-			<div>
-				<h3><img alt="Songs Icon" src="./client/images/song.png" />&nbsp;Songs for selected Album(s):</h3>
-			</div>
-			<div class="musicList" id="songListDiv">
-				<ol id="songList"></ol>
-			</div>
-		</div>
-	</div>
+
+<div id="main">
+	<div class="songPager"></div>
+	<table id="songList" class="tablesorter">
+		<thead>
+			<tr>
+				<th>Title</th><th>Album</th><th>Artist</th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table>
+	<div class="songPager"></div>
 </div>

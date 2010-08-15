@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$.getJSON('./server/music.php', 'a=gett&SID=' + SID, displayTotals);
+/*	$.getJSON('./server/music.php', 'a=gett&SID=' + SID, displayTotals);
 	getArtists();
 
 	$("#artistsList").selectable({
@@ -21,7 +21,10 @@ $(document).ready(function(){
 	$("#songList").selectable({
 		stop: function(){
 		}
-	});
+	});*/
+
+	postData = "a=allsongs&page=0&SID=" + SID;
+	$.getJSON("./server/music.php", postData, displaySongs);
 
 	$("#addToPLDiag").dialog({
 		bgiframe: true,
@@ -92,6 +95,19 @@ $(document).ready(function(){
 	});
 });
 
+function displaySongs(result)
+{
+	var $tr = $("<tr>");
+	var $td = $("<td>");
+	for (var i = 0; i < result.data.length; i++)
+	{
+		$tr.clone().append($td.clone().text(result.data[i].song_name)).append($td.clone().text(result.data[i].alb_name)).append($td.clone().text(result.data[i].art_name)).appendTo("#songList tbody");
+	}
+
+	$("#songList").tablesorter({widthFixed: true}).selectable({filter:'tr'}).find("td").click(function(){alert("sadasd")});
+	
+}
+
 function displayTotals(data)
 {
 	if (data.isError)
@@ -122,7 +138,7 @@ function addToPLResponse(data)
 	}
 }
 
-function procSearchResults(results)
+/*function procSearchResults(results)
 {
 	if (results.isError)
 	{
@@ -165,7 +181,7 @@ function search(query, reschedule)
 	{
 		queryDB(query);		
 	}	
-}
+}*/
 
 function displayAddToPLDiag(savedPLArr)
 {
@@ -177,7 +193,7 @@ function displayAddToPLDiag(savedPLArr)
 	$("#addToPLDiag").dialog('open');
 }
 
-function displaySongs(songs)
+/*function displaySongs(songs)
 {
 	if (songs.isError)
 	{
@@ -251,7 +267,7 @@ function displaySongs(songs)
 		);
 		$('#artnAlbMenu').disableContextMenuItems('#rename,#delete');
 	}
-}//displaySongs
+}//displaySongs*/
 
 function displayAlbums(albums)
 {

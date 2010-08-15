@@ -74,14 +74,16 @@ class SongsModel
 		return $this->result;
 	}
 
-	function getAllSongs()
+	function getAllSongs($page)
 	{
 		/*echo $columns;
 		echo $whereCol;
 		print_r($whereVal);*/
+		$page = $page*500;
+
 		//prepare statement
 		try{
-			$sngStmt = $this->dbh->prepare("SELECT song_name, art_name, alb_name FROM music INNER JOIN albums ON music.song_album=albums.alb_id INNER JOIN artists ON music.song_art=artists.art_id ORDER BY song_name");
+			$sngStmt = $this->dbh->prepare("SELECT song_name, art_name, alb_name FROM music INNER JOIN albums ON music.song_album=albums.alb_id INNER JOIN artists ON music.song_art=artists.art_id ORDER BY art_id LIMIT $page, 500");
 			$sngStmt->execute();
 			$this->result->data = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
 		}

@@ -52,13 +52,13 @@
 		width: 300px;
 	}
 	#searchForm input, #searchForm div.search_button_wrapper {
-		background:url("../images/css/player/search_bg.png?1263768476") repeat-x scroll left top #FFFFFF;
-		border:1px solid #777777;
-		float:left;
+		background-color: #FFFFFF;
+		border: 1px solid #777777;
+		float: left;
 	}
 	#searchForm div.search_button_wrapper {
-		-moz-border-radius-bottomright:11px;
-		-moz-border-radius-topright:11px;
+		-moz-border-radius-bottomright: 11px;
+		-moz-border-radius-topright: 11px;
 		-webkit-border-bottom-right-radius: 11px;
 		-webkit-border-top-right-radius: 11px;
 		border-left:medium none;
@@ -74,7 +74,7 @@
 	}
 	#nav { overflow:hidden; }
 	div.hlist { background-color: #c8ddf3 }
-	#main { margin: 1em 0; padding: 1em; background: #fff; }
+	#main { margin: 1em 0; background: #fff; }
 	#teaser { clear: both; padding: 1em; margin: 1em 0; }
 	#errorDiv { display: none; }
 	#footer { padding: 10px 20px; color:#666; background: #EDF2F8; }

@@ -17,14 +17,14 @@
 		<meta charset="UTF-8" />
 		<title>Mandolin v<?php echo $settings->get("version"); ?></title>
 		<link rel="shortcut icon" href="./client/images/logo.png" />
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/redmond/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/redmond/jquery-ui.css" />
 		<link rel="stylesheet" type="text/css" href="./client/css/global/main.css" />
 		<link rel='stylesheet' type='text/css' href='./client/css/<?php echo $p; ?>.css' />
 		<!--[if IE]>
 		<link href="./client/css/global/mod.ie.css" rel="stylesheet" type="text/css" />
 		<![endif]-->
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="./client/js/js.php?p=<?php echo $p; ?>"></script>
 	</head>
 	<body>
@@ -55,8 +55,6 @@
 					<?php endif; ?>
 				</div>
 
-				<?php if ($p != 'login') include "./client/views/nav.php"; ?>
-
 				<?php
 				$page = "./client/$p.php";
 				if (!file_exists($page))
@@ -83,7 +81,7 @@
 				<!-- begin: #footer -->
 				<div id="footerHead">&nbsp;</div>
 				<div id="footer">
-					Copyright &copy; 2009 SCTree (<a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPLv2</a>)
+					Copyright &copy; 2008-2010 SCTree (<a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPLv2</a>)
 					&nbsp;|&nbsp;
 					<a href="./?mobi=true">See mobile version</a>
 				</div>

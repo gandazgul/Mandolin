@@ -1,7 +1,7 @@
 /*JQUERY*/
 #feedback { font-size: 1.4em; }
-#artistsList .ui-selecting, #albumList .ui-selecting, #songList .ui-selecting { background: #EDF2F8; }
-#artistsList .ui-selected, #songList .ui-selected { background: #C8DDF3; }
+#artistsList .ui-selecting td, #albumList .ui-selecting td, #songList .ui-selecting td { background: #EDF2F8; }
+#artistsList .ui-selected td, #songList .ui-selected td { background: #C8DDF3; }
 #albumList .ui-selected { border: 1px solid orange; }
 #artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
 #artistsList li, #songList li { list-style-type: none; margin: 0 0 1px 0; padding: 0.3em; font-weight: bold; }

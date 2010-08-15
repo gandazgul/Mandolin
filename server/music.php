@@ -108,7 +108,9 @@ function allsongs()
 {
 	global $mSongs;
 
-	echo json_encode($mSongs->getAllSongs());
+	$page = $_GET['page'];
+
+	echo json_encode($mSongs->getAllSongs($page));
 }
 
 function search()
