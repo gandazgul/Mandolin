@@ -1,0 +1,1 @@
+{"baseURL":"http:\/\/localhost\/mandolin","musicFolders":"[\"c:\\\\music\"]","version":"0.7.1-alpha","keyLastsFor":"86400","lameCMD":"\/usr\/bin\/lame","oggCMD":"\/usr\/bin\/oggdec","flacCMD":"\/usr\/bin\/flac","baseDir":"C:\\httpdocs\\mandolin\\","dbDSN":"sqlite:C:\\httpdocs\\mandolin\\data\/mandolin.db","dbUser":"null","dbPassword":"null"}

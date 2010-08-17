@@ -61,4 +61,8 @@ $(document).ready(function(){
 	};
 
 	$("button").button();
+
+	$("#jplayer-player").jPlayer({
+		swfPath: "./client/js/lib"
+	});
 });

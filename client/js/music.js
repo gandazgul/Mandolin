@@ -26,6 +26,12 @@ $(document).ready(function(){
 	postData = "a=allsongs&page=0&SID=" + SID;
 	$.getJSON("./server/music.php", postData, displaySongs);
 
+	
+
+	$(".panel-border-horizontal a").click(function(){
+		$(this).parent().siblings().show();
+	});
+
 	$("#addToPLDiag").dialog({
 		bgiframe: true,
 		autoOpen: false,
@@ -97,15 +103,24 @@ $(document).ready(function(){
 
 function displaySongs(result)
 {
+	//console.log(result);
 	var $tr = $("<tr>");
 	var $td = $("<td>");
 	for (var i = 0; i < result.data.length; i++)
 	{
-		$tr.clone().append($td.clone().text(result.data[i].song_name)).append($td.clone().text(result.data[i].alb_name)).append($td.clone().text(result.data[i].art_name)).appendTo("#songList tbody");
+		$tr.clone().data("song_id", result.data[i].song_id).append($td.clone().text(result.data[i].song_name)).append($td.clone().text(result.data[i].alb_name)).append($td.clone().text(result.data[i].art_name)).appendTo("#songList tbody");
 	}
 
-	$("#songList").tablesorter({widthFixed: true}).selectable({filter:'tr'}).find("td").click(function(){alert("sadasd")});
-	
+	$("#songList").tablesorter({widthFixed: true}).find("td").click(function(event, ui){
+		$(this).parent().parent().find("td").css("background-color", "#FFF");
+		$(event.originalTarget).parent().find("td").css("background-color", "#C8DDF3");
+	}).dblclick(function(){
+		var baseURL = window.location;
+		baseURL = baseURL.protocol + "//" + baseURL.host + baseURL.pathname;
+		
+		$("#jplayer-player").jPlayer("setFile", baseURL + "server/stream.php?k="+ key +"&s="+ $(this).parent().data("song_id")).jPlayer("play");
+		$("#jplayer_playlist li").text($(this).parent().find(":first-child").text());
+	});
 }
 
 function displayTotals(data)

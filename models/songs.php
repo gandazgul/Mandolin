@@ -83,7 +83,7 @@ class SongsModel
 
 		//prepare statement
 		try{
-			$sngStmt = $this->dbh->prepare("SELECT song_name, art_name, alb_name FROM music INNER JOIN albums ON music.song_album=albums.alb_id INNER JOIN artists ON music.song_art=artists.art_id ORDER BY art_id LIMIT $page, 500");
+			$sngStmt = $this->dbh->prepare("SELECT song_id, song_name, art_name, alb_name FROM music INNER JOIN albums ON music.song_album=albums.alb_id INNER JOIN artists ON music.song_art=artists.art_id ORDER BY art_name LIMIT $page, 500");
 			$sngStmt->execute();
 			$this->result->data = $sngStmt->fetchAll(PDO::FETCH_ASSOC);
 		}

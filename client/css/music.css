@@ -1,8 +1,50 @@
 /*JQUERY*/
 #feedback { font-size: 1.4em; }
-#artistsList .ui-selecting td, #albumList .ui-selecting td, #songList .ui-selecting td { background: #EDF2F8; }
-#artistsList .ui-selected td, #songList .ui-selected td { background: #C8DDF3; }
+#artistsList .ui-selected td, #songList .ui-selected td {  }
 #albumList .ui-selected { border: 1px solid orange; }
 #artistsList, #albumList, #songList { list-style-type: none; margin: 0; padding: 0; }
 #artistsList li, #songList li { list-style-type: none; margin: 0 0 1px 0; padding: 0.3em; font-weight: bold; }
 #albumList li { list-style-type: none; margin: 0 .3em .3em 0; padding: 0.3em; float: left; width: 110px; height: 90px; font-weight: bold; text-align: center; }
+
+.panel-border-horizontal {
+	background-color: #EDF2F8;
+	font-size:9px;
+	height:6px;
+	line-height:6px;
+	text-align:center;
+}
+.panel-border-horizontal a, .panel-border-horizontal a:hover { text-decoration: none; cursor: pointer; display: block; }
+.panel-border-horizontal a:hover { background-color: #C8DDF3; }
+
+table.tablesorter {
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter tr:hover td { background-color: #EDF2F8 !important; }
+
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	font-size: 8pt;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {	background-color:#F0F0F6; }
+table.tablesorter thead tr .headerSortUp { background-image: url(../images/asc.gif); }
+table.tablesorter thead tr .headerSortDown { background-image: url(../images/desc.gif); }
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp { background-color: #8dbdd8; }

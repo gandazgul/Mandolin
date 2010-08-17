@@ -6,7 +6,9 @@
 	}
 ?>
 <link type="text/css" rel="stylesheet" href="./client/css/lib/jquery.contextMenu.css" />
-<script type="text/javascript" src="./client/js/lib/jquery.tablesorter.min.js"></script>
+<script type="text/javascript">
+	var key = "<?php echo $_SESSION["key"]; ?>";
+</script>
 
 <form method="post" action="./server/music.php" id="playForm">
 	<div>
@@ -48,14 +50,24 @@
 <div id="errorDiv"></div>
 
 <div id="main">
-	<div class="songPager"></div>
-	<table id="songList" class="tablesorter">
-		<thead>
-			<tr>
-				<th>Title</th><th>Album</th><th>Artist</th>
-			</tr>
-		</thead>
-		<tbody></tbody>
-	</table>
-	<div class="songPager"></div>
+	<div id="mainPlaylists">
+		<div class="ui-widget-content">Playlists go here</div>
+		<div class="panel-border-vertical">&nbsp;</div>
+	</div>
+	<div id="mainSongs">
+		<div id="songFilters" class="ui-widget-content">
+			<div>Artists and albums go here to filter the list.</div>
+			<span class="panel-border-horizontal"><a>&#x25BC;</a></span>
+		</div>
+		<div class="songPager">Pager goes here</div>
+		<table id="songList" class="tablesorter">
+			<thead>
+				<tr>
+					<th>Title</th><th>Album</th><th>Artist</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<div class="songPager">and here</div>
+	</div>
 </div>

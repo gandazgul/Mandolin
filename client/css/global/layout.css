@@ -1,0 +1,186 @@
+@charset "UTF-8";
+/**
+ * This work has been taken from YAML, this file has been modified to be
+ * used by this project only and not as part of the YAML framework.
+ *
+ * Mandolin is licensed under the GPL but this CSS file is licenced, like the original work, under 
+ * Creative Commons - Attribution 2.0 Generic 
+ * (http://creativecommons.org/licenses/by/2.0/)
+ *
+ * YAML: "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) central stylesheet
+ *
+ * @creator       YAML Builder V1.2b (http://builder.yaml.de)
+ * @file          basemod.css
+ * @-yaml-minver  3.1
+ *
+ * @file		base.css
+ * @creator		Carlos Ravelo, based on YAML
+ *
+ */
+
+@media screen, projection
+{
+	/*-------------------------------------------------------------------------*/
+
+	body { background: #3b69ad none; padding: 0; margin: 3px 0; }
+	img { border:0 solid; }
+
+	.page_margins { margin: 0 auto; width: auto;  min-width: 960px; max-width: 90em; background: #fff; }
+	.page { padding: 10px 15px 10px 10px; }
+	.musicList { height: 350px; overflow-y: auto; overflow-x: hidden; }
+	.hidden-table, .hidden-table td, .hidden-table tr:hover td { background: none; border: none; margin: 0; width: 100%;  }
+
+    #header { padding: 1em; color: #000; background:#edf2f8 url("../../images/bg_header.gif") repeat-x bottom left; clear: both; position: relative; overflow: hidden; }
+	#header img { width: 70px; float: left; }
+    #headerTitle { float: left; margin-left: 8px; }
+    #appName { line-height: 0.7em; }
+    #appSubName {  }
+    #headerRight { float: right; }
+	#topMenu { text-align: right; }
+
+	#searchForm { margin-top: 1em; }
+	#searchForm input.text {
+		-moz-border-radius-bottomleft: 11px;
+		-moz-border-radius-topleft: 11px;
+		-webkit-border-bottom-left-radius: 11px;
+		-webkit-border-top-left-radius: 11px;
+		border-right:medium none;
+		height:14px;
+		padding-left: 10px;
+		padding-bottom: 5px;
+		width: 177px;
+	}
+	#searchForm input, #searchForm div.search_button_wrapper {
+		background-color: #FFFFFF;
+		border: 1px solid #777777;
+		float: left;
+	}
+	#searchForm div.search_button_wrapper {
+		-moz-border-radius-bottomright: 11px;
+		-moz-border-radius-topright: 11px;
+		-webkit-border-bottom-right-radius: 11px;
+		-webkit-border-top-right-radius: 11px;
+		border-left:medium none;
+	} 
+	#searchForm #search_button {
+		-moz-border-radius-bottomright:11px;
+		-moz-border-radius-topright:11px;
+		-webkit-border-bottom-left-radius: 11px;
+		-webkit-border-top-left-radius: 11px;
+		background:url("../../images/search_button.png") no-repeat scroll left center transparent;
+		height:20px;
+		width:20px;
+	}
+	#nav { overflow:hidden; }
+	div.hlist { background-color: #c8ddf3 }
+	#main { margin: 1em 0; background: #fff; overflow: hidden; }
+	/*#teaser { clear: both; padding: 1em; margin: 1em 0; }*/
+	#errorDiv { display: none; }
+
+	#mainPlaylists { float: left; width: 20%; }
+	#mainPlaylists div { margin-right: 5px; }
+	#mainSongs { float: left; width: 80%; }
+	#songFilters { margin-bottom: 5px; }
+	#songFilters div { display: none; }
+
+	#footer { padding: 10px 20px; color:#666; background: #EDF2F8; }
+	#footerHead { background-color: #C8DDF3;  height: 5px; }
+
+	#login-form {
+		left: 50%;
+		margin-left: -150px;
+		position: absolute;
+		width: 300px;
+	}
+	#login-form fieldset.top { text-align: center; }
+
+	/*-------------------------------------------------------------------------*/
+
+	.page_margins {
+		border: 0 none;
+		background-image:  url(../../images/gfxborder/border_left.gif);
+		background-repeat:repeat-y;
+		background-position:left;
+	}
+
+	.page {
+		border: 0 none;
+		margin: 0 0 0 5px; padding: 10px 15px 10px 10px;
+		background-image:  url(../../images/gfxborder/border_right.gif);
+		background-repeat:repeat-y;
+		background-position:right;
+	}
+
+	#border-top {
+		overflow:hidden;
+		width: auto;
+		height: 20px;
+		font-size:0;
+		margin-bottom: -15px;
+		background-image:  url(../../images/gfxborder/border_top.gif);
+		background-repeat:repeat-x;
+		background-position:top left;
+	}
+
+	#border-bottom {
+		overflow:hidden;
+		width: auto;
+		height: 20px;
+		margin-top: -15px;
+		font-size:0;
+		background-image:  url(../../images/gfxborder/border_bottom.gif);
+		background-repeat:repeat-x;
+		background-position:bottom left;
+	}
+
+	#edge-tl {
+		float:left;
+		width: 20px;
+		height: 20px;
+		font-size:0;
+		background-image:  url(../../images/gfxborder/corner_tl.gif);
+		background-position: top left;
+	}
+
+	#edge-tr {
+		position:relative; /* IE Fix | z-index */
+		float:right;
+		width: 20px;
+		height: 20px;
+		font-size:0;
+		background-image:  url(../../images/gfxborder/corner_tr.gif);
+		background-position: top right;
+	}
+
+	#edge-bl {
+		float:left;
+		width: 20px;
+		height: 20px;
+		background-image:  url(../../images/gfxborder/corner_bl.gif);
+		background-position: bottom left;
+	}
+
+	#edge-br {
+		position:relative; /* IE Fix | z-index */
+		float:right;
+		width: 20px;
+		height: 20px;
+		background-image:  url(../../images/gfxborder/corner_br.gif);
+		background-position: bottom right;
+	}
+
+	/*JQUERY UI*/
+	.ui-form legend { padding: 0.5em }
+	.ui-form label  { display:inline-block; }
+	.ui-form input.text, .ui-form select.text { display: block; margin-bottom: 0.5em; width: 95%; padding: .3em; }
+	.ui-form input.text-no-margin, .ui-form select.text-no-margin { display: block; width: 95%; padding: .3em; }
+	.ui-form input.text-side-no-margin { padding: .3em; }
+	.ui-form fieldset { padding: 0.8em; margin: 0; }
+	.ui-form fieldset.top, .ui-form.top { margin-top: 4px; }
+
+	.ui-accordion .ui-accordion-content { padding: 1em; }
+	/*.ui-form button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration: none !important; cursor:pointer; position: relative; text-align: center; }
+	.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }*/
+
+}

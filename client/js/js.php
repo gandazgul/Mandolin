@@ -8,6 +8,9 @@ var SID = '<?php echo sha1(session_id()); ?>';
 <?php
 echo "\n\n//---------------------------------------------------- MAIN.JS ----------------------------------------------------------------------\n\n";
 include_once './main.js';
+echo "\n\n//---------------------------------------------------- jquery.jplayer.min.js ----------------------------------------------------------------------\n\n";
+include_once './lib/jquery.jplayer.min.js';
+
 if (!isset ($_GET['p'])) exit();
 
 if (($_GET['p'] != 'login') and ($_GET['p'] != 'checkAuth') and ($_GET['p'] != 'about'))
@@ -23,6 +26,8 @@ switch ($_GET['p'])
 	{
 		echo "\n\n//---------------------------------------------------- CONTEXT MENU PLUGIN ----------------------------------------------------------------------\n\n";
 		include_once './lib/jquery.contextMenu.js';
+		echo "\n\n//---------------------------------------------------- TABLE SORTER PLUGIN ----------------------------------------------------------------------\n\n";
+		include_once './lib/jquery.tablesorter.min.js';		
 		break;
 	}
 	case 'adm':
