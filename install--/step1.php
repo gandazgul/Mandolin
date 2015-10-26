@@ -45,7 +45,7 @@
     <td>			
 		<?php
 			// Now let's check for GD support
-			if (function_exists("sqlite_query"))
+			if (extension_loaded('pdo_sqlite'))
 				echo '<font color="green">SQLite Support found!</font>';
 			else
 			{
